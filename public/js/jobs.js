@@ -346,10 +346,8 @@ const fetchAndRenderJobs = async (url, params) => {
       }
 
       jobs.forEach((job, index) => {
-        // Only show Featured tag if it's a Featured job AND it's in the "Local" group (distanceGroup 1)
-        // If distanceGroup is undefined (e.g. no location search), show it (default behavior).
-        const showFeaturedTag =
-          job.featured && (!job.distanceGroup || job.distanceGroup === 1);
+        // Always show Featured tag if the job is featured
+        const showFeaturedTag = job.featured;
 
         const html = `
           <div class="job-card" tabindex="0" data-id="${job._id}" data-index="${index + 1}">

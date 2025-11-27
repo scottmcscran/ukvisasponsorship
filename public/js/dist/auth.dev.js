@@ -28,7 +28,7 @@ exports.signupEmployer = function _callee(data) {
             form = document.querySelector(".form--signup-employer");
 
             if (form) {
-              form.parentElement.innerHTML = '<div class="form__group" style="margin: 4rem 0;"><h2 class="heading-secondary ma-bt-lg">Check your email!</h2><p class="text-center" style="font-size: 1.6rem;">We have sent a verification link to your email address. Please close this tab and check your email to activate your account.</p></div>';
+              form.parentElement.innerHTML = '<div class="form__group" style="margin: 10rem 0; min-height: 40vh; display: flex; flex-direction: column; justify-content: center;"><h2 class="heading-secondary ma-bt-lg">Check your email!</h2><p class="text-center" style="font-size: 1.6rem;">We have sent a verification link to your email address. Please close this tab and check your email to activate your account.</p></div>';
             }
           }
 
@@ -151,7 +151,7 @@ exports.signupCandidate = function _callee4(name, email, password, passwordConfi
             form = document.querySelector(".form--signup");
 
             if (form) {
-              form.parentElement.innerHTML = '<div class="form__group" style="margin: 4rem 0;"><h2 class="heading-secondary ma-bt-lg">Check your email!</h2><p class="text-center" style="font-size: 1.6rem;">We have sent a verification link to your email address. Please close this tab and check your email to activate your account.</p></div>';
+              form.parentElement.innerHTML = '<div class="form__group" style="margin: 10rem 0; min-height: 40vh; display: flex; flex-direction: column; justify-content: center;"><h2 class="heading-secondary ma-bt-lg">Check your email!</h2><p class="text-center" style="font-size: 1.6rem;">We have sent a verification link to your email address. Please close this tab and check your email to activate your account.</p></div>';
             }
           }
 

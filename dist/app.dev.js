@@ -42,20 +42,20 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      connectSrc: ["'self'", "ws://127.0.0.1:*", "ws://localhost:*", "https://www.google-analytics.com", "https://analytics.google.com"],
-      scriptSrc: ["'self'", "https://js.stripe.com", "'unsafe-eval'", "https://www.googletagmanager.com"],
+      connectSrc: ["'self'", "ws://127.0.0.1:*", "ws://localhost:*", "http://127.0.0.1:*", "http://localhost:*", "https://www.google-analytics.com", "https://analytics.google.com"],
+      scriptSrc: ["'self'", "https://js.stripe.com", "'unsafe-eval'", "'unsafe-inline'", "https://www.googletagmanager.com"],
       styleSrc: ["'self'", "https://fonts.googleapis.com", "'unsafe-inline'"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
-      frameSrc: ["'self'", "https://js.stripe.com"],
-      imgSrc: ["'self'", "data:", "https://www.google-analytics.com"]
+      upgradeInsecureRequests: null
     }
-  }
-})); // Stripe Webhook - Must be before express.json()
+  },
+  hsts: false // Disable Strict-Transport-Security for IP access
+
+})); // Stripe Webhook
 
 app.post("/webhook-checkout", express.raw({
   type: "application/json"
 }), subController.webhookCheckout);
-app.use(express.json());
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
@@ -63,7 +63,7 @@ if (process.env.NODE_ENV === "development") {
 
 
 var limiter = rateLimit({
-  max: 1000,
+  max: 100,
   windowMs: 60 * 60 * 1000,
   message: "Request limit reached, try again in 1hr"
 });
@@ -85,7 +85,7 @@ app.use(function (req, res, next) {
 });
 app.get("/bundle.js.map", function (req, res) {
   res.sendFile(path.join(__dirname, "public/js/bundle.js.map"));
-}); // ROUTES
+}); // Routes
 
 app.use("/", viewRouter);
 app.use("/api/v1/users", userRouter);
@@ -96,6 +96,5 @@ app.use("/api/v1/bug-reports", bugReportRouter);
 app.use(function (req, res, next) {
   next(new AppError("Requested URL does not exist. (".concat(req.originalUrl, ")"), 404));
 });
-app.use(globalErrorHandler); // START SERVER
-
+app.use(globalErrorHandler);
 module.exports = app;

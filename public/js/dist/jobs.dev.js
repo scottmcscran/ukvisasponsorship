@@ -454,9 +454,8 @@ var fetchAndRenderJobs = function fetchAndRenderJobs(url, params) {
 
         case 13:
           jobs.forEach(function (job, index) {
-            // Only show Featured tag if it's a Featured job AND it's in the "Local" group (distanceGroup 1)
-            // If distanceGroup is undefined (e.g. no location search), show it (default behavior).
-            var showFeaturedTag = job.featured && (!job.distanceGroup || job.distanceGroup === 1);
+            // Always show Featured tag if the job is featured
+            var showFeaturedTag = job.featured;
             var html = "\n          <div class=\"job-card\" tabindex=\"0\" data-id=\"".concat(job._id, "\" data-index=\"").concat(index + 1, "\">\n            ").concat(showFeaturedTag ? '<p class="featured__label">Featured</p>' : "", "\n            <h3 class=\"job-card__title\">").concat(job.title, "</h3>\n            <p class=\"job-card__company\">").concat(job.postedBy ? job.postedBy.name : "Company", "</p>\n            <div class=\"job-card__location\">\n              <p>").concat(job.location.city, "</p>\n              <p>").concat(job.location.postcode, "</p>\n              <p>Remote: ").concat(job.location.remote ? job.location.remote.charAt(0).toUpperCase() + job.location.remote.slice(1) : "No", "</p>\n            </div>\n            <p class=\"job-card__description\">").concat(job.description, "</p>\n          </div>\n        ");
             resultsContainer.insertAdjacentHTML("beforeend", html);
           });

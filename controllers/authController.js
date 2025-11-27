@@ -65,8 +65,15 @@ exports.signUpEmployer = catchAsync(async (req, res, next) => {
     },
   });
 
+  // Check if user exists before sending email
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    return next(new AppError("Email already in use", 400));
+  }
+
   const verificationToken = newUser.createEmailVerificationToken();
-  await newUser.save({ validateBeforeSave: false });
+  // Validate user data before sending email
+  await newUser.validate();
 
   const url = `${req.protocol}://${req.get(
     `host`
@@ -74,32 +81,25 @@ exports.signUpEmployer = catchAsync(async (req, res, next) => {
 
   try {
     await new Email(newUser, url).sendVerification();
-
-    res.status(201).json({
-      status: "success",
-      message: "Token sent to email!",
-    });
   } catch (err) {
     console.error("EMAIL SEND ERROR:", err);
 
     if (process.env.NODE_ENV === "development") {
       console.log("Verification URL:", url);
-      return res.status(201).json({
-        status: "success",
-        message: "Token sent to email! (Dev: Check console for URL)",
-        url: url,
-      });
+    } else {
+      return next(
+        new AppError("There was an error sending the email. Try again later!"),
+        500
+      );
     }
-
-    newUser.emailVerificationToken = undefined;
-    newUser.emailVerificationExpires = undefined;
-    await newUser.save({ validateBeforeSave: false });
-
-    return next(
-      new AppError("There was an error sending the email. Try again later!"),
-      500
-    );
   }
+
+  await newUser.save({ validateBeforeSave: false });
+
+  res.status(201).json({
+    status: "success",
+    message: "Token sent to email!",
+  });
 });
 
 exports.signupCandidate = catchAsync(async (req, res, next) => {
@@ -113,8 +113,15 @@ exports.signupCandidate = catchAsync(async (req, res, next) => {
     role: "candidate",
   });
 
+  // Check if user exists before sending email
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    return next(new AppError("Email already in use", 400));
+  }
+
   const verificationToken = newUser.createEmailVerificationToken();
-  await newUser.save({ validateBeforeSave: false });
+  // Validate user data before sending email
+  await newUser.validate();
 
   const url = `${req.protocol}://${req.get(
     `host`
@@ -122,32 +129,25 @@ exports.signupCandidate = catchAsync(async (req, res, next) => {
 
   try {
     await new Email(newUser, url).sendVerification();
-
-    res.status(201).json({
-      status: "success",
-      message: "Token sent to email!",
-    });
   } catch (err) {
     console.error("EMAIL SEND ERROR:", err);
 
     if (process.env.NODE_ENV === "development") {
       console.log("Verification URL:", url);
-      return res.status(201).json({
-        status: "success",
-        message: "Token sent to email! (Dev: Check console for URL)",
-        url: url,
-      });
+    } else {
+      return next(
+        new AppError("There was an error sending the email. Try again later!"),
+        500
+      );
     }
-
-    newUser.emailVerificationToken = undefined;
-    newUser.emailVerificationExpires = undefined;
-    await newUser.save({ validateBeforeSave: false });
-
-    return next(
-      new AppError("There was an error sending the email. Try again later!"),
-      500
-    );
   }
+
+  await newUser.save({ validateBeforeSave: false });
+
+  res.status(201).json({
+    status: "success",
+    message: "Token sent to email!",
+  });
 });
 
 exports.logIn = catchAsync(async (req, res, next) => {
@@ -423,7 +423,23 @@ exports.verifyEmail = catchAsync(async (req, res, next) => {
   user.emailVerificationExpires = undefined;
   await user.save({ validateBeforeSave: false });
 
-  createSendToken(user, 200, res);
+  // Log the user in by setting the cookie
+  const token = signToken(user._id);
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + +process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+  };
+  if (process.env.NODE_ENV === `production`) cookieOptions.secure = true;
+  res.cookie(`jwt`, token, cookieOptions);
+
+  // Redirect to dashboard or home page
+  if (user.role === "employer") {
+    res.redirect("/employer-dashboard?alert=verified");
+  } else {
+    res.redirect("/?alert=verified");
+  }
 });
 
 exports.claimAccount = catchAsync(async (req, res, next) => {

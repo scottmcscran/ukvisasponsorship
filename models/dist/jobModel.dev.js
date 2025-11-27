@@ -157,6 +157,9 @@ jobSchema.index({
   experienceLevel: 1,
   remoteWork: 1
 });
+jobSchema.index({
+  "location.coordinates": "2dsphere"
+});
 jobSchema.pre("save", function _callee(next) {
   var user;
   return regeneratorRuntime.async(function _callee$(_context) {

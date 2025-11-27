@@ -15,6 +15,7 @@ router.post("/login", authController.logIn);
 router.get("/logout", authController.logOut);
 router.post("/forgotPassword", authController.forgotPassword);
 router.patch("/resetPassword/:token", authController.resetPassword);
+router.get("/verifyEmail/:token", authController.verifyEmail);
 router.patch("/claimAccount/:token", authController.claimAccount);
 router.use(authController.protect);
 router.patch("/updatePassword", authController.updatePassword);

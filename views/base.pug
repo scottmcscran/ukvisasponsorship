@@ -17,16 +17,16 @@ html
         gtag('js', new Date());
         gtag('config', 'G-RXRYJ205Q1');
 
-      link(rel="stylesheet", href="/css/main.css?v=1.1")
+      link(rel="stylesheet", href="/css/main.css?v=1.3")
       link(rel="shortcut icon" type="image/png" href="/img/favicon.svg")
       link(rel="stylesheet", href="https://fonts.googleapis.com/css?family=Lato:300,300i,500,700")
       title #{title} | Uk Visa Sponsorship
   body(data-alert=`${alert ? alert : ``}`)
     include _header
 
-    
-    block content 
-      h1 placeholder
+    .content-wrapper
+      block content 
+        h1 placeholder
 
   
     include _footer

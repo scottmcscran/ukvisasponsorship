@@ -147,18 +147,35 @@ function () {
       }, null, this);
     }
   }, {
-    key: "sendClaimAccount",
-    value: function sendClaimAccount() {
-      return regeneratorRuntime.async(function sendClaimAccount$(_context5) {
+    key: "sendVerification",
+    value: function sendVerification() {
+      return regeneratorRuntime.async(function sendVerification$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
             case 0:
               _context5.next = 2;
-              return regeneratorRuntime.awrap(this.send("claimAccount", "Claim your UK Visa Sponsorship Employer Account"));
+              return regeneratorRuntime.awrap(this.send("verifyEmail", "Verify your email address"));
 
             case 2:
             case "end":
               return _context5.stop();
+          }
+        }
+      }, null, this);
+    }
+  }, {
+    key: "sendClaimAccount",
+    value: function sendClaimAccount() {
+      return regeneratorRuntime.async(function sendClaimAccount$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              _context6.next = 2;
+              return regeneratorRuntime.awrap(this.send("claimAccount", "Claim your UK Visa Sponsorship Employer Account"));
+
+            case 2:
+            case "end":
+              return _context6.stop();
           }
         }
       }, null, this);

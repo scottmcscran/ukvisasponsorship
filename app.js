@@ -37,6 +37,8 @@ app.use(
           `'self'`,
           `ws://127.0.0.1:*`,
           `ws://localhost:*`,
+          `http://127.0.0.1:*`,
+          `http://localhost:*`,
           `https://www.google-analytics.com`,
           `https://analytics.google.com`,
         ],
@@ -44,6 +46,7 @@ app.use(
           `'self'`,
           `https://js.stripe.com`,
           `'unsafe-eval'`,
+          `'unsafe-inline'`,
           `https://www.googletagmanager.com`,
         ],
         styleSrc: [`'self'`, `https://fonts.googleapis.com`, `'unsafe-inline'`],
@@ -51,6 +54,7 @@ app.use(
         upgradeInsecureRequests: null,
       },
     },
+    hsts: false, // Disable Strict-Transport-Security for IP access
   })
 );
 
