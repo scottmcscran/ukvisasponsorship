@@ -84,6 +84,7 @@
   align-self: stretch;
   padding: 0;
   display: flex;
+  position: relative;
   z-index: 20;
 }
 
