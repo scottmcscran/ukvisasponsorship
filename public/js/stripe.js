@@ -10,7 +10,7 @@ const stripe = Stripe(
 exports.subscribe = async (plan) => {
   try {
     const session = await axios.post(
-      `http://127.0.0.1:3000/api/v1/subscriptions/checkout-session/`,
+      `/api/v1/subscriptions/checkout-session/`,
       plan
     );
 
