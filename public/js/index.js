@@ -700,6 +700,7 @@ if (resultsContainer && detailsModal) {
     const card = e.target.closest(".job-card");
     if (card) {
       detailsModal.classList.add("details--open");
+      document.body.classList.add("no-scroll");
       const jobId = card.dataset.id;
 
       // Update Status Text
@@ -720,6 +721,7 @@ if (resultsContainer && detailsModal) {
 if (closeDetailsBtn && detailsModal) {
   closeDetailsBtn.addEventListener("click", () => {
     detailsModal.classList.remove("details--open");
+    document.body.classList.remove("no-scroll");
   });
 }
 

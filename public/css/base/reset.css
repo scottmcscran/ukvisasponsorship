@@ -28,6 +28,10 @@ body {
   overflow-x: hidden;
 }
 
+.no-scroll {
+  overflow: hidden;
+}
+
 img,
 picture,
 video,

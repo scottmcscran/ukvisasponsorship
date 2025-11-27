@@ -269,6 +269,7 @@ exports.loadJobData = async (id) => {
       if (closeBtn) {
         closeBtn.addEventListener("click", () => {
           detailsContainer.classList.remove("details--open");
+          document.body.classList.remove("no-scroll");
         });
       }
 

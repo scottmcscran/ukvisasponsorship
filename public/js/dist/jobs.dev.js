@@ -292,6 +292,7 @@ exports.loadJobData = function _callee5(id) {
             if (closeBtn) {
               closeBtn.addEventListener("click", function () {
                 detailsContainer.classList.remove("details--open");
+                document.body.classList.remove("no-scroll");
               });
             } // Attach Save Listener
 

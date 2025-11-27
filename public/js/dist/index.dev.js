@@ -713,6 +713,7 @@ if (resultsContainer && detailsModal) {
 
     if (card) {
       detailsModal.classList.add("details--open");
+      document.body.classList.add("no-scroll");
       var jobId = card.dataset.id; // Update Status Text
 
       var index = card.dataset.index;
@@ -733,6 +734,7 @@ if (resultsContainer && detailsModal) {
 if (closeDetailsBtn && detailsModal) {
   closeDetailsBtn.addEventListener("click", function () {
     detailsModal.classList.remove("details--open");
+    document.body.classList.remove("no-scroll");
   });
 } // Custom Select Logic
 
