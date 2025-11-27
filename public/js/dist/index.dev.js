@@ -287,7 +287,7 @@ if (resetPasswordForm) {
     var password = document.getElementById("password").value;
     var passwordConfirm = document.getElementById("passwordConfirm").value; // Get token from URL
 
-    var token = window.location.pathname.split("/")[3];
+    var token = window.location.pathname.split("/")[2];
     resetPassword(token, password, passwordConfirm);
   });
 }

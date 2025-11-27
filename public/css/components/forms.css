@@ -136,6 +136,12 @@ input[type="range"].range-input:not(.min-salary):not(
   margin-top: var(--spacing-xs);
 }
 
+/* Force uniform background for disabled sliders */
+.disabled-filter .range-input,
+.disabled-filter .slider-track {
+  background: var(--slider-track) !important;
+}
+
 /* General Form Styles */
 .login-form {
   max-width: 60rem;
