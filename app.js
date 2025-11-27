@@ -48,8 +48,7 @@ app.use(
         ],
         styleSrc: [`'self'`, `https://fonts.googleapis.com`, `'unsafe-inline'`],
         fontSrc: [`'self'`, `https://fonts.gstatic.com`],
-        frameSrc: [`'self'`, `https://js.stripe.com`],
-        imgSrc: [`'self'`, `data:`, `https://www.google-analytics.com`],
+        upgradeInsecureRequests: null,
       },
     },
   })
