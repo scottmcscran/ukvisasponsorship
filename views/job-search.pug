@@ -1,0 +1,37 @@
+extends base
+
+block content
+  section.section.section__alone
+    .container
+      h3.heading__search.font-bold.text-gradient.text-uppercase.text-center Your UK Visa-Sponsored Job Search Starts Here
+      h4.sub-heading__search.font-light.text-center Only Licensed Sponsors Can Post On This Site
+
+      form.search-bar#search(action='/search' method='GET' )
+        .search-bar__group
+         
+          input.search-bar__input(type="text" name="search" placeholder="Job title, keywords, or company")
+
+        .search-bar__divider
+
+        .search-bar__group
+          
+          input.search-bar__input(type="text" name="location" placeholder="City, region, or postcode")
+
+        .search-bar__divider
+
+        .search-bar__group.search-bar__group--select
+          .custom-select-wrapper
+            .custom-select
+              .custom-select__trigger
+                span +25 miles
+                .arrow
+              .custom-select__options
+                span.custom-option(data-value="10") +10 miles
+                span.custom-option.selected(data-value="25") +25 miles
+                span.custom-option(data-value="50") +50 miles
+                span.custom-option(data-value="100") +100 miles
+            input#distanceInput(type="hidden" name="distance" value="25")
+
+        .search-bar__divider.search-bar__divider--mobile
+
+        button.btn.btn--search(type="submit") Search

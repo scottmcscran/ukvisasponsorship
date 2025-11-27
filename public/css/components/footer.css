@@ -1,0 +1,26 @@
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 25vh;
+  background-color: var(--brand-primary-hover);
+  color: var(--text-inverse);
+  position: relative;
+
+  .footer__nav {
+    margin-right: clamp(15px, 6vw, 100px);
+    display: flex;
+    align-items: center;
+    gap: clamp(5px, 1vw, 35px);
+    font-size: 1.5rem;
+  }
+  .footer__copyright {
+    position: absolute;
+    top: 95%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: fit-content;
+    height: fit-content;
+    font-size: small;
+  }
+}

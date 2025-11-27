@@ -1,0 +1,308 @@
+extends base
+
+block content
+  main.main
+    .dashboard-container
+      .dashboard-header
+        h2.heading-secondary Admin Dashboard
+        span.status-badge.status-badge--verified Admin Access
+
+      .user-view__tabs.dashboard-tabs
+        button.tab-btn.tab-btn--active(data-tab='reported') Reported Jobs
+        button.tab-btn(data-tab='verification') Employer Verification
+        button.tab-btn(data-tab='analytics') Analytics
+        button.tab-btn(data-tab='bugs') Bug Reports
+        button.tab-btn(data-tab='export') Data Export
+        button.tab-btn(data-tab='shadow') Shadow Accounts
+
+      .dashboard-content
+        //- SHADOW ACCOUNTS TAB
+        .tab-content(id='shadow')
+          .shadow-account-section
+            h3.heading-tertiary.ma-bt-sm Create Shadow Employer
+            form.form.form--shadow-employer
+              .form__group
+                label.form__label(for='shadowCompanyName') Company Name
+                input#shadowCompanyName.form__input(type='text', required)
+              .form__group
+                label.form__label(for='shadowEmail') Email Address
+                input#shadowEmail.form__input(type='email', required)
+              .form__group
+                label.form__label(for='shadowIndustry') Industry
+                select#shadowIndustry.form__input
+                  option(value='Technology') Technology
+                  option(value='Healthcare') Healthcare
+                  option(value='Finance') Finance
+                  option(value='Engineering') Engineering
+                  option(value='Education') Education
+                  option(value='Manufacturing') Manufacturing
+                  option(value='Retail') Retail
+                  option(value='Hospitality') Hospitality
+                  option(value='Other') Other
+              .form__group
+                button.btn.btn--small.btn--green#createShadowBtn(type='button') Create Account
+
+            .shadow-job-section.hidden#shadowJobSection
+              h3.heading-tertiary.ma-bt-sm.ma-top-md Post Job for <span id="shadowCompanyNameDisplay"></span>
+              
+              //- List of jobs added for this session
+              .shadow-jobs-list.ma-bt-md#shadowJobsList
+                h4.heading-quaternary Jobs Added:
+                ul#shadowJobsListUl
+                  //- Jobs will be appended here dynamically
+
+              form.form.form--shadow-job
+                input#shadowUserId(type='hidden')
+                .form__group
+                  label.form__label(for='shadowJobTitle') Job Title
+                  input#shadowJobTitle.form__input(type='text', required)
+                .form__group
+                  label.form__label(for='shadowJobDescription') Description
+                  textarea#shadowJobDescription.form__input(rows='4', required)
+                .form__group
+                  label.form__label(for='shadowJobLocation') City
+                  input#shadowJobLocation.form__input(type='text', required)
+                .form__group
+                  label.form__label(for='shadowJobPostcode') Postcode
+                  input#shadowJobPostcode.form__input(type='text', required)
+                .form__group
+                  label.form__label(for='shadowJobSalaryMin') Min Salary
+                  input#shadowJobSalaryMin.form__input(type='number', required)
+                .form__group
+                  label.form__label(for='shadowJobSalaryMax') Max Salary
+                  input#shadowJobSalaryMax.form__input(type='number')
+                .form__group
+                  label.form__label(for='shadowJobType') Job Type
+                  select#shadowJobType.form__input
+                    option(value='Full-time') Full-time
+                    option(value='Part-time') Part-time
+                    option(value='Contract') Contract
+                    option(value='Temporary') Temporary
+                .form__group
+                  label.form__label(for='shadowJobExperience') Experience Level
+                  select#shadowJobExperience.form__input
+                    option(value='Entry') Entry
+                    option(value='Mid') Mid
+                    option(value='Senior') Senior
+                    option(value='Lead') Lead
+                .form__group
+                  label.form__label(for='shadowJobVisa') Visa Types (Hold Ctrl/Cmd to select multiple)
+                  select#shadowJobVisa.form__input(multiple, required, style='height: 120px;')
+                    option(value='Skilled Worker') Skilled Worker
+                    option(value='Health and Care') Health and Care
+                    option(value='Global Talent') Global Talent
+                    option(value='Graduate') Graduate
+                    option(value='Senior or Specialist Worker') Senior or Specialist Worker
+                .form__group
+                  label.form__label(for='shadowJobLink') Application Link (Optional)
+                  input#shadowJobLink.form__input(type='url', placeholder='https://...')
+                .form__group
+                  button.btn.btn--small.btn--green#postShadowJobBtn(type='button') Post Job
+              
+              .shadow-actions.ma-top-md
+                button.btn.btn--small.btn--standard#sendClaimEmailBtn Send Claim Email
+                p.ma-top-sm.text-small(style="color: #777;") *Send this email only after adding all jobs.
+
+        //- REPORTED JOBS TAB
+        .tab-content.tab-content--active(id='reported')
+          if reportedJobs.length > 0
+            .jobs-list
+              each job in reportedJobs
+                .job-item
+                  .job-item__header
+                    h3.job-item__title= job.title
+                    span.job-item__status.job-item__status--reported Reported
+                  
+                  .job-item__details
+                    p
+                      strong Company: 
+                      | #{job.companyName}
+                    p
+                      strong Posted: 
+                      | #{job.postedDate.toLocaleDateString()}
+                    p
+                      strong Reports: 
+                      | #{job.reports || 1}
+
+                  .job-item__actions
+                    button.btn.btn--small.btn--standard.btn--view-job(data-job-id=job._id) View Job
+          else
+            p.no-jobs No reported jobs at the moment.
+
+        //- VERIFICATION TAB
+        .tab-content(id='verification')
+          if unverifiedEmployers.length > 0
+            .jobs-list
+              each employer in unverifiedEmployers
+                .job-item
+                  .job-item__header
+                    h3.job-item__title= employer.companyProfile.companyName
+                    span.job-item__status.job-item__status--unverified Unverified
+                  
+                  .job-item__details
+                    p
+                      strong Legal Name: 
+                      | #{employer.companyProfile.legalOrgName}
+                    p
+                      strong Email: 
+                      | #{employer.email}
+                    p
+                      strong Website: 
+                      a(href=employer.companyProfile.website target="_blank")= employer.companyProfile.website
+                    p
+                      strong Industry: 
+                      | #{employer.companyProfile.industry}
+
+                  .job-item__actions
+                    button.btn.btn--small.btn--green.btn--approve-employer(data-user-id=employer._id, data-company-name=employer.companyProfile.companyName) Approve
+                    button.btn.btn--small.btn--delete.btn--reject-employer(data-user-id=employer._id, data-company-name=employer.companyProfile.companyName) Reject
+          else
+            p.no-jobs No employers waiting for verification.
+
+        //- BUG REPORTS TAB
+        .tab-content(id='bugs')
+          if bugReports && bugReports.length > 0
+            .jobs-list
+              each bug in bugReports
+                .job-item
+                  .job-item__header
+                    h3.job-item__title= bug.title
+                    span.job-item__status.job-item__status--reported= bug.status
+                  
+                  .job-item__details
+                    p
+                      strong Reported By: 
+                      | #{bug.reportedBy.name} (#{bug.reportedBy.email})
+                    p
+                      strong Date: 
+                      | #{bug.createdAt.toLocaleDateString()}
+                    p.ma-top-sm
+                      strong Description:
+                      br
+                      | #{bug.description}
+
+                  .job-item__actions
+                    button.btn.btn--small.btn--green.btn--fix-bug(data-bug-id=bug._id) Fixed (Delete)
+          else
+            p.no-jobs No open bug reports.
+
+        //- DATA EXPORT TAB
+        .tab-content(id='export')
+          .content-box
+            h3.heading-tertiary.ma-bt-sm Export User Data (GDPR)
+            p.ma-bt-md Enter a user's email address to retrieve all data associated with their account.
+            
+            form.form.form--export-data
+              .form__group
+                label.form__label(for='exportEmail') User Email
+                input#exportEmail.form__input(type='email', placeholder='user@example.com', required)
+              .form__group
+                button.btn.btn--small.btn--standard#btnExportData Export Data
+            
+            .export-result.hidden.ma-top-md
+              h4.heading-tertiary.ma-bt-sm Data Result
+              pre.code-block#exportOutput
+              button.btn.btn--small.btn--standard.ma-top-md#btnDownloadJson Download JSON
+
+        //- ANALYTICS TAB
+        .tab-content(id='analytics')
+          .stats-grid
+            .stat-card
+              h4.stat-card__title Total Jobs
+              p.stat-card__value= stats.totalJobs
+            .stat-card
+              h4.stat-card__title Active Jobs
+              p.stat-card__value= stats.activeJobs
+            .stat-card
+              h4.stat-card__title Featured Jobs
+              p.stat-card__value= stats.featuredJobs
+            .stat-card
+              h4.stat-card__title Total Users
+              p.stat-card__value= stats.totalUsers
+            .stat-card
+              h4.stat-card__title Verified Employers
+              p.stat-card__value= stats.verifiedEmployers
+            .stat-card
+              h4.stat-card__title Free Users
+              p.stat-card__value= stats.freeUsers
+            .stat-card
+              h4.stat-card__title Starter Users
+              p.stat-card__value= stats.starterUsers
+            .stat-card
+              h4.stat-card__title Pro Users
+              p.stat-card__value= stats.professionalUsers
+
+          .analytics-sections
+            .analytics-row
+              .analytics-card
+                h3.heading-tertiary.ma-bt-sm Platform Engagement
+                ul.analytics-list
+                  li
+                    span Total Views
+                    strong= analytics.platform.totalViews
+                  li
+                    span Total Clicks
+                    strong= analytics.platform.totalClicks
+                  li
+                    span Total Saves
+                    strong= analytics.platform.totalSaves
+
+              .analytics-card
+                h3.heading-tertiary.ma-bt-sm Top Visa Types
+                ul.analytics-list
+                  each visa in analytics.jobsByVisaType
+                    li
+                      span= visa.visaType
+                      strong= visa.count
+
+            .analytics-row
+              .analytics-card
+                h3.heading-tertiary.ma-bt-sm Top Locations
+                ul.analytics-list
+                  each loc in analytics.jobsByLocation
+                    li
+                      span= loc.city
+                      strong= loc.count
+
+              .analytics-card
+                h3.heading-tertiary.ma-bt-sm Top Employers
+                ul.analytics-list
+                  each emp in analytics.topEmployers
+                    li
+                      span= emp.companyName
+                      strong= emp.jobCount
+
+  //- CONFIRMATION MODAL
+  .modal-overlay.hidden#confirmModal
+    .modal
+      button.btn-close-modal &times;
+      h2.heading-secondary.ma-bt-md#confirmTitle Confirm Action
+      p.ma-bt-md#confirmMessage Are you sure you want to proceed?
+      .modal-actions
+        button.btn.btn--small.btn--standard#confirmBtn Confirm
+        button.btn.btn--small.btn--text#cancelBtn Cancel
+
+  //- VIEW JOB MODAL
+  .modal-overlay.hidden#viewJobModal
+    .modal.modal--large
+      button.btn-close-modal.close-view-modal &times;
+      .job-details-content
+        h2.heading-secondary.ma-bt-md#viewJobTitle Job Title
+        p.ma-bt-sm
+          strong Company: 
+          span#viewJobCompany
+        p.ma-bt-sm
+          strong Location: 
+          span#viewJobLocation
+        p.ma-bt-sm
+          strong Salary: 
+          span#viewJobSalary
+        
+        h3.heading-tertiary.ma-bt-sm Description
+        .description-box#viewJobDescription
+        
+        .modal-actions
+          button.btn.btn--small.btn--green.btn--dismiss-report#modalDismissBtn Dismiss Report
+          button.btn.btn--small.btn--delete.btn--delete-job#modalDeleteBtn Delete Job
+          button.btn.btn--small.btn--text.close-view-modal Cancel
+

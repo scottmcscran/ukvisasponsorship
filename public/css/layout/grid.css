@@ -1,0 +1,46 @@
+.container {
+  width: min(100% - 4rem, 120rem);
+  margin-inline: auto;
+}
+
+.grid-auto {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+}
+
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 2rem;
+}
+
+.col-span-6 {
+  grid-column: span 6;
+}
+.col-span-4 {
+  grid-column: span 4;
+}
+.col-span-12 {
+  grid-column: span 12;
+}
+
+.section {
+  padding-block: 8rem;
+}
+
+.section__alone {
+  margin: 30vh 0;
+}
+
+@media (max-width: 600px) {
+  .section__alone {
+    margin: 4rem 0;
+  }
+}
+
+.results {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+}

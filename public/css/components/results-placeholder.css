@@ -1,0 +1,28 @@
+/* No Results & Placeholder Styling */
+.no-results-container,
+.details__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+}
+
+.no-results,
+.details__placeholder p {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Ensure details pane takes full height to center content */
+.details {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.details__placeholder {
+  flex: 1;
+}

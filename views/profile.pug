@@ -1,0 +1,109 @@
+extends base
+
+block content
+  main.main
+    .user-view
+      .user-view__tabs
+        button.tab-btn.tab-btn--active(data-tab='settings') Account Details
+        button.tab-btn(data-tab='cv') My CV
+
+      .user-view__content
+        .user-view__form-container.tab-content.tab-content--active(id='settings')
+          h2.heading-secondary.ma-bt-md Your account details
+          
+          //- WITHOUT API
+          //- form.form.form-user-data(action='/submit-user-data' method='POST' enctype='multipart/form-data')
+          
+          //- WITH API
+          form.form.form-user-data
+            .form__group
+              label.form__label(for='name') Name
+              input#name.form__input(type='text', value=`${user.name}`, required, name='name')
+            .form__group.ma-bt-md
+              label.form__label(for='email') Email address
+              input#email.form__input(type='email', value=`${user.email}`, required, name='email')
+            
+            if user.role === 'employer'
+              .line &nbsp;
+              h3.heading-tertiary.ma-bt-sm Company Details
+              .form__group
+                label.form__label(for='companyName') Company Name
+                input#companyName.form__input(type='text', value=`${user.companyProfile && user.companyProfile.companyName ? user.companyProfile.companyName : ''}`, required)
+              .form__group
+                label.form__label(for='website') Website
+                input#website.form__input(type='url', value=`${user.companyProfile && user.companyProfile.website ? user.companyProfile.website : ''}`, placeholder='https://example.com')
+              .form__group
+                label.form__label(for='industry') Industry
+                select#industry.form__input
+                  each industry in ['Technology', 'Healthcare', 'Finance', 'Engineering', 'Education', 'Manufacturing', 'Retail', 'Hospitality', 'Other']
+                    option(value=industry selected=(user.companyProfile && user.companyProfile.industry===industry))= industry
+              .form__group
+                label.form__label(for='companySize') Company Size
+                select#companySize.form__input
+                  each size in ['1-10', '11-50', '51-200', '201-500', '501-1000', '1000+']
+                    option(value=size selected=(user.companyProfile && user.companyProfile.companySize===size))= size
+
+            .form__group.right
+              button.btn.btn--small.btn--standard Save Details
+              
+          .line &nbsp;
+          
+          h2.heading-secondary.ma-bt-md Password change
+          form.form.form-user-password
+            .form__group
+              label.form__label(for='password-current') Current password
+              input#password-current.form__input(type='password', placeholder='••••••••', required, minlength='8')
+            .form__group
+              label.form__label(for='password') New password
+              input#password.form__input(type='password', placeholder='••••••••', required, minlength='8')
+            .form__group.ma-bt-lg
+              label.form__label(for='password-confirm') Confirm password
+              input#password-confirm.form__input(type='password', placeholder='••••••••', required, minlength='8')
+            .form__group.right
+              button.btn.btn--small.btn--standard.btn--save-password Save password
+
+          .line &nbsp;
+
+          h2.heading-secondary.ma-bt-md Close Account
+          .form__group
+            p.ma-bt-md Permanently delete your account and all associated data. This action cannot be undone.
+            button.btn.btn--small.btn--danger#deleteAccountBtn Delete Account
+
+        .user-view__form-container.tab-content(id='cv')
+          h2.heading-secondary.ma-bt-md My CV
+          
+          if user.cv
+            .cv-display
+              a.btn-text(href=`/cvs/${user.cv}` target='_blank') View CV
+              button.btn.btn--small.btn--standard#deleteCvBtn Delete CV
+          else 
+            p.ma-bt-md No CV uploaded yet.
+
+          .line &nbsp;
+
+          h3.heading-tertiary.ma-bt-sm Upload New CV
+          form.form.form-user-cv
+            .form__group.form__photo-upload
+              input.form__upload(type='file', accept='.pdf,.doc,.docx', id='cv-upload', name='cv')
+              label(for='cv-upload') Choose new CV
+            .form__group.right
+              button.btn.btn--small.btn--standard Upload CV
+
+    //- Delete Account Modal
+    .modal-overlay.hidden#deleteAccountModal
+      .modal
+        button.btn-close-modal#closeDeleteAccountModal &times;
+        h2.heading-secondary.ma-bt-md Delete Account
+        p.ma-bt-md.warning-text(style="color: var(--status-error); font-weight: bold;") This action is irreversible. All your data will be permanently removed.
+        p.ma-bt-md Please type your email address 
+          strong #{user.email}
+          |  to confirm.
+        
+        form.form#deleteAccountForm
+          .form__group
+            label.form__label(for='deleteEmailConfirm') Email Address
+            input#deleteEmailConfirm.form__input(type='email', required, placeholder=user.email)
+          
+          .modal-actions
+            button.btn.btn--text#cancelDeleteAccountBtn(type='button', style="font-size: var(--font-size-base); border-radius: var(--border-radius-sm);") Cancel
+            button.btn.btn--danger#confirmDeleteAccountBtn(type='submit', disabled, style="font-size: var(--font-size-base); border-radius: var(--border-radius-sm);") Delete Account

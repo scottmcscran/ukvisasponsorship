@@ -1,0 +1,318 @@
+.results__container {
+  border: 1px solid var(--border-default);
+  border-radius: var(--border-radius-sm);
+  height: clamp(50rem, 85vh, 100rem);
+  overflow: hidden;
+  margin-bottom: 4rem;
+
+  padding: 0.8rem;
+  display: grid;
+  grid-template-columns: 200px 1fr 1.5fr;
+  gap: 0.8rem;
+}
+
+.filters {
+  padding: var(--spacing-sm);
+  border-right: 1px solid var(--border-default);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
+
+.filters::-webkit-scrollbar {
+  width: 6px;
+}
+
+.filters::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.filters::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-radius: 20px;
+}
+
+.filter-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.filter-title {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+  color: var(--text-main);
+}
+
+.filter-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.disabled-filter {
+  opacity: 0.5;
+  filter: grayscale(100%);
+}
+
+.disabled-filter .slider-container,
+.disabled-filter .range-values {
+  pointer-events: none;
+}
+
+.disabled-filter .filter-toggle {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.disabled-text {
+  opacity: 0.5;
+}
+
+/* Responsive Design */
+.filters-header {
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.mobile-filters-actions {
+  display: none;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+@media (max-width: 900px) {
+  .mobile-filters-actions {
+    display: flex;
+  }
+
+  .mobile-filters-actions .btn {
+    flex: 1;
+    width: auto;
+    margin: 0;
+  }
+
+  .btn--show-filters {
+    display: block;
+  }
+
+  .results__container {
+    display: block; /* Stack elements */
+    height: auto;
+    max-height: none;
+    overflow-y: visible;
+    position: relative;
+  }
+
+  .filters {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-body);
+    z-index: 1000;
+    padding: var(--spacing-lg);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    border-right: none;
+    max-height: none;
+  }
+
+  .filters.filters--open {
+    transform: translateX(0);
+  }
+
+  .filters-header {
+    display: flex;
+  }
+
+  .results {
+    height: auto;
+    min-height: 500px;
+    border-bottom: none;
+    width: 100%;
+  }
+
+  .details {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-body);
+    z-index: 1000;
+    padding: var(--spacing-lg);
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    overflow-y: auto;
+    border: none;
+  }
+
+  .details.details--open {
+    transform: translateX(0);
+  }
+}
+
+.results {
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 4px; /* Reduced gap between cards and scrollbar */
+
+  /* Firefox Support */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+}
+
+.results::-webkit-scrollbar {
+  width: 12px; /* Reduced width for tighter spacing */
+  background-color: transparent;
+}
+
+.results::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.results::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  border: 3px solid transparent; /* Reduced border for tighter spacing */
+  background-clip: content-box;
+}
+
+.results::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.filters {
+  padding: var(--spacing-sm);
+  border-right: 1px solid var(--border-default);
+  overflow-y: auto;
+
+  /* Firefox Support */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+}
+
+.filters::-webkit-scrollbar {
+  width: 12px;
+  background-color: transparent;
+}
+
+.filters::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.filters::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+.filters::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.details {
+  border: 1px solid var(--border-default);
+  border-radius: var(--border-radius-sm);
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.details::-webkit-scrollbar {
+  display: none;
+}
+
+/* Job Details Styling */
+.job-details-content {
+  padding: var(--spacing-lg);
+}
+
+.job-header {
+  margin-bottom: var(--spacing-lg);
+  border-bottom: 1px solid var(--border-default);
+  padding-bottom: var(--spacing-md);
+}
+
+.job-header h2 {
+  font-size: 2.4rem;
+  color: var(--text-main);
+  margin-bottom: var(--spacing-xs);
+}
+
+.company-name {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-md);
+}
+
+.job-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  background-color: var(--bg-meta);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.meta-label {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.meta-value {
+  font-size: 1.5rem;
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+.job-body {
+  font-size: 1.5rem;
+  line-height: 1.6;
+  color: var(--text-main);
+  margin-bottom: var(--spacing-lg);
+}
+
+.job-body h3 {
+  font-size: 1.8rem;
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-main);
+}
+
+.job-actions {
+  margin-top: 3rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.spinner {
+  text-align: center;
+  padding: var(--spacing-lg);
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+}
+
+.meta-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.06);
+  margin: var(--spacing-xs) 0;
+}

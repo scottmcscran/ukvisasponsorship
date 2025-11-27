@@ -1,0 +1,12 @@
+.code-block {
+  background-color: #f4f4f4;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 1.5rem;
+  overflow-x: auto;
+  font-family: monospace;
+  font-size: 1.4rem;
+  max-height: 40rem;
+  overflow-y: auto;
+  white-space: pre-wrap;
+}

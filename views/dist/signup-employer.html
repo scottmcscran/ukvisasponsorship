@@ -1,0 +1,93 @@
+<!DOCTYPE html >
+<html> 
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1. 0"/>
+    <link rel="stylesheet" href="/css/main.css?v=1.1"/>
+    <link rel="shortcut icon" type="image/png" href="/img/favicon.svg"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300i,500,700"/>
+    <title> | Uk Visa Sponsorship</title>
+  </head>
+  <body data-alert="">
+    <header class="header"><a class="logo header__logo" href="/"><img src="/img/ukvisasponsorlogo.svg" alt="uk visa sponsorship logo"/></a>
+      <nav class="nav nav--user"> <a class="nav__el" href="/login">Login</a><a class="nav__el nav__el--cta" href="/signup">Sign up</a>
+      </nav>
+    </header>
+    <main class="main">
+      <div class="login-form">
+        <h2 class="heading-secondary ma-bt-lg">Create your employer account</h2>
+        <form class="form form--signup-employer">
+          <div class="form__group">
+            <label class="form__label" for="name">Full Name<span class="required">*</span></label>
+            <input class="form__input" id="name" type="text" placeholder="John Doe" required="required"/>
+          </div>
+          <div class="form__group">
+            <label class="form__label" for="email">Email address<span class="required">*</span></label>
+            <input class="form__input" id="email" type="email" placeholder="you@example.com" required="required"/><small class="form__text-muted">where applications for jobs without direct applications links will be sent.</small>
+          </div>
+          <div class="form__group">
+            <label class="form__label" for="companyName">Company Name<span class="required">*</span></label>
+            <input class="form__input" id="companyName" type="text" placeholder="Acme Corp" required="required"/>
+          </div>
+          <div class="form__group">
+            <label class="form__label" for="legalOrgName">Legal Organization Name<span class="required">*</span></label>
+            <input class="form__input" id="legalOrgName" type="text" placeholder="Acme Corporation Ltd" required="required"/><small class="form__text-muted">Note: This must match the name on the UK government licensed visa sponsor companies list.</small>
+          </div>
+          <div class="form__group">
+            <label class="form__label" for="website">Company Website</label>
+            <input class="form__input" id="website" type="text" placeholder="www.example.com"/>
+          </div>
+          <div class="form__group">
+            <label class="form__label" for="industry">Industry</label>
+            <select class="form__input" id="industry" required="required">
+              <option value="Technology">Technology</option>
+              <option value="Healthcare">Healthcare</option>
+              <option value="Finance">Finance</option>
+              <option value="Engineering">Engineering</option>
+              <option value="Education">Education</option>
+              <option value="Manufacturing">Manufacturing</option>
+              <option value="Retail">Retail</option>
+              <option value="Hospitality">Hospitality</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form__group">
+            <label class="form__label" for="companySize">Company Size</label>
+            <select class="form__input" id="companySize" required="required">
+              <option value="1-10">1-10</option>
+              <option value="11-50">11-50</option>
+              <option value="51-200">51-200</option>
+              <option value="201-500">201-500</option>
+              <option value="501+">501+</option>
+            </select>
+          </div>
+          <div class="form__group ma-bt-md">
+            <label class="form__label" for="password">Password<span class="required">*</span></label>
+            <input class="form__input" id="password" type="password" placeholder="••••••••" required="required" minlength="8"/>
+          </div>
+          <div class="form__group ma-bt-md">
+            <label class="form__label" for="passwordConfirm">Confirm Password<span class="required">*</span></label>
+            <input class="form__input" id="passwordConfirm" type="password" placeholder="••••••••" required="required" minlength="8"/>
+          </div>
+          <div class="form__group">
+            <button class="btn btn--standard">Sign up</button>
+          </div>
+        </form>
+        <div class="form__group ma-top-md">
+          <p class="text-center">Already have an account? <a href="/login">Log in</a></p>
+        </div>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="logo footer__logo" href="/"><img src="/img/ukvisasponsorlogo.svg" alt="footer logo"/></div>
+      <ul class="footer__nav"> 
+        <li><a class="footer-nav__el" href="/employer-signup">Employer Sign Up</a></li>
+        <li><a class="footer-nav__el" href="#">Report Bug</a></li>
+        <li><a class="footer-nav__el" href="#">Contact</a></li>
+      </ul>
+      <p class="footer__copyright">&copy; ukvisasponsorship</p>
+    </footer>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="/js/bundle.js"></script>
+  </body>
+</html>

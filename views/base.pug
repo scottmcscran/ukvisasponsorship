@@ -1,0 +1,46 @@
+doctype html 
+html 
+  head
+    block head
+      meta( charset="UTF-8" )
+      meta( name="viewport" content="width=device-width, initial-scale=1. 0" )
+      
+      //- Google Analytics
+      script(async src="https://www.googletagmanager.com/gtag/js?id=G-RXRYJ205Q1")
+      script.
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('consent', 'default', {
+          'ad_storage': 'denied',
+          'analytics_storage': 'denied'
+        });
+        gtag('js', new Date());
+        gtag('config', 'G-RXRYJ205Q1');
+
+      link(rel="stylesheet", href="/css/main.css?v=1.1")
+      link(rel="shortcut icon" type="image/png" href="/img/favicon.svg")
+      link(rel="stylesheet", href="https://fonts.googleapis.com/css?family=Lato:300,300i,500,700")
+      title #{title} | Uk Visa Sponsorship
+  body(data-alert=`${alert ? alert : ``}`)
+    include _header
+
+    
+    block content 
+      h1 placeholder
+
+  
+    include _footer
+
+    .cookie-consent
+      .cookie-consent__content
+        p.cookie-consent__text
+          | We use cookies to improve your experience on our site. By using our site, you agree to our 
+          a.cookie-consent__link(href='/privacy') Privacy Policy
+          |  and 
+          a.cookie-consent__link(href='/terms') Terms of Service
+          | .
+      .cookie-consent__actions
+        button.btn.btn--small.btn--green.cookie-consent__btn--accept Accept
+
+    script(src='https://js.stripe.com/v3/')
+    script(src=`/js/bundle.js`)

@@ -1,0 +1,60 @@
+:root {
+  /* Branding */
+  --brand-primary: #1a73c2;
+  --brand-primary-hover: #002c6e;
+  --brand-secondary: #3730a3;
+  --brand-secondary-bg: #e0e7ff;
+
+  /* Text */
+  --text-main: #0b0c0c;
+  --text-secondary: #505a5f;
+  --text-muted: #6b7280;
+  --text-inverse: #ffffff;
+
+  /* Typography */
+  --font-primary: "lato", sans-serif;
+  --font-size-base: 1.6rem;
+  --font-size-sm: 1.4rem;
+  --font-size-xs: 1.2rem;
+  --font-size-heading: 4rem;
+  --font-size-sub-heading: 2.75rem;
+
+  /* Backgrounds */
+  --bg-body: #ffffff;
+  --bg-section: #f3f2f1;
+  --bg-card: #ffffff;
+  --bg-input: #ffffff;
+  --bg-hover: #cccdcf;
+  --bg-meta: #f9fafb;
+
+  /* Status Colors */
+  --status-success: #00703c;
+  --status-error: #d4351c;
+
+  /* Borders */
+  --border-default: #b1b4b6;
+  --border-light: #e1e1e1;
+  --border-input: #0b0c0c;
+  --border-radius-sm: 5px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 15px;
+  --border-radius-round: 50%;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-hover: 0 4px 12px rgba(59, 130, 246, 0.15);
+
+  /* Components */
+  --slider-track: #dadae5;
+  --slider-thumb: #6b7280;
+  --slider-thumb-hover: #4b5563;
+
+  /* Spacing */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+}

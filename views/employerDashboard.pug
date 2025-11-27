@@ -1,0 +1,373 @@
+extends base
+
+block content
+  main.main
+    .dashboard-container
+      .dashboard-header
+        h2.heading-secondary Employer Dashboard
+        .status-wrapper
+          if user.companyProfile.accStatus === 'verified'
+            .info-icon-wrapper
+              span.info-icon i
+              span.tooltip-text Your account has been verified and is fully active.
+            span.status-badge.status-badge--verified 
+              span.status-dot
+              | Verified
+          else if user.companyProfile.accStatus === 'rejected'
+            .info-icon-wrapper
+              span.info-icon i
+              span.tooltip-text If you think this decision was incorrect, please contact support.
+            span.status-badge.status-badge--rejected 
+              span.status-dot
+              | Rejected
+          else if user.companyProfile.accStatus === 'banned'
+            .info-icon-wrapper
+              span.info-icon i
+              span.tooltip-text Your account has been banned due to policy violations.
+            span.status-badge.status-badge--rejected 
+              span.status-dot
+              | Banned
+          else
+            .info-icon-wrapper
+              span.info-icon i
+              span.tooltip-text Your account has not yet been looked at by an admin.
+            span.status-badge.status-badge--unverified 
+              span.status-dot
+              | Unverified
+
+      if user.companyProfile.accStatus === 'banned'
+        .banned-message-container(style="text-align: center; padding: 4rem; background-color: #fee2e2; border-radius: 8px; border: 1px solid #ef4444; margin-bottom: 2rem;")
+          h2.heading-secondary.ma-bt-md(style="color: #b91c1c;") Account Banned
+          p.error-text(style="font-size: 1.8rem; color: #b91c1c; font-weight: bold; max-width: none;") Your account has been permanently banned due to repeated policy violations.
+          p.ma-top-md(style="font-size: 1.6rem; color: #7f1d1d; max-width: none;") Access to dashboard features has been revoked.
+
+      .user-view__tabs.dashboard-tabs(style=user.companyProfile.accStatus === 'banned' ? 'display: none !important' : '')
+        button.tab-btn.tab-btn--active(data-tab='jobs') Your Jobs
+        button.tab-btn(data-tab='settings') Account Details
+        button.tab-btn(data-tab='subscription') Subscription
+
+      .tab-content.tab-content--active(id='jobs' style=user.companyProfile.accStatus === 'banned' ? 'display: none !important' : '')
+        .stats-grid
+          .stat-card
+            h3.stat-value= jobs.summary.totalJobs
+            p.stat-label Total Jobs
+          if jobs.summary.featuredCount > 0
+            .stat-card
+              h3.stat-value= jobs.summary.featuredCount
+              p.stat-label Featured Jobs
+          .stat-card
+            h3.stat-value= jobs.summary.totalViews
+            p.stat-label Total Views
+          .stat-card
+            h3.stat-value= jobs.summary.totalClicks
+            p.stat-label Application Clicks
+
+        .dashboard-content
+          .content-header
+            h3.heading-tertiary Your Jobs
+            if user.companyProfile.accStatus === 'rejected'
+              p.error-text(style="color: var(--status-error); font-weight: bold;") Your account was rejected by an admin. This means it was not on the public list of licensed sponsors.
+            else
+              button.btn.btn--small.btn--standard#postJobBtn Post a Job
+          
+          if jobs.allJobs.length > 0
+            .job-list
+              each job in jobs.allJobs
+                - const daysPosted = Math.floor((Date.now() - new Date(job.postedDate).getTime()) / (1000 * 60 * 60 * 24));
+                - const daysRemaining = 21 - daysPosted;
+                .job-item(data-id=job._id class=job.featured ? 'job-item--featured' : '')
+                  .job-item__header
+                    div(style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;")
+                      h4.job-item__title(style="margin-bottom: 0;")= job.title
+                      if job.featured
+                        span.status-badge(style="font-size: 1.2rem; padding: 0.2rem 0.8rem; background-color: var(--brand-secondary); color: white;") Featured
+                      if job.status === 'sub_expired'
+                        span.status-badge.status-badge--rejected(style="font-size: 1.2rem; padding: 0.2rem 0.8rem;") Hidden (Plan Limit)
+                      if job.status === 'admin_expired'
+                        span.status-badge.status-badge--rejected(style="font-size: 1.2rem; padding: 0.2rem 0.8rem;") Expired (Time Limit)
+                      if job.isAdminPosted && job.status === 'active' && daysRemaining >= 0
+                        span.status-badge(style="font-size: 1.2rem; padding: 0.2rem 0.8rem; background-color: #e67e22; color: white;") Expires in #{daysRemaining} days
+                    span.job-item__date Posted: #{job.postedDate.toLocaleDateString('en-GB')}
+                  
+                  .job-item__metrics
+                    .metric
+                      span.metric__value= job.analytics.views || 0
+                      span.metric__label Views
+                    .metric
+                      span.metric__value= job.analytics.applicationClicks || 0
+                      span.metric__label Clicks
+                    .metric
+                      span.metric__value= job.analytics.saves || 0
+                      span.metric__label Saves
+                    .metric
+                      span.metric__value #{job.conversionRate}%
+                      span.metric__label Conv. Rate
+
+                  .job-item__actions
+                    button.btn.btn--small.btn--edit(data-job-id=job._id) Edit
+                    button.btn.btn--small.btn--delete(data-job-id=job._id) Delete
+          else
+            p.no-jobs You haven't posted any jobs yet.
+
+      .tab-content(id='settings' style=user.companyProfile.accStatus === 'banned' ? 'display: none !important' : '')
+        .user-view__form-container
+          h2.heading-secondary.ma-bt-md Account Details
+          
+          form.form.form-user-data
+            .form__group
+              label.form__label(for='name') Name
+              input#name.form__input(type='text', value=`${user.name}`, required, name='name')
+            .form__group.ma-bt-md
+              label.form__label(for='email') Email address
+              input#email.form__input(type='email', value=`${user.email}`, required, name='email')
+            
+            .line &nbsp;
+            h3.heading-tertiary.ma-bt-sm Company Details
+            .form__group
+              label.form__label(for='companyName') Company Name
+              input#companyName.form__input(type='text', value=`${user.companyProfile && user.companyProfile.companyName ? user.companyProfile.companyName : ''}`, required)
+            .form__group
+              label.form__label(for='website') Website
+              input#website.form__input(type='url', value=`${user.companyProfile && user.companyProfile.website ? user.companyProfile.website : ''}`, placeholder='https://example.com')
+            .form__group
+              label.form__label(for='industry') Industry
+              select#industry.form__input
+                each industry in ['Technology', 'Healthcare', 'Finance', 'Engineering', 'Education', 'Manufacturing', 'Retail', 'Hospitality', 'Other']
+                  option(value=industry selected=(user.companyProfile && user.companyProfile.industry===industry))= industry
+            .form__group
+              label.form__label(for='companySize') Company Size
+              select#companySize.form__input
+                each size in ['1-10', '11-50', '51-200', '201-500', '501-1000', '1000+']
+                  option(value=size selected=(user.companyProfile && user.companyProfile.companySize===size))= size
+
+            .form__group.right
+              button.btn.btn--small.btn--standard Save Details
+          
+          .line &nbsp;
+          
+          h2.heading-secondary.ma-bt-md Password change
+          form.form.form-user-password
+            .form__group
+              label.form__label(for='password-current') Current password
+              input#password-current.form__input(type='password', placeholder='••••••••', required, minlength='8')
+            .form__group
+              label.form__label(for='password') New password
+              input#password.form__input(type='password', placeholder='••••••••', required, minlength='8')
+            .form__group.ma-bt-lg
+              label.form__label(for='password-confirm') Confirm password
+              input#password-confirm.form__input(type='password', placeholder='••••••••', required, minlength='8')
+            .form__group.right
+              button.btn.btn--small.btn--standard.btn--save-password Save password
+
+          .line &nbsp;
+
+          h2.heading-secondary.ma-bt-md Close Account
+          .form__group
+            p.ma-bt-md Permanently delete your account and all associated data. This action cannot be undone.
+            button.btn.btn--small.btn--danger#deleteAccountBtn Delete Account
+
+      .tab-content(id='subscription' style=user.companyProfile.accStatus === 'banned' ? 'display: none !important' : '')
+        .user-view__form-container
+          h2.heading-secondary.ma-bt-md Subscription Management
+          
+          .subscription-card
+            .subscription-header
+              h3.heading-tertiary Current Plan: #{user.subscription.tier.charAt(0).toUpperCase() + user.subscription.tier.slice(1)}
+              if user.subscription.tier !== 'free'
+                span.status-badge(class=`status-badge--${user.subscription.status === 'active' ? 'verified' : 'unverified'}`)
+                  span.status-dot
+                  | #{user.subscription.status.charAt(0).toUpperCase() + user.subscription.status.slice(1)}
+            
+            .subscription-details.ma-top-md
+              p.ma-bt-sm
+                strong Account Limits:
+              ul.limits-list
+                if user.subscription.tier === 'free'
+                  li Max 3 Active Jobs
+                  li No Featured Jobs
+                else if user.subscription.tier === 'starter'
+                  li Unlimited Active Jobs
+                  li 3 Featured Jobs
+                else if user.subscription.tier === 'professional'
+                  li Unlimited Active Jobs
+                  li 10 Featured Jobs
+            
+            .subscription-stats.ma-top-md
+              p.featured-stats
+                strong Featured Jobs Used: 
+                span.featured-count #{jobs.summary.featuredCount}
+                if user.subscription.tier === 'free'
+                  span.featured-warning  (Not showing on Free Plan)
+            
+            .subscription-actions
+              if user.subscription.tier === 'free'
+                .pricing-grid
+                  .pricing-card
+                    h4.pricing-title Starter
+                    p.pricing-price £74/mo
+                    ul.pricing-features
+                      li Unlimited Active Jobs
+                      li 3 Featured Jobs
+                    button.btn.btn--small.btn--standard#sub-starter Upgrade
+                  
+                  .pricing-card
+                    h4.pricing-title Professional
+                    p.pricing-price £149/mo
+                    ul.pricing-features
+                      li Unlimited Active Jobs
+                      li 10 Featured Jobs
+                    button.btn.btn--small.btn--standard#sub-pro Upgrade
+              
+              else if user.subscription.tier === 'starter'
+                 p.ma-bt-sm You are on the Starter plan.
+                 .pricing-actions
+                   button.btn.btn--small.btn--standard#sub-pro Upgrade (£149/mo)
+                   button.btn.btn--small.btn--text#btn-billing-portal Manage Billing
+
+              else
+                 p.ma-bt-sm You are on the Professional plan.
+                 .pricing-actions
+                   button.btn.btn--small.btn--text#btn-downgrade-starter Downgrade to Starter
+                   button.btn.btn--small.btn--text#btn-billing-portal Manage Billing
+
+    //- Post Job Modal
+    .modal-overlay.hidden#postJobModal
+      .modal
+        button.btn-close-modal#closePostJobModal &times;
+        h2.heading-secondary.ma-bt-md#modalTitle Post a New Job
+        
+        form.form.form--post-job
+          .form__group.ma-top-md
+            label.form__label(for='title') Job Title
+            input#title.form__input(type='text', required, placeholder='e.g. Senior Software Engineer')
+            
+          .form__group.ma-top-md
+            label.form__label(for='description') Job Description
+            textarea#description.form__input(rows='5', required, placeholder='Describe the role, responsibilities, and requirements...')
+            small.form__text-muted Minimum 20 characters.
+
+          .form__row
+            .form__group.ma-top-md
+              label.form__label(for='city') City
+              input#city.form__input(type='text', required, placeholder='London')
+            .form__group.ma-top-md
+              label.form__label(for='postcode') Postcode
+              input#postcode.form__input(type='text', required, placeholder='SW1A 1AA')
+          
+          .form__row
+            .form__group.ma-top-md
+              label.form__label(for='remote') Remote Work
+              select#remote.form__input
+                option(value='no') No
+                option(value='hybrid') Hybrid
+                option(value='full') Fully Remote
+            .form__group.ma-top-md
+              label.form__label(for='jobType') Job Type
+              select#jobType.form__input
+                option(value='Full-time') Full-time
+                option(value='Part-time') Part-time
+                option(value='Contract') Contract
+                option(value='Temporary') Temporary
+
+          .form__row
+            .form__group.ma-top-md
+              label.form__label(for='salaryMin') Min Salary (£)
+              input#salaryMin.form__input(type='number', required, placeholder='30000')
+            .form__group.ma-top-md
+              label.form__label(for='salaryMax') Max Salary (£)
+              input#salaryMax.form__input(type='number', placeholder='45000')
+              small.form__text-muted Same as Min if fixed salary
+            .form__group.ma-top-md
+              label.form__label(for='salaryPeriod') Period
+              select#salaryPeriod.form__input
+                option(value='year') Per Year
+                option(value='month') Per Month
+                option(value='hour') Per Hour
+
+          .form__group.ma-top-md
+            label.form__label(for='experienceLevel') Experience Level
+            select#experienceLevel.form__input
+              option(value='Entry') Entry Level
+              option(value='Mid') Mid Level
+              option(value='Senior') Senior Level
+              option(value='Lead') Lead / Manager
+
+          .form__group.ma-top-md
+            label.form__label Visa Sponsorship Types
+            .checkbox-group
+              label.checkbox-label
+                input(type='checkbox', name='visaTypes', value='Skilled Worker')
+                span Skilled Worker
+              label.checkbox-label
+                input(type='checkbox', name='visaTypes', value='Health and Care')
+                span Health and Care
+              label.checkbox-label
+                input(type='checkbox', name='visaTypes', value='Global Talent')
+                span Global Talent
+              label.checkbox-label
+                input(type='checkbox', name='visaTypes', value='Graduate')
+                span Graduate
+              label.checkbox-label
+                input(type='checkbox', name='visaTypes', value='Senior or Specialist Worker')
+                span Senior / Specialist
+
+          .form__group.ma-top-md
+            label.form__label(for='applicationUrl') Application Link (Optional)
+            input#applicationUrl.form__input(type='url', placeholder='https://company.com/careers/job-123')
+            small.form__text-muted If left blank, candidates will apply via email through our platform.
+
+          .form__group.ma-top-md
+            div(style="display: flex; align-items: center; gap: 1rem;")
+              label.checkbox-label(style="margin-bottom: 0;")
+                input#featured(type='checkbox', name='featured')
+                span Feature this job (Boost visibility)
+              .info-icon-wrapper
+                span.info-icon(style="width: 1.8rem; height: 1.8rem; font-size: 1.2rem; line-height: 1.8rem;") i
+                span.tooltip-text.tooltip-text--top Featured jobs are prioritized in local searches (within 25 miles). In wider searches, they are still boosted but may appear without the 'Featured' tag if far away, ensuring users see the closest relevant jobs first.
+
+          .form__group.right.ma-top-md
+            button.btn.btn--standard#modalSubmitBtn Post Job
+
+    //- Downgrade to Starter Modal
+    .modal-overlay.hidden#downgradeStarterModal
+      .modal
+        button.btn-close-modal#closeDowngradeStarterModal &times;
+        h2.heading-secondary.ma-bt-md Downgrade to Starter
+        p.ma-bt-md 
+          | You are about to downgrade to the Starter plan.
+          br
+          | The Starter plan allows a maximum of 3 featured jobs.
+        
+        .job-selection-container.hidden#featuredJobSelectionContainer
+          p.ma-bt-sm.warning-text You have more than 3 featured jobs. 
+            br
+            | Please select up to 3 jobs to keep featured. 
+            br
+            | The rest will be un-featured.
+          .job-selection-list#featuredJobSelectionList
+            //- Populated via JS
+        
+        p.ma-bt-md.ma-top-md Are you sure you want to downgrade?
+        
+        .modal-actions
+          button.btn.btn--text#keepProSubBtn(style="font-size: var(--font-size-base); border-radius: var(--border-radius-sm);") Keep Professional
+          button.btn.btn--danger#confirmDowngradeStarterBtn(style="font-size: var(--font-size-base); border-radius: var(--border-radius-sm);") Confirm Downgrade
+
+    //- Delete Account Modal
+    .modal-overlay.hidden#deleteAccountModal
+      .modal
+        button.btn-close-modal#closeDeleteAccountModal &times;
+        h2.heading-secondary.ma-bt-md Delete Account
+        p.ma-bt-md.warning-text(style="color: var(--status-error); font-weight: bold;") This action is irreversible. All your data will be permanently removed.
+        p.ma-bt-md Please type your email address 
+          strong #{user.email}
+          |  to confirm.
+        
+        form.form#deleteAccountForm
+          .form__group
+            label.form__label(for='deleteEmailConfirm') Email Address
+            input#deleteEmailConfirm.form__input(type='email', required, placeholder=user.email)
+          
+          .modal-actions
+            button.btn.btn--text#cancelDeleteAccountBtn(type='button', style="font-size: var(--font-size-base); border-radius: var(--border-radius-sm);") Cancel
+            button.btn.btn--danger#confirmDeleteAccountBtn(type='submit', disabled, style="font-size: var(--font-size-base); border-radius: var(--border-radius-sm);") Delete Account

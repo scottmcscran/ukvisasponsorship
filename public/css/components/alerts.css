@@ -1,0 +1,40 @@
+/* Slick Alert Styling */
+@keyframes slideInDown {
+  from {
+    transform: translate(-50%, -200%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+.alert {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  color: #fff;
+  font-size: 1.6rem;
+  font-weight: 500;
+  text-align: center;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  padding: 1.2rem 4rem;
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
+  animation: slideInDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy effect */
+  min-width: 300px;
+  max-width: 90%;
+}
+
+.alert--success {
+  background-color: #10b981; /* Emerald 500 */
+  border-top: 4px solid #059669;
+}
+
+.alert--error {
+  background-color: #ef4444; /* Red 500 */
+  border-top: 4px solid #b91c1c;
+}

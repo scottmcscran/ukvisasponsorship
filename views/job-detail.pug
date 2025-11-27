@@ -1,0 +1,57 @@
+extends base
+
+block content
+  section.section-job-detail
+    .container
+      .job-details-content
+        .job-header
+          h2= job.title
+          p.company-name= job.postedBy ? job.postedBy.name : "Company"
+          .job-meta
+            .meta-item
+              span.meta-label Location:
+              span.meta-value= `${job.location.city}, ${job.location.postcode}`
+            .meta-item
+              span.meta-label Salary:
+              span.meta-value
+                if job.salaryRange
+                  if job.salaryRange.min === job.salaryRange.max
+                    | £#{job.salaryRange.min.toLocaleString()}
+                  else
+                    | £#{job.salaryRange.min.toLocaleString()}#{job.salaryRange.max ? ` - £${job.salaryRange.max.toLocaleString()}` : "+"}
+                  |  per #{job.salaryRange.period || "year"}
+                else
+                  | Negotiable
+            .meta-divider
+            .meta-item
+              span.meta-label Type:
+              span.meta-value= job.jobType || "Full-time"
+            .meta-item
+              span.meta-label Remote:
+              span.meta-value= job.location.remote ? job.location.remote.charAt(0).toUpperCase() + job.location.remote.slice(1) : "No"
+
+        .job-body
+          h3 Description
+          p= job.description
+
+          if job.requirements && job.requirements.length > 0
+            h3 Requirements
+            p= job.requirements.join(", ")
+
+          if job.visaTypes && job.visaTypes.length > 0
+            h3 Visa Types
+            .job-tags
+              each type in job.visaTypes
+                span.tag= type
+
+        .job-actions
+          - const isRestricted = user && (user.role === 'admin' || user.role === 'employer');
+          if !isRestricted
+            if job.applicationLink
+              a.btn.btn--standard.btn--apply(href=job.applicationLink target="_blank") Apply Now
+            else
+              //- Note: Full application logic with CV upload is handled via client-side JS in the search view.
+              //- For this standalone page, we can redirect to search or show a simple message.
+              a.btn.btn--standard.btn--apply(href=`/search?job=${job._id}`) Apply via Search
+          
+          button.btn.btn--text.btn--report#reportJobBtn(data-id=job._id style="font-size: 1.2rem; color: #999; text-decoration: underline; margin-top: 1rem; background: none; border: none; cursor: pointer;") Report Job

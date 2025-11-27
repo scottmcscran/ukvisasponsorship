@@ -1,0 +1,39 @@
+footer.footer
+  .logo.footer__logo(href=`/`)
+    img(src="/img/ukvisasponsorlogo.svg", alt="footer logo")
+  ul.footer__nav 
+    li: a.footer-nav__el(href="/employer-signup") Employer Sign Up
+    li: a.footer-nav__el(href="/privacy") Privacy
+    li: a.footer-nav__el(href="/terms") Terms
+    li: a.footer-nav__el#reportBugBtn(href="#") Report Bug
+    li: a.footer-nav__el(href="#") Contact
+  p.footer__copyright &copy; ukvisasponsorship
+
+  //- Bug Report Modal
+  .modal-overlay.hidden#bugReportModal
+    .modal
+      button.btn-close-modal#closeBugReportModal &times;
+      h2.heading-secondary.ma-bt-md Report a Bug
+      
+      form.form.form--bug-report
+        .form__group
+          label.form__label(for='bugTitle') Title
+          input#bugTitle.form__input(type='text', required, placeholder='Brief summary of the issue')
+          
+        .form__group.ma-bt-md
+          label.form__label(for='bugDescription') Description
+          textarea#bugDescription.form__input(rows='5', required, placeholder='Please describe what happened, steps to reproduce, etc.')
+
+        .form__group.right
+          button.btn.btn--small.btn--standard#submitBugReportBtn Submit Report
+
+  //- Report Job Modal
+  .modal-overlay.hidden#reportJobModal
+    .modal.modal--fit-content
+      button.btn-close-modal#closeReportJobModal &times;
+      h2.heading-secondary.ma-bt-md Report Job
+      p.ma-bt-md Are you sure you want to report this job? This will flag it for review by our team.
+      
+      .form__group.right
+        button.btn.btn--small.btn--text#cancelReportJobBtn(style="margin-right: 1rem;") Cancel
+        button.btn.btn--small.btn--delete#confirmReportJobBtn Report Job

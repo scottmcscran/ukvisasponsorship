@@ -1,0 +1,66 @@
+extends base
+
+block content
+  main.main
+    .login-form
+      h2.heading-secondary.ma-bt-lg Create your employer account
+      form.form.form--signup-employer
+        .form__group
+          label.form__label(for='name') Full Name
+            span.required *
+          input#name.form__input(type='text', placeholder='John Doe', required)
+        .form__group
+          label.form__label(for='email') Email address
+            span.required *
+          input#email.form__input(type='email', placeholder='you@example.com', required)
+          small.form__text-muted where applications for jobs without direct applications links will be sent.
+        .form__group
+          label.form__label(for='companyName') Company Name
+            span.required *
+          input#companyName.form__input(type='text', placeholder='Acme Corp', required)
+        .form__group
+          label.form__label(for='legalOrgName') Legal Organization Name
+            span.required *
+          input#legalOrgName.form__input(type='text', placeholder='Acme Corporation Ltd', required)
+          small.form__text-muted Note: This must match the name on the UK government licensed visa sponsor companies list.
+        .form__group
+          label.form__label(for='website') Company Website
+            
+          input#website.form__input(type='text', placeholder='www.example.com')
+        .form__group
+          label.form__label(for='industry') Industry
+            
+          select#industry.form__input(required)
+            option(value='Technology') Technology
+            option(value='Healthcare') Healthcare
+            option(value='Finance') Finance
+            option(value='Engineering') Engineering
+            option(value='Education') Education
+            option(value='Manufacturing') Manufacturing
+            option(value='Retail') Retail
+            option(value='Hospitality') Hospitality
+            option(value='Other') Other
+        .form__group
+          label.form__label(for='companySize') Company Size
+            
+          select#companySize.form__input(required)
+            option(value='1-10') 1-10
+            option(value='11-50') 11-50
+            option(value='51-200') 51-200
+            option(value='201-500') 201-500
+            option(value='501+') 501+
+        .form__group.ma-bt-md
+          label.form__label(for='password') Password
+            span.required *
+          input#password.form__input(type='password', placeholder='••••••••', required, minlength='8')
+        .form__group.ma-bt-md
+          label.form__label(for='passwordConfirm') Confirm Password
+            span.required *
+          input#passwordConfirm.form__input(type='password', placeholder='••••••••', required, minlength='8')
+        .form__group
+          button.btn.btn--standard Sign up
+      .form__group.ma-top-md
+        p.text-center
+          | Already have an account? 
+          a(href='/login') Log in
+

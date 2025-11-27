@@ -1,0 +1,27 @@
+.logo {
+  width: clamp(120px, 12.5vw, 200px);
+  cursor: pointer;
+  transition: opacity 200ms ease;
+}
+
+.footer__logo {
+  width: clamp(120px, 15vw, 800px);
+  margin-left: clamp(15px, 2.5vw, 100px);
+  position: relative;
+  opacity: 0.99;
+  cursor: default;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    transform: translate(-47%, -50%);
+    width: 110%;
+    height: 80%;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    filter: blur(15px);
+    z-index: -1;
+  }
+}

@@ -1,0 +1,118 @@
+extends base
+
+block content
+  section
+    .container
+      h2.heading-secondary.text-center.mb-medium.margin-top Saved Jobs
+      
+    .container.results__container
+      .mobile-filters-actions
+        button.btn.btn--small.btn--show-filters#showFiltersBtn Show Filters
+        button.btn.btn--small.btn--clear-filters#clearFiltersBtnMobile Clear Filters
+
+      aside.filters#filtersModal
+        .filters-header
+          h3 Filters
+          button.btn-close#closeFiltersBtn &times;
+
+        .filter-group
+          h4.filter-title Visa Type
+          .filter-options
+            label.checkbox-label
+              input.filter-input(type="checkbox" name="visaTypes" value="Skilled Worker")
+              span Skilled Worker
+            label.checkbox-label
+              input.filter-input(type="checkbox" name="visaTypes" value="Health and Care")
+              span Health and Care
+            label.checkbox-label
+              input.filter-input(type="checkbox" name="visaTypes" value="Global Talent")
+              span Global Talent
+            label.checkbox-label
+              input.filter-input(type="checkbox" name="visaTypes" value="Graduate")
+              span Graduate
+            label.checkbox-label
+              input.filter-input(type="checkbox" name="visaTypes" value="Senior or Specialist Worker")
+              span Senior / Specialist
+
+        .filter-group
+          h4.filter-title Remote Work
+          .filter-options
+            label.checkbox-label
+              input.filter-input(type="checkbox" name="remoteWork" value="no")
+              span No
+            label.checkbox-label
+              input.filter-input(type="checkbox" name="remoteWork" value="hybrid")
+              span Hybrid
+            label.checkbox-label
+              input.filter-input(type="checkbox" name="remoteWork" value="full")
+              span Full
+
+        .filter-group
+          h4.filter-title Experience Level
+          .filter-options
+            label.checkbox-label
+              input.filter-input(type="checkbox" name="experienceLevel" value="Entry")
+              span Entry Level
+            label.checkbox-label
+              input.filter-input(type="checkbox" name="experienceLevel" value="Mid")
+              span Mid Level
+            label.checkbox-label
+              input.filter-input(type="checkbox" name="experienceLevel" value="Senior")
+              span Senior
+            label.checkbox-label
+              input.filter-input(type="checkbox" name="experienceLevel" value="Lead")
+              span Lead
+
+        .filter-group
+          h4.filter-title Location
+          .location-search-wrapper(style="display: flex; gap: 5px;")
+            input.filter-input.text-input(type="text" name="location" placeholder="City or Postcode" value=`${searchParams.location || ''}` style="flex: 1;")
+            button.btn.btn--small.btn--apply#locationSearchBtn(type="button" style="min-width: auto; padding: 0 15px;") Go
+
+        .filter-group
+          h4.filter-title Distance
+          .range-slider(class=(!searchParams.distance ? 'disabled-filter' : ''))#distanceSlider
+            input.filter-toggle(type="checkbox" id="distanceToggle" checked=(!!searchParams.distance))
+            .slider-container
+              input.filter-input.range-input(type="range" name="distance" min="5" max="100" value=`${searchParams.distance || 25}` step="5" disabled=(!searchParams.distance))
+            .range-values
+              span#distanceValue #{searchParams.distance || 25} miles
+
+        .filter-group
+          h4.filter-title Salary Range (£)
+          .range-slider.double-slider(class=(!searchParams.salaryMin && !searchParams.salaryMax ? 'disabled-filter' : ''))#salarySlider
+            input.filter-toggle(type="checkbox" id="salaryToggle" checked=(!!searchParams.salaryMin || !!searchParams.salaryMax))
+            .slider-container
+              .slider-track
+              input.filter-input.range-input.min-salary(type="range" name="salaryMin" min="20000" max="150000" value="20000" step="1000" disabled=(!searchParams.salaryMin && !searchParams.salaryMax))
+              input.filter-input.range-input.max-salary(type="range" name="salaryMax" min="20000" max="150000" value="150000" step="1000" disabled=(!searchParams.salaryMin && !searchParams.salaryMax))
+          .range-values(class=(!searchParams.salaryMin && !searchParams.salaryMax ? 'disabled-text' : ''))#salaryValues
+            span#salaryMinValue £20k
+            span -
+            span#salaryMaxValue £150k+
+
+        button.btn.btn--small.btn--clear-filters#clearFiltersBtn Clear Filters
+
+      .results
+        if jobs.length > 0
+          each job in jobs
+            .job-card(tabindex="0" data-id=job._id)
+              if job.featured === true
+                p.featured__label Featured  
+              h3.job-card__title= job.title
+              p.job-card__company= job.postedBy ? job.postedBy.name : 'Company'
+              .job-card__location
+                p= job.location.city
+                p= job.location.postcode
+                p Remote: #{job.location.remote ? job.location.remote.charAt(0).toUpperCase() + job.location.remote.slice(1) : 'No'}
+
+              p.job-card__description= job.description
+
+        else
+          .no-results-container
+            p.no-results.text-gradient Saved jobs will show up here.
+
+      .details#detailsModal
+        button.btn-close.btn-close-details#closeDetailsBtn &times;
+        .details__placeholder
+          p.text-gradient Select a job to view details

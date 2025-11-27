@@ -1,0 +1,57 @@
+<!DOCTYPE html >
+<html> 
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1. 0"/>
+    <link rel="stylesheet" href="/css/main.css?v=1.1"/>
+    <link rel="shortcut icon" type="image/png" href="/img/favicon.svg"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300i,500,700"/>
+    <title> | Uk Visa Sponsorship</title>
+  </head>
+  <body data-alert="">
+    <header class="header"><a class="logo header__logo" href="/"><img src="/img/ukvisasponsorlogo.svg" alt="uk visa sponsorship logo"/></a>
+      <nav class="nav nav--user"> <a class="nav__el" href="/login">Login</a><a class="nav__el nav__el--cta" href="/signup">Sign up</a>
+      </nav>
+    </header>
+    <section class="section section__alone">
+      <div class="container">
+        <h3 class="heading__search font-bold text-gradient text-uppercase text-center">Your UK Visa-Sponsored Job Search Starts Here</h3>
+        <h4 class="sub-heading__search font-light text-center">Only Licensed Sponsors Can Post On This Site</h4>
+        <form class="search-bar" id="search" action="/search" method="GET">
+          <div class="search-bar__group">
+            <input class="search-bar__input" type="text" name="search" placeholder="Job title, keywords, or company"/>
+          </div>
+          <div class="search-bar__divider"></div>
+          <div class="search-bar__group">
+            <input class="search-bar__input" type="text" name="location" placeholder="City, region, or postcode"/>
+          </div>
+          <div class="search-bar__divider"></div>
+          <div class="search-bar__group search-bar__group--select">
+            <div class="custom-select-wrapper">
+              <div class="custom-select">
+                <div class="custom-select__trigger"><span>+25 miles</span>
+                  <div class="arrow"></div>
+                </div>
+                <div class="custom-select__options"><span class="custom-option" data-value="10">+10 miles</span><span class="custom-option selected" data-value="25">+25 miles</span><span class="custom-option" data-value="50">+50 miles</span><span class="custom-option" data-value="100">+100 miles</span></div>
+              </div>
+              <input id="distanceInput" type="hidden" name="distance" value="25"/>
+            </div>
+          </div>
+          <div class="search-bar__divider search-bar__divider--mobile"></div>
+          <button class="btn btn--search" type="submit">Search</button>
+        </form>
+      </div>
+    </section>
+    <footer class="footer">
+      <div class="logo footer__logo" href="/"><img src="/img/ukvisasponsorlogo.svg" alt="footer logo"/></div>
+      <ul class="footer__nav"> 
+        <li><a class="footer-nav__el" href="/employer-signup">Employer Sign Up</a></li>
+        <li><a class="footer-nav__el" href="#">Report Bug</a></li>
+        <li><a class="footer-nav__el" href="#">Contact</a></li>
+      </ul>
+      <p class="footer__copyright">&copy; ukvisasponsorship</p>
+    </footer>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="/js/bundle.js"></script>
+  </body>
+</html>

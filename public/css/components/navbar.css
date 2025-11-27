@@ -1,0 +1,53 @@
+.header {
+  position: sticky;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--bg-section);
+
+  .header__logo {
+    margin-left: clamp(15px, 2.5vw, 100px);
+  }
+
+  .nav {
+    margin-right: clamp(15px, 2.5vw, 100px);
+  }
+}
+
+@media (max-width: 600px) {
+  .header {
+    flex-direction: column;
+    padding: 1.5rem 0;
+    gap: 1.5rem;
+  }
+
+  .header__logo {
+    margin-left: 0;
+  }
+
+  .header .nav {
+    margin-right: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    padding: 0 1rem;
+  }
+
+  /* Override button margins from buttons.css */
+  .nav__el:not(:last-child) {
+    margin-right: 0 !important;
+  }
+
+  .nav__el {
+    flex: 1;
+    min-width: auto;
+    padding: 1rem;
+    font-size: 1.4rem;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

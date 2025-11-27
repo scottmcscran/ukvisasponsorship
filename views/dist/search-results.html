@@ -1,0 +1,126 @@
+<!DOCTYPE html >
+<html> 
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1. 0"/>
+    <link rel="stylesheet" href="/css/main.css"/>
+    <link rel="shortcut icon" type="image/png" href="/img/favicon.svg"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300i,500,700"/>
+    <title> | Uk Visa Sponsorship</title>
+  </head>
+  <body data-alert="">
+    <header class="header"><a class="logo header__logo" href="/"><img src="/img/ukvisasponsorlogo.svg" alt="uk visa sponsorship logo"/></a>
+      <nav class="nav nav--user"> <a class="nav__el" href="/login">Login</a><a class="nav__el nav__el--cta" href="/signup">Sign up</a>
+      </nav>
+    </header>
+    <section>
+      <div class="container">
+        <form class="search-bar" id="search">
+          <div class="search-bar__group">
+            <input class="search-bar__input" type="text" placeholder="Job title, keywords, or company"/>
+          </div>
+          <div class="search-bar__divider"></div>
+          <div class="search-bar__group">
+            <input class="search-bar__input" type="text" placeholder="City, region, or postcode"/>
+          </div>
+          <button class="btn btn--search" type="submit">Search</button>
+        </form>
+      </div>
+      <div class="container results__container">
+        <div class="mobile-filters-actions">
+          <button class="btn btn--small btn--show-filters" id="showFiltersBtn">Show Filters</button>
+          <button class="btn btn--small btn--clear-filters" id="clearFiltersBtnMobile">Clear Filters</button>
+        </div>
+        <aside class="filters" id="filtersModal">
+          <div class="filters-header">
+            <h3>Filters</h3>
+            <button class="btn-close" id="closeFiltersBtn">&times;</button>
+          </div>
+          <div class="filter-group">
+            <h4 class="filter-title">Visa Type</h4>
+            <div class="filter-options">
+              <label class="checkbox-label">
+                <input class="filter-input" type="checkbox" name="visaTypes" value="Skilled Worker"/><span>Skilled Worker</span>
+              </label>
+              <label class="checkbox-label">
+                <input class="filter-input" type="checkbox" name="visaTypes" value="Health and Care"/><span>Health and Care</span>
+              </label>
+              <label class="checkbox-label">
+                <input class="filter-input" type="checkbox" name="visaTypes" value="Global Talent"/><span>Global Talent</span>
+              </label>
+              <label class="checkbox-label">
+                <input class="filter-input" type="checkbox" name="visaTypes" value="Graduate"/><span>Graduate</span>
+              </label>
+              <label class="checkbox-label">
+                <input class="filter-input" type="checkbox" name="visaTypes" value="Senior or Specialist Worker"/><span>Senior / Specialist</span>
+              </label>
+            </div>
+          </div>
+          <div class="filter-group">
+            <h4 class="filter-title">Remote Work</h4>
+            <div class="filter-options">
+              <label class="checkbox-label">
+                <input class="filter-input" type="checkbox" name="remoteWork" value="no"/><span>No</span>
+              </label>
+              <label class="checkbox-label">
+                <input class="filter-input" type="checkbox" name="remoteWork" value="hybrid"/><span>Hybrid</span>
+              </label>
+              <label class="checkbox-label">
+                <input class="filter-input" type="checkbox" name="remoteWork" value="full"/><span>Full</span>
+              </label>
+            </div>
+          </div>
+          <div class="filter-group">
+            <h4 class="filter-title">Experience Level</h4>
+            <div class="filter-options">
+              <label class="checkbox-label">
+                <input class="filter-input" type="checkbox" name="experienceLevel" value="Entry"/><span>Entry Level</span>
+              </label>
+              <label class="checkbox-label">
+                <input class="filter-input" type="checkbox" name="experienceLevel" value="Mid"/><span>Mid Level</span>
+              </label>
+              <label class="checkbox-label">
+                <input class="filter-input" type="checkbox" name="experienceLevel" value="Senior"/><span>Senior</span>
+              </label>
+              <label class="checkbox-label">
+                <input class="filter-input" type="checkbox" name="experienceLevel" value="Lead"/><span>Lead</span>
+              </label>
+            </div>
+          </div>
+          <div class="filter-group">
+            <h4 class="filter-title">Distance</h4>
+            <div class="range-slider">
+              <input class="filter-input range-input" type="range" name="distance" min="5" max="100" value="25" step="5"/>
+              <div class="range-values"><span id="distanceValue">25 miles</span></div>
+            </div>
+          </div>
+          <div class="filter-group">
+            <h4 class="filter-title">Salary Range (£)</h4>
+            <div class="range-slider double-slider">
+              <div class="slider-track"></div>
+              <input class="filter-input range-input min-salary" type="range" name="salaryMin" min="20000" max="150000" value="20000" step="1000"/>
+              <input class="filter-input range-input max-salary" type="range" name="salaryMax" min="20000" max="150000" value="150000" step="1000"/>
+            </div>
+            <div class="range-values"><span id="salaryMinValue">£20k</span><span>-</span><span id="salaryMaxValue">£150k+</span></div>
+          </div>
+          <button class="btn btn--small btn--clear-filters" id="clearFiltersBtn">Clear Filters</button>
+        </aside>
+        <div class="results"></div>
+        <div class="details" id="detailsModal">
+          <button class="btn-close btn-close-details" id="closeDetailsBtn">&times;</button>
+        </div>
+      </div>
+    </section>
+    <footer class="footer">
+      <div class="logo footer__logo" href="/"><img src="/img/ukvisasponsorlogo.svg" alt="footer logo"/></div>
+      <ul class="footer__nav"> 
+        <li><a class="footer-nav__el" href="#">Employer Sign Up</a></li>
+        <li><a class="footer-nav__el" href="#">Report Bug</a></li>
+        <li><a class="footer-nav__el" href="#">Contact</a></li>
+      </ul>
+      <p class="footer__copyright">&copy; ukvisasponsorship</p>
+    </footer>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="/js/bundle.js"></script>
+  </body>
+</html>

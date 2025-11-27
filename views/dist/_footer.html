@@ -1,0 +1,42 @@
+
+<footer class="footer">
+  <div class="logo footer__logo" href="/"><img src="/img/ukvisasponsorlogo.svg" alt="footer logo"/></div>
+  <ul class="footer__nav"> 
+    <li><a class="footer-nav__el" href="/employer-signup">Employer Sign Up</a></li>
+    <li><a class="footer-nav__el" href="/privacy">Privacy</a></li>
+    <li><a class="footer-nav__el" href="/terms">Terms</a></li>
+    <li><a class="footer-nav__el" id="reportBugBtn" href="#">Report Bug</a></li>
+    <li><a class="footer-nav__el" href="#">Contact</a></li>
+  </ul>
+  <p class="footer__copyright">&copy; ukvisasponsorship</p>
+  <div class="modal-overlay hidden" id="bugReportModal">
+    <div class="modal">
+      <button class="btn-close-modal" id="closeBugReportModal">&times;</button>
+      <h2 class="heading-secondary ma-bt-md">Report a Bug</h2>
+      <form class="form form--bug-report">
+        <div class="form__group">
+          <label class="form__label" for="bugTitle">Title</label>
+          <input class="form__input" id="bugTitle" type="text" required="required" placeholder="Brief summary of the issue"/>
+        </div>
+        <div class="form__group ma-bt-md">
+          <label class="form__label" for="bugDescription">Description</label>
+          <textarea class="form__input" id="bugDescription" rows="5" required="required" placeholder="Please describe what happened, steps to reproduce, etc."></textarea>
+        </div>
+        <div class="form__group right">
+          <button class="btn btn--small btn--standard" id="submitBugReportBtn">Submit Report</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-overlay hidden" id="reportJobModal">
+    <div class="modal modal--fit-content">
+      <button class="btn-close-modal" id="closeReportJobModal">&times;</button>
+      <h2 class="heading-secondary ma-bt-md">Report Job</h2>
+      <p class="ma-bt-md">Are you sure you want to report this job? This will flag it for review by our team.</p>
+      <div class="form__group right">
+        <button class="btn btn--small btn--text" id="cancelReportJobBtn" style="margin-right: 1rem;">Cancel</button>
+        <button class="btn btn--small btn--delete" id="confirmReportJobBtn">Report Job</button>
+      </div>
+    </div>
+  </div>
+</footer>
