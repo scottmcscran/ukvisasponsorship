@@ -160,6 +160,7 @@ jobSchema.index({
   experienceLevel: 1,
   remoteWork: 1,
 });
+jobSchema.index({ "location.coordinates": "2dsphere" });
 
 jobSchema.pre(`save`, async function (next) {
   if (this.isNew) {
