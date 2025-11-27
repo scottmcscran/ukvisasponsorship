@@ -84,6 +84,7 @@
   align-self: stretch;
   padding: 0;
   display: flex;
+  z-index: 20;
 }
 
 .search-bar__select {
