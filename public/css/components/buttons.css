@@ -129,6 +129,8 @@
   font-size: var(--font-size-base);
   cursor: pointer;
   transition: background-color 0.2s;
+  position: relative;
+  z-index: 1;
 
   &:hover {
     background-color: var(--brand-primary-hover);
