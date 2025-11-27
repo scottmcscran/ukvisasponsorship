@@ -415,6 +415,18 @@ exports.verifyEmail = catchAsync(async (req, res, next) => {
   });
 
   if (!user) {
+    // Check if token exists but is expired
+    const expiredUser = await User.findOne({
+      emailVerificationToken: hashedToken,
+    });
+
+    if (expiredUser) {
+      return res.status(200).render("verification-expired", {
+        title: "Verification Expired",
+        email: expiredUser.email,
+      });
+    }
+
     return next(new AppError(`Token is invalid or has expired`, 400));
   }
 
@@ -470,4 +482,52 @@ exports.claimAccount = catchAsync(async (req, res, next) => {
 
   // 3) Log the user in, send JWT
   createSendToken(user, 200, res);
+});
+
+exports.resendVerification = catchAsync(async (req, res, next) => {
+  const { email } = req.body;
+  if (!email) {
+    return next(new AppError("Please provide an email address.", 400));
+  }
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return res.status(200).json({
+      status: "success",
+      message:
+        "If an account with that email exists, a verification link has been sent.",
+    });
+  }
+
+  if (user.emailVerified) {
+    return next(
+      new AppError("This account is already verified. Please log in.", 400)
+    );
+  }
+
+  const verificationToken = user.createEmailVerificationToken();
+  await user.save({ validateBeforeSave: false });
+
+  const url = `${req.protocol}://${req.get(
+    "host"
+  )}/api/v1/users/verifyEmail/${verificationToken}`;
+
+  try {
+    await new Email(user, url).sendVerification();
+
+    res.status(200).json({
+      status: "success",
+      message: "Token sent to email!",
+    });
+  } catch (err) {
+    user.emailVerificationToken = undefined;
+    user.emailVerificationExpires = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    return next(
+      new AppError("There was an error sending the email. Try again later!"),
+      500
+    );
+  }
 });

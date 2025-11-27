@@ -723,7 +723,7 @@ exports.checkJobPostLimits = catchAsync(function _callee12(req, res, next) {
   });
 });
 exports.verifyEmail = catchAsync(function _callee13(req, res, next) {
-  var hashedToken, user, token, cookieOptions;
+  var hashedToken, user, expiredUser, token, cookieOptions;
   return regeneratorRuntime.async(function _callee13$(_context13) {
     while (1) {
       switch (_context13.prev = _context13.next) {
@@ -741,22 +741,41 @@ exports.verifyEmail = catchAsync(function _callee13(req, res, next) {
           user = _context13.sent;
 
           if (user) {
-            _context13.next = 6;
+            _context13.next = 11;
             break;
           }
 
+          _context13.next = 7;
+          return regeneratorRuntime.awrap(User.findOne({
+            emailVerificationToken: hashedToken
+          }));
+
+        case 7:
+          expiredUser = _context13.sent;
+
+          if (!expiredUser) {
+            _context13.next = 10;
+            break;
+          }
+
+          return _context13.abrupt("return", res.status(200).render("verification-expired", {
+            title: "Verification Expired",
+            email: expiredUser.email
+          }));
+
+        case 10:
           return _context13.abrupt("return", next(new AppError("Token is invalid or has expired", 400)));
 
-        case 6:
+        case 11:
           user.emailVerified = true;
           user.emailVerificationToken = undefined;
           user.emailVerificationExpires = undefined;
-          _context13.next = 11;
+          _context13.next = 16;
           return regeneratorRuntime.awrap(user.save({
             validateBeforeSave: false
           }));
 
-        case 11:
+        case 16:
           // Log the user in by setting the cookie
           token = signToken(user._id);
           cookieOptions = {
@@ -772,7 +791,7 @@ exports.verifyEmail = catchAsync(function _callee13(req, res, next) {
             res.redirect("/?alert=verified");
           }
 
-        case 16:
+        case 21:
         case "end":
           return _context13.stop();
       }
@@ -825,4 +844,87 @@ exports.claimAccount = catchAsync(function _callee14(req, res, next) {
       }
     }
   });
+});
+exports.resendVerification = catchAsync(function _callee15(req, res, next) {
+  var email, user, verificationToken, url;
+  return regeneratorRuntime.async(function _callee15$(_context15) {
+    while (1) {
+      switch (_context15.prev = _context15.next) {
+        case 0:
+          email = req.body.email;
+
+          if (email) {
+            _context15.next = 3;
+            break;
+          }
+
+          return _context15.abrupt("return", next(new AppError("Please provide an email address.", 400)));
+
+        case 3:
+          _context15.next = 5;
+          return regeneratorRuntime.awrap(User.findOne({
+            email: email
+          }));
+
+        case 5:
+          user = _context15.sent;
+
+          if (user) {
+            _context15.next = 8;
+            break;
+          }
+
+          return _context15.abrupt("return", res.status(200).json({
+            status: "success",
+            message: "If an account with that email exists, a verification link has been sent."
+          }));
+
+        case 8:
+          if (!user.emailVerified) {
+            _context15.next = 10;
+            break;
+          }
+
+          return _context15.abrupt("return", next(new AppError("This account is already verified. Please log in.", 400)));
+
+        case 10:
+          verificationToken = user.createEmailVerificationToken();
+          _context15.next = 13;
+          return regeneratorRuntime.awrap(user.save({
+            validateBeforeSave: false
+          }));
+
+        case 13:
+          url = "".concat(req.protocol, "://").concat(req.get("host"), "/api/v1/users/verifyEmail/").concat(verificationToken);
+          _context15.prev = 14;
+          _context15.next = 17;
+          return regeneratorRuntime.awrap(new Email(user, url).sendVerification());
+
+        case 17:
+          res.status(200).json({
+            status: "success",
+            message: "Token sent to email!"
+          });
+          _context15.next = 27;
+          break;
+
+        case 20:
+          _context15.prev = 20;
+          _context15.t0 = _context15["catch"](14);
+          user.emailVerificationToken = undefined;
+          user.emailVerificationExpires = undefined;
+          _context15.next = 26;
+          return regeneratorRuntime.awrap(user.save({
+            validateBeforeSave: false
+          }));
+
+        case 26:
+          return _context15.abrupt("return", next(new AppError("There was an error sending the email. Try again later!"), 500));
+
+        case 27:
+        case "end":
+          return _context15.stop();
+      }
+    }
+  }, null, null, [[14, 20]]);
 });

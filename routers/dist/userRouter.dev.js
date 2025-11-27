@@ -25,4 +25,5 @@ userController.updateMe);
 router["delete"]("/deleteCv", userController.deleteCv);
 router["delete"]("/deleteMe", userController.deleteMe);
 router.use("/admin", adminRouter);
+router.post("/resendVerification", authController.resendVerification);
 module.exports = router;

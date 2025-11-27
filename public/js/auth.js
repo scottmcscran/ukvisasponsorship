@@ -216,3 +216,24 @@ exports.claimAccount = async (token, password, passwordConfirm) => {
     showAlert("error", err.response.data.message);
   }
 };
+
+exports.resendVerification = async (email) => {
+  try {
+    const res = await axios({
+      method: "POST",
+      url: "/api/v1/users/resendVerification",
+      data: { email },
+    });
+
+    if (res.data.status === "success") {
+      showAlert("success", "Verification email sent! Please check your inbox.");
+      const btn = document.getElementById("resendBtn");
+      if (btn) {
+        btn.textContent = "Email Sent!";
+        btn.disabled = true;
+      }
+    }
+  } catch (err) {
+    showAlert("error", err.response.data.message);
+  }
+};

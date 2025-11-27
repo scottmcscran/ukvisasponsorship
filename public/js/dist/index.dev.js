@@ -27,7 +27,8 @@ var _require3 = require("./auth"),
     deleteAccount = _require3.deleteAccount,
     forgotPassword = _require3.forgotPassword,
     resetPassword = _require3.resetPassword,
-    claimAccount = _require3.claimAccount;
+    claimAccount = _require3.claimAccount,
+    resendVerification = _require3.resendVerification;
 
 var _require4 = require("./dashboard"),
     initDashboard = _require4.initDashboard;
@@ -792,5 +793,17 @@ if (signupEmployerForm) {
       password: password,
       passwordConfirm: passwordConfirm
     });
+  });
+}
+
+var resendVerificationForm = document.querySelector(".form--resend-verification");
+
+if (resendVerificationForm) {
+  resendVerificationForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var email = document.getElementById("email").value;
+    var btn = document.getElementById("resendBtn");
+    btn.textContent = "Sending...";
+    resendVerification(email);
   });
 }

@@ -419,3 +419,48 @@ exports.claimAccount = function _callee10(token, password, passwordConfirm) {
     }
   }, null, null, [[0, 7]]);
 };
+
+exports.resendVerification = function _callee11(email) {
+  var res, btn;
+  return regeneratorRuntime.async(function _callee11$(_context11) {
+    while (1) {
+      switch (_context11.prev = _context11.next) {
+        case 0:
+          _context11.prev = 0;
+          _context11.next = 3;
+          return regeneratorRuntime.awrap((0, _axios["default"])({
+            method: "POST",
+            url: "/api/v1/users/resendVerification",
+            data: {
+              email: email
+            }
+          }));
+
+        case 3:
+          res = _context11.sent;
+
+          if (res.data.status === "success") {
+            (0, _alerts.showAlert)("success", "Verification email sent! Please check your inbox.");
+            btn = document.getElementById("resendBtn");
+
+            if (btn) {
+              btn.textContent = "Email Sent!";
+              btn.disabled = true;
+            }
+          }
+
+          _context11.next = 10;
+          break;
+
+        case 7:
+          _context11.prev = 7;
+          _context11.t0 = _context11["catch"](0);
+          (0, _alerts.showAlert)("error", _context11.t0.response.data.message);
+
+        case 10:
+        case "end":
+          return _context11.stop();
+      }
+    }
+  }, null, null, [[0, 7]]);
+};

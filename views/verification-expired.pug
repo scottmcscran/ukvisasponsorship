@@ -1,0 +1,16 @@
+extends base
+
+block content
+  main.main
+    .error
+      .error__title
+        h2.heading-secondary.heading-secondary--error Verification Link Expired
+        h2.error__emoji 😢 
+      .error__msg The verification link you clicked has expired. Please request a new one below.
+      
+      form.form.form--resend-verification
+        .form__group
+          input#email(type='hidden', value=`${email}`)
+        .form__group
+          button.btn.btn--green#resendBtn Resend Verification Email
+

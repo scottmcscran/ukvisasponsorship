@@ -20,6 +20,7 @@ const {
   forgotPassword,
   resetPassword,
   claimAccount,
+  resendVerification,
 } = require(`./auth`);
 const { initDashboard } = require(`./dashboard`);
 const { initAdmin } = require(`./admin`);
@@ -782,5 +783,18 @@ if (signupEmployerForm) {
       password,
       passwordConfirm,
     });
+  });
+}
+
+const resendVerificationForm = document.querySelector(
+  ".form--resend-verification"
+);
+if (resendVerificationForm) {
+  resendVerificationForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = document.getElementById("email").value;
+    const btn = document.getElementById("resendBtn");
+    btn.textContent = "Sending...";
+    resendVerification(email);
   });
 }
