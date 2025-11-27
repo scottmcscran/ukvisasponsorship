@@ -153,6 +153,10 @@
   .details.details--open {
     transform: translateX(0);
   }
+
+  .btn-close-details {
+    display: block;
+  }
 }
 
 .results {
