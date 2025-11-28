@@ -267,7 +267,7 @@ if (resetPasswordForm) {
     e.preventDefault();
     console.log("Reset password form submitted");
     const password = document.getElementById("password").value;
-    const passwordConfirm = document.getElementById("passwordConfirm").value;
+    const passwordConfirm = document.getElementById("password-confirm").value;
     // Get token from URL
     const token = window.location.pathname.split("/")[2];
     console.log("Token extracted:", token);

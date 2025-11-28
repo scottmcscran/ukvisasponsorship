@@ -8490,7 +8490,7 @@ if (resetPasswordForm) {
     e.preventDefault();
     console.log("Reset password form submitted");
     var password = document.getElementById("password").value;
-    var passwordConfirm = document.getElementById("passwordConfirm").value;
+    var passwordConfirm = document.getElementById("password-confirm").value;
     // Get token from URL
     var token = window.location.pathname.split("/")[2];
     console.log("Token extracted:", token);

@@ -139,7 +139,20 @@ input[type="range"].range-input:not(.min-salary):not(
 /* Force uniform background for disabled sliders */
 .disabled-filter .range-input,
 .disabled-filter .slider-track {
-  background: var(--slider-track) !important;
+  background: var(--slider-disabled) !important;
+  background-image: none !important; /* Ensure gradient is removed */
+  background-color: var(--slider-disabled) !important;
+}
+
+/* Ensure thumb is also grey/disabled style */
+.disabled-filter .range-input::-webkit-slider-thumb {
+  background: var(--slider-thumb) !important;
+  border-color: var(--slider-disabled) !important;
+}
+
+.disabled-filter .range-input::-moz-range-thumb {
+  background: var(--slider-thumb) !important;
+  border-color: var(--slider-disabled) !important;
 }
 
 /* General Form Styles */

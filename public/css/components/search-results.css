@@ -51,7 +51,7 @@
 
 .disabled-filter {
   opacity: 0.5;
-  filter: grayscale(100%);
+  /* filter: grayscale(100%); Removed to prevent double-grey effect on gradients */
 }
 
 .disabled-filter .slider-container,

@@ -50,6 +50,7 @@
   --slider-track: #dadae5;
   --slider-thumb: #6b7280;
   --slider-thumb-hover: #4b5563;
+  --slider-disabled: #dadae5; /* Reusable disabled color */
 
   /* Spacing */
   --spacing-xs: 0.5rem;
