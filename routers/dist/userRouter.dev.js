@@ -20,7 +20,7 @@ router.patch("/claimAccount/:token", authController.claimAccount);
 router.use(authController.protect);
 router.patch("/updatePassword", authController.updatePassword);
 router.get("/me", userController.getMe, userController.getUser);
-router.patch("/updateMe", authController.checkAccountStatus, userController.uploadCv, // userController.resizeUserPhoto,
+router.patch("/updateMe", userController.uploadCv, // userController.resizeUserPhoto,
 userController.updateMe);
 router["delete"]("/deleteCv", userController.deleteCv);
 router["delete"]("/deleteMe", userController.deleteMe);

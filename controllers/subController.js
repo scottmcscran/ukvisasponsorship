@@ -85,6 +85,10 @@ exports.createBillingPortalSession = catchAsync(async (req, res, next) => {
 });
 
 exports.webhookCheckout = async (req, res) => {
+  console.log(
+    "Webhook received:",
+    req.headers["stripe-signature"] ? "Signature present" : "No signature"
+  );
   const signature = req.headers["stripe-signature"];
 
   let event;

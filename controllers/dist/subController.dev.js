@@ -145,23 +145,24 @@ exports.webhookCheckout = function _callee3(req, res) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
+          console.log("Webhook received:", req.headers["stripe-signature"] ? "Signature present" : "No signature");
           signature = req.headers["stripe-signature"];
-          _context3.prev = 1;
+          _context3.prev = 2;
           event = stripe.webhooks.constructEvent(req.body, signature, process.env.STRIPE_WEBHOOK_SECRET);
-          _context3.next = 9;
+          _context3.next = 10;
           break;
 
-        case 5:
-          _context3.prev = 5;
-          _context3.t0 = _context3["catch"](1);
+        case 6:
+          _context3.prev = 6;
+          _context3.t0 = _context3["catch"](2);
           console.error("Webhook signature verification failed: ".concat(_context3.t0.message));
           return _context3.abrupt("return", res.status(400).send("Webhook error: ".concat(_context3.t0.message)));
 
-        case 9:
+        case 10:
           console.log("Webhook received: ".concat(event.type));
 
           if (!(event.type === "checkout.session.completed")) {
-            _context3.next = 19;
+            _context3.next = 20;
             break;
           }
 
@@ -170,61 +171,61 @@ exports.webhookCheckout = function _callee3(req, res) {
           tier = session.metadata.plan;
 
           if (!(userId && tier)) {
-            _context3.next = 17;
+            _context3.next = 18;
             break;
           }
 
-          _context3.next = 17;
+          _context3.next = 18;
           return regeneratorRuntime.awrap(handleSubscriptionStatusChange(userId, tier, "active"));
 
-        case 17:
-          _context3.next = 60;
+        case 18:
+          _context3.next = 61;
           break;
 
-        case 19:
+        case 20:
           if (!(event.type === "customer.subscription.deleted")) {
-            _context3.next = 29;
+            _context3.next = 30;
             break;
           }
 
           subscription = event.data.object;
-          _context3.next = 23;
+          _context3.next = 24;
           return regeneratorRuntime.awrap(User.findOne({
             "subscription.stripeCustomerId": subscription.customer
           }));
 
-        case 23:
+        case 24:
           user = _context3.sent;
 
           if (!user) {
-            _context3.next = 27;
+            _context3.next = 28;
             break;
           }
 
-          _context3.next = 27;
+          _context3.next = 28;
           return regeneratorRuntime.awrap(handleSubscriptionStatusChange(user._id, user.subscription.tier, "expired"));
 
-        case 27:
-          _context3.next = 60;
+        case 28:
+          _context3.next = 61;
           break;
 
-        case 29:
+        case 30:
           if (!(event.type === "customer.subscription.updated")) {
-            _context3.next = 44;
+            _context3.next = 45;
             break;
           }
 
           _subscription = event.data.object;
-          _context3.next = 33;
+          _context3.next = 34;
           return regeneratorRuntime.awrap(User.findOne({
             "subscription.stripeCustomerId": _subscription.customer
           }));
 
-        case 33:
+        case 34:
           _user = _context3.sent;
 
           if (!_user) {
-            _context3.next = 42;
+            _context3.next = 43;
             break;
           }
 
@@ -235,74 +236,74 @@ exports.webhookCheckout = function _callee3(req, res) {
           if (priceId === process.env.PRO_SUB_PRICE_ID) newTier = "professional"; // Only update if tier changed or status changed
 
           if (!(_user.subscription.tier !== newTier || _subscription.status !== "active")) {
-            _context3.next = 42;
+            _context3.next = 43;
             break;
           }
 
-          _context3.next = 42;
+          _context3.next = 43;
           return regeneratorRuntime.awrap(handleSubscriptionStatusChange(_user._id, newTier, _subscription.status === "active" ? "active" : "expired"));
 
-        case 42:
-          _context3.next = 60;
+        case 43:
+          _context3.next = 61;
           break;
 
-        case 44:
+        case 45:
           if (!(event.type === "invoice.payment_succeeded")) {
-            _context3.next = 54;
+            _context3.next = 55;
             break;
           }
 
           invoice = event.data.object;
-          _context3.next = 48;
+          _context3.next = 49;
           return regeneratorRuntime.awrap(User.findOne({
             "subscription.stripeCustomerId": invoice.customer
           }));
 
-        case 48:
+        case 49:
           _user2 = _context3.sent;
 
           if (!(_user2 && invoice.subscription)) {
-            _context3.next = 52;
+            _context3.next = 53;
             break;
           }
 
-          _context3.next = 52;
+          _context3.next = 53;
           return regeneratorRuntime.awrap(handleSubscriptionStatusChange(_user2._id, _user2.subscription.tier, "active"));
 
-        case 52:
-          _context3.next = 60;
+        case 53:
+          _context3.next = 61;
           break;
 
-        case 54:
+        case 55:
           if (!(event.type === "invoice.payment_failed")) {
-            _context3.next = 60;
+            _context3.next = 61;
             break;
           }
 
           _invoice = event.data.object;
-          _context3.next = 58;
+          _context3.next = 59;
           return regeneratorRuntime.awrap(User.findOne({
             "subscription.stripeCustomerId": _invoice.customer
           }));
 
-        case 58:
+        case 59:
           _user3 = _context3.sent;
 
           if (_user3) {// Optionally handle grace periods, but for now we can mark as expired or past_due
             // handleSubscriptionStatusChange(user._id, user.subscription.tier, 'expired');
           }
 
-        case 60:
+        case 61:
           res.status(200).json({
             received: true
           });
 
-        case 61:
+        case 62:
         case "end":
           return _context3.stop();
       }
     }
-  }, null, null, [[1, 5]]);
+  }, null, null, [[2, 6]]);
 };
 
 exports.updateSubCheckout = function _callee4(req, res, next) {
