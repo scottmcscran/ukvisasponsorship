@@ -1,6 +1,7 @@
 const Job = require(`./../models/jobModel`);
 const User = require(`./../models/userModel`); // Ensure User is imported
 const BugReport = require("./../models/bugReportModel");
+const Discount = require("./../models/discountModel");
 const r2 = require("../utils/r2");
 const { geoPostcode } = require(`../utils/geoPostcode`);
 
@@ -62,7 +63,9 @@ exports.getAdminDashboard = catchAsync(async (req, res, next) => {
     }),
 
     freeUsers: await User.countDocuments({ "subscription.tier": "free" }),
-    freeUsersChange: await calculateChange(User, { "subscription.tier": "free" }),
+    freeUsersChange: await calculateChange(User, {
+      "subscription.tier": "free",
+    }),
 
     starterUsers: await User.countDocuments({ "subscription.tier": "starter" }),
     starterUsersChange: await calculateChange(User, {
@@ -133,11 +136,26 @@ exports.getAdminDashboard = catchAsync(async (req, res, next) => {
     .sort({ createdAt: -1 })
     .populate("reportedBy", "name email");
 
+  const discounts = await Discount.find().sort("-createdAt");
+
+  // Check for expired discounts and update them
+  for (const discount of discounts) {
+    if (
+      discount.isActive &&
+      discount.expiresAt &&
+      new Date() > discount.expiresAt
+    ) {
+      discount.isActive = false;
+      await discount.save();
+    }
+  }
+
   res.status(200).render("adminDashboard", {
     title: "Admin Dashboard",
     reportedJobs,
     unverifiedEmployers,
     bugReports,
+    discounts,
     stats,
     analytics: {
       jobsByVisaType,
@@ -158,6 +176,18 @@ exports.getEmployerDashboard = catchAsync(async (req, res, next) => {
       `title analytics.views analytics.applicationClicks analytics.saves postedDate featured status isAdminPosted`
     )
     .sort(`-postedDate`);
+
+  // Check for active discount and ensure it hasn't expired
+  let activeDiscount = await Discount.findOne({ isActive: true });
+  if (
+    activeDiscount &&
+    activeDiscount.expiresAt &&
+    new Date() > activeDiscount.expiresAt
+  ) {
+    activeDiscount.isActive = false;
+    await activeDiscount.save();
+    activeDiscount = null;
+  }
 
   const featuredJobs = jobs.filter((job) => job.featured);
   const regularJobs = jobs.filter((job) => !job.featured);
@@ -205,6 +235,7 @@ exports.getEmployerDashboard = catchAsync(async (req, res, next) => {
   res.render(`employerDashboard`, {
     title: `Dashboard`,
     jobs: analytics,
+    activeDiscount,
   });
 });
 

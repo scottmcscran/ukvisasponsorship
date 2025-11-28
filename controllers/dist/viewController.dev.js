@@ -13,6 +13,8 @@ var User = require("./../models/userModel"); // Ensure User is imported
 
 var BugReport = require("./../models/bugReportModel");
 
+var Discount = require("./../models/discountModel");
+
 var r2 = require("../utils/r2");
 
 var _require = require("../utils/geoPostcode"),
@@ -76,7 +78,8 @@ var calculateChange = function calculateChange(Model) {
 };
 
 exports.getAdminDashboard = catchAsync(function _callee(req, res, next) {
-  var reportedJobs, unverifiedEmployers, stats, jobsByVisaType, jobsByLocation, topEmployers, platformAnalytics, bugReports;
+  var reportedJobs, unverifiedEmployers, stats, jobsByVisaType, jobsByLocation, topEmployers, platformAnalytics, bugReports, discounts, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, discount;
+
   return regeneratorRuntime.async(function _callee$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
@@ -348,11 +351,81 @@ exports.getAdminDashboard = catchAsync(function _callee(req, res, next) {
 
         case 69:
           bugReports = _context2.sent;
+          _context2.next = 72;
+          return regeneratorRuntime.awrap(Discount.find().sort("-createdAt"));
+
+        case 72:
+          discounts = _context2.sent;
+          // Check for expired discounts and update them
+          _iteratorNormalCompletion = true;
+          _didIteratorError = false;
+          _iteratorError = undefined;
+          _context2.prev = 76;
+          _iterator = discounts[Symbol.iterator]();
+
+        case 78:
+          if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+            _context2.next = 87;
+            break;
+          }
+
+          discount = _step.value;
+
+          if (!(discount.isActive && discount.expiresAt && new Date() > discount.expiresAt)) {
+            _context2.next = 84;
+            break;
+          }
+
+          discount.isActive = false;
+          _context2.next = 84;
+          return regeneratorRuntime.awrap(discount.save());
+
+        case 84:
+          _iteratorNormalCompletion = true;
+          _context2.next = 78;
+          break;
+
+        case 87:
+          _context2.next = 93;
+          break;
+
+        case 89:
+          _context2.prev = 89;
+          _context2.t16 = _context2["catch"](76);
+          _didIteratorError = true;
+          _iteratorError = _context2.t16;
+
+        case 93:
+          _context2.prev = 93;
+          _context2.prev = 94;
+
+          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+            _iterator["return"]();
+          }
+
+        case 96:
+          _context2.prev = 96;
+
+          if (!_didIteratorError) {
+            _context2.next = 99;
+            break;
+          }
+
+          throw _iteratorError;
+
+        case 99:
+          return _context2.finish(96);
+
+        case 100:
+          return _context2.finish(93);
+
+        case 101:
           res.status(200).render("adminDashboard", {
             title: "Admin Dashboard",
             reportedJobs: reportedJobs,
             unverifiedEmployers: unverifiedEmployers,
             bugReports: bugReports,
+            discounts: discounts,
             stats: stats,
             analytics: {
               jobsByVisaType: jobsByVisaType,
@@ -366,15 +439,15 @@ exports.getAdminDashboard = catchAsync(function _callee(req, res, next) {
             }
           });
 
-        case 71:
+        case 102:
         case "end":
           return _context2.stop();
       }
     }
-  });
+  }, null, null, [[76, 89, 93, 101], [94,, 96, 100]]);
 });
 exports.getEmployerDashboard = catchAsync(function _callee2(req, res, next) {
-  var jobs, featuredJobs, regularJobs, calculateAnalytics, analytics;
+  var jobs, activeDiscount, featuredJobs, regularJobs, calculateAnalytics, analytics;
   return regeneratorRuntime.async(function _callee2$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
@@ -386,6 +459,27 @@ exports.getEmployerDashboard = catchAsync(function _callee2(req, res, next) {
 
         case 2:
           jobs = _context3.sent;
+          _context3.next = 5;
+          return regeneratorRuntime.awrap(Discount.findOne({
+            isActive: true
+          }));
+
+        case 5:
+          activeDiscount = _context3.sent;
+
+          if (!(activeDiscount && activeDiscount.expiresAt && new Date() > activeDiscount.expiresAt)) {
+            _context3.next = 11;
+            break;
+          }
+
+          activeDiscount.isActive = false;
+          _context3.next = 10;
+          return regeneratorRuntime.awrap(activeDiscount.save());
+
+        case 10:
+          activeDiscount = null;
+
+        case 11:
           featuredJobs = jobs.filter(function (job) {
             return job.featured;
           });
@@ -425,10 +519,11 @@ exports.getEmployerDashboard = catchAsync(function _callee2(req, res, next) {
           };
           res.render("employerDashboard", {
             title: "Dashboard",
-            jobs: analytics
+            jobs: analytics,
+            activeDiscount: activeDiscount
           });
 
-        case 8:
+        case 16:
         case "end":
           return _context3.stop();
       }

@@ -15,6 +15,7 @@ block content
         button.tab-btn(data-tab='export') Data Export
         button.tab-btn(data-tab='shadow') Shadow Accounts
         button.tab-btn(data-tab='blog') Post Blog
+        button.tab-btn(data-tab='discounts') Discounts
 
       .dashboard-content
         //- SHADOW ACCOUNTS TAB
@@ -316,6 +317,51 @@ block content
 
               .form__group
                 button.btn.btn--small.btn--green#createBlogBtn(type='submit') Publish Article
+
+        //- DISCOUNTS TAB
+        .tab-content(id='discounts')
+          .discount-section
+            h3.heading-tertiary.ma-bt-sm Create New Discount
+            form.form.form--create-discount
+              .form__group
+                label.form__label(for='discountCode') Discount Code (Uppercase)
+                input#discountCode.form__input(type='text', required, placeholder='e.g. SUMMER2025', style='text-transform: uppercase;')
+              
+              .form__group
+                label.form__label(for='discountPercentage') Percentage Off (%)
+                input#discountPercentage.form__input(type='number', required, min='1', max='100', placeholder='20')
+
+              .form__group
+                label.form__label(for='discountExpires') Expiration Date (Optional)
+                input#discountExpires.form__input(type='date')
+
+              .form__group
+                button.btn.btn--small.btn--green#createDiscountBtn(type='submit') Create Discount
+
+            .discounts-list.ma-top-lg
+              h3.heading-tertiary.ma-bt-sm Active Discounts
+              if discounts && discounts.length > 0
+                table.table
+                  thead
+                    tr
+                      th Code
+                      th Percentage
+                      th Status
+                      th Actions
+                  tbody
+                    each discount in discounts
+                      tr
+                        td= discount.code
+                        td #{discount.percentage}%
+                        td
+                          span.status-badge(class=`status-badge--${discount.isActive ? 'verified' : 'rejected'}`)
+                            | #{discount.isActive ? 'Active' : 'Inactive'}
+                        td
+                          div(style="display: flex; gap: 0.5rem;")
+                            button.btn.btn--small.btn--text.btn--toggle-discount(data-id=discount._id data-action=discount.isActive ? 'deactivate' : 'activate' style="width: auto; min-width: auto;") #{discount.isActive ? 'Deactivate' : 'Activate'}
+                            button.btn.btn--small.btn--danger.btn--delete-discount(data-id=discount._id style="width: auto; min-width: auto;") Delete
+              else
+                p No discounts found.
 
   //- CONFIRMATION MODAL
   .modal-overlay.hidden#confirmModal

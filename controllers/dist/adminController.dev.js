@@ -19,9 +19,13 @@ var User = require("./../models/userModel");
 
 var BugReport = require("../models/bugReportModel");
 
+var Discount = require("../models/discountModel");
+
 var crypto = require("crypto");
 
 var Email = require("../utils/email");
+
+var stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 exports.approveEmployer = catchAsync(function _callee(req, res, next) {
   var user, dashboardUrl;
@@ -684,4 +688,233 @@ exports.sendClaimEmail = catchAsync(function _callee8(req, res, next) {
       }
     }
   }, null, null, [[11, 17]]);
+});
+exports.createDiscount = catchAsync(function _callee9(req, res, next) {
+  var _req$body2, code, percentage, expiresAt, coupon, discount;
+
+  return regeneratorRuntime.async(function _callee9$(_context9) {
+    while (1) {
+      switch (_context9.prev = _context9.next) {
+        case 0:
+          _req$body2 = req.body, code = _req$body2.code, percentage = _req$body2.percentage, expiresAt = _req$body2.expiresAt; // 1. Create Coupon in Stripe
+          // We use try-catch for Stripe creation to handle duplicates gracefully or errors
+
+          _context9.prev = 1;
+          _context9.next = 4;
+          return regeneratorRuntime.awrap(stripe.coupons.create({
+            percent_off: percentage,
+            duration: "once",
+            // Applies to the first payment only
+            name: code,
+            id: code // Use the code as the ID
+
+          }));
+
+        case 4:
+          coupon = _context9.sent;
+          _context9.next = 16;
+          break;
+
+        case 7:
+          _context9.prev = 7;
+          _context9.t0 = _context9["catch"](1);
+
+          if (!(_context9.t0.code === "resource_already_exists")) {
+            _context9.next = 15;
+            break;
+          }
+
+          _context9.next = 12;
+          return regeneratorRuntime.awrap(stripe.coupons.retrieve(code));
+
+        case 12:
+          coupon = _context9.sent;
+          _context9.next = 16;
+          break;
+
+        case 15:
+          return _context9.abrupt("return", next(new AppError("Stripe Error: ".concat(_context9.t0.message), 400)));
+
+        case 16:
+          _context9.next = 18;
+          return regeneratorRuntime.awrap(Discount.updateMany({}, {
+            isActive: false
+          }));
+
+        case 18:
+          _context9.next = 20;
+          return regeneratorRuntime.awrap(Discount.create({
+            code: code,
+            percentage: percentage,
+            stripeId: coupon.id,
+            isActive: true,
+            expiresAt: expiresAt ? new Date(expiresAt) : undefined
+          }));
+
+        case 20:
+          discount = _context9.sent;
+          res.status(201).json({
+            status: "success",
+            data: {
+              discount: discount
+            }
+          });
+
+        case 22:
+        case "end":
+          return _context9.stop();
+      }
+    }
+  }, null, null, [[1, 7]]);
+});
+exports.getAllDiscounts = catchAsync(function _callee10(req, res, next) {
+  var discounts;
+  return regeneratorRuntime.async(function _callee10$(_context10) {
+    while (1) {
+      switch (_context10.prev = _context10.next) {
+        case 0:
+          _context10.next = 2;
+          return regeneratorRuntime.awrap(Discount.find().sort("-createdAt"));
+
+        case 2:
+          discounts = _context10.sent;
+          res.status(200).json({
+            status: "success",
+            results: discounts.length,
+            data: {
+              discounts: discounts
+            }
+          });
+
+        case 4:
+        case "end":
+          return _context10.stop();
+      }
+    }
+  });
+});
+exports.deleteDiscount = catchAsync(function _callee11(req, res, next) {
+  var discount;
+  return regeneratorRuntime.async(function _callee11$(_context11) {
+    while (1) {
+      switch (_context11.prev = _context11.next) {
+        case 0:
+          _context11.next = 2;
+          return regeneratorRuntime.awrap(Discount.findByIdAndDelete(req.params.id));
+
+        case 2:
+          discount = _context11.sent;
+
+          if (discount) {
+            _context11.next = 5;
+            break;
+          }
+
+          return _context11.abrupt("return", next(new AppError("No discount found with that ID", 404)));
+
+        case 5:
+          _context11.prev = 5;
+          _context11.next = 8;
+          return regeneratorRuntime.awrap(stripe.coupons.del(discount.stripeId));
+
+        case 8:
+          _context11.next = 12;
+          break;
+
+        case 10:
+          _context11.prev = 10;
+          _context11.t0 = _context11["catch"](5);
+
+        case 12:
+          res.status(204).json({
+            status: "success",
+            data: null
+          });
+
+        case 13:
+        case "end":
+          return _context11.stop();
+      }
+    }
+  }, null, null, [[5, 10]]);
+});
+exports.toggleDiscountStatus = catchAsync(function _callee12(req, res, next) {
+  var discount, action;
+  return regeneratorRuntime.async(function _callee12$(_context12) {
+    while (1) {
+      switch (_context12.prev = _context12.next) {
+        case 0:
+          _context12.next = 2;
+          return regeneratorRuntime.awrap(Discount.findById(req.params.id));
+
+        case 2:
+          discount = _context12.sent;
+
+          if (discount) {
+            _context12.next = 5;
+            break;
+          }
+
+          return _context12.abrupt("return", next(new AppError("No discount found", 404)));
+
+        case 5:
+          action = req.body.action;
+
+          if (!(action === "activate")) {
+            _context12.next = 12;
+            break;
+          }
+
+          _context12.next = 9;
+          return regeneratorRuntime.awrap(Discount.updateMany({}, {
+            isActive: false
+          }));
+
+        case 9:
+          discount.isActive = true;
+          _context12.next = 20;
+          break;
+
+        case 12:
+          if (!(action === "deactivate")) {
+            _context12.next = 16;
+            break;
+          }
+
+          discount.isActive = false;
+          _context12.next = 20;
+          break;
+
+        case 16:
+          if (discount.isActive) {
+            _context12.next = 19;
+            break;
+          }
+
+          _context12.next = 19;
+          return regeneratorRuntime.awrap(Discount.updateMany({}, {
+            isActive: false
+          }));
+
+        case 19:
+          discount.isActive = !discount.isActive;
+
+        case 20:
+          _context12.next = 22;
+          return regeneratorRuntime.awrap(discount.save());
+
+        case 22:
+          res.status(200).json({
+            status: "success",
+            data: {
+              discount: discount
+            }
+          });
+
+        case 23:
+        case "end":
+          return _context12.stop();
+      }
+    }
+  });
 });

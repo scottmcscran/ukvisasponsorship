@@ -233,7 +233,12 @@ block content
                 .pricing-grid
                   .pricing-card
                     h4.pricing-title Starter
-                    p.pricing-price £74/mo
+                    if activeDiscount
+                      p.pricing-price 
+                        span(style="text-decoration: line-through; color: #999; font-size: 1.4rem; margin-right: 0.5rem;") £74/mo
+                        | £#{(74 * (1 - activeDiscount.percentage / 100)).toFixed(0)}/mo
+                    else
+                      p.pricing-price £74/mo
                     ul.pricing-features
                       li Unlimited Active Jobs
                       li 3 Featured Jobs
@@ -242,7 +247,12 @@ block content
                   
                   .pricing-card
                     h4.pricing-title Professional
-                    p.pricing-price £149/mo
+                    if activeDiscount
+                      p.pricing-price 
+                        span(style="text-decoration: line-through; color: #999; font-size: 1.4rem; margin-right: 0.5rem;") £149/mo
+                        | £#{(149 * (1 - activeDiscount.percentage / 100)).toFixed(0)}/mo
+                    else
+                      p.pricing-price £149/mo
                     ul.pricing-features
                       li Unlimited Active Jobs
                       li 10 Featured Jobs
@@ -253,7 +263,13 @@ block content
                  p.ma-bt-sm You are on the Starter plan.
                  .pricing-actions
                    if user.companyProfile.accStatus === 'verified'
-                     button.btn.btn--small.btn--standard#sub-pro Upgrade (£149/mo)
+                     if activeDiscount
+                       button.btn.btn--small.btn--standard#sub-pro 
+                         | Upgrade (
+                         span(style="text-decoration: line-through; color: #ccc; margin-right: 0.3rem;") £149/mo
+                         | £#{(149 * (1 - activeDiscount.percentage / 100)).toFixed(0)}/mo)
+                     else
+                       button.btn.btn--small.btn--standard#sub-pro Upgrade (£149/mo)
                    button.btn.btn--small.btn--text#btn-billing-portal Manage Billing
 
               else

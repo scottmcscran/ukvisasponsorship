@@ -18,6 +18,16 @@ router
   .post(adminController.approveEmployer)
   .delete(adminController.rejectEmployer);
 
+router
+  .route("/discounts")
+  .get(adminController.getAllDiscounts)
+  .post(adminController.createDiscount);
+
+router
+  .route("/discounts/:id")
+  .delete(adminController.deleteDiscount)
+  .patch(adminController.toggleDiscountStatus);
+
 router.route(`/get-users`).get(userController.getAllUsers);
 // .post(userController.createUser);
 

@@ -9,6 +9,8 @@ var User = require("./../models/userModel");
 
 var Job = require("../models/jobModel");
 
+var Discount = require("../models/discountModel");
+
 var _require2 = require("../services/subscriptionService"),
     handleSubscriptionStatusChange = _require2.handleSubscriptionStatusChange;
 
@@ -19,7 +21,7 @@ var PLAN_TO_PRICE_ID = {
   professional: process.env.PRO_SUB_PRICE_ID
 };
 exports.getCheckoutSession = catchAsync(function _callee(req, res, next) {
-  var plan, priceId, user, stripeCustomerId, customer, session;
+  var plan, priceId, user, stripeCustomerId, customer, activeDiscount, sessionParams, session;
   return regeneratorRuntime.async(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
@@ -67,7 +69,27 @@ exports.getCheckoutSession = catchAsync(function _callee(req, res, next) {
 
         case 16:
           _context.next = 18;
-          return regeneratorRuntime.awrap(stripe.checkout.sessions.create({
+          return regeneratorRuntime.awrap(Discount.findOne({
+            isActive: true
+          }));
+
+        case 18:
+          activeDiscount = _context.sent;
+
+          if (!(activeDiscount && activeDiscount.expiresAt && new Date() > activeDiscount.expiresAt)) {
+            _context.next = 24;
+            break;
+          }
+
+          activeDiscount.isActive = false;
+          _context.next = 23;
+          return regeneratorRuntime.awrap(activeDiscount.save());
+
+        case 23:
+          activeDiscount = null;
+
+        case 24:
+          sessionParams = {
             payment_method_types: ["card"],
             success_url: "".concat(req.protocol, "://").concat(req.get("host"), "/employer-dashboard?alert=subscription_success"),
             cancel_url: "".concat(req.protocol, "://").concat(req.get("host"), "/employer-dashboard?alert=subscription_cancelled"),
@@ -81,16 +103,25 @@ exports.getCheckoutSession = catchAsync(function _callee(req, res, next) {
               quantity: 1
             }],
             mode: "subscription"
-          }));
+          };
 
-        case 18:
+          if (activeDiscount) {
+            sessionParams.discounts = [{
+              coupon: activeDiscount.stripeId
+            }];
+          }
+
+          _context.next = 28;
+          return regeneratorRuntime.awrap(stripe.checkout.sessions.create(sessionParams));
+
+        case 28:
           session = _context.sent;
           res.status(200).json({
             status: "success",
             session: session
           });
 
-        case 20:
+        case 30:
         case "end":
           return _context.stop();
       }

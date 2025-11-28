@@ -88,6 +88,11 @@ export const initAdmin = () => {
         } else if (currentAction === "deleteBug") {
           await axios.delete(`/api/v1/bug-reports/${currentId}`);
           showAlert("success", "Bug report deleted successfully!");
+        } else if (currentAction === "deleteDiscount") {
+          await axios.delete(`/api/v1/admin/discounts/${currentId}`);
+          showAlert("success", "Discount deleted successfully!");
+          setTimeout(() => location.reload(), 1000);
+          return;
         }
 
         // Remove element from DOM without reloading
@@ -514,4 +519,67 @@ export const initAdmin = () => {
       }
     });
   }
+
+  // --- DISCOUNT LOGIC ---
+  const createDiscountForm = document.querySelector(".form--create-discount");
+  if (createDiscountForm) {
+    createDiscountForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const code = document.getElementById("discountCode").value;
+      const percentage = document.getElementById("discountPercentage").value;
+      const expiresAt = document.getElementById("discountExpires").value;
+      const btn = document.getElementById("createDiscountBtn");
+
+      btn.textContent = "Creating...";
+      try {
+        const res = await axios({
+          method: "POST",
+          url: "/api/v1/admin/discounts",
+          data: { code, percentage, expiresAt },
+        });
+
+        if (res.data.status === "success") {
+          showAlert("success", "Discount created successfully!");
+          setTimeout(() => location.reload(), 1500);
+        }
+      } catch (err) {
+        showAlert("error", err.response.data.message);
+        btn.textContent = "Create Discount";
+      }
+    });
+  }
+
+  const deleteDiscountBtns = document.querySelectorAll(".btn--delete-discount");
+  deleteDiscountBtns.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const id = e.target.dataset.id;
+      openModal(
+        "Delete Discount",
+        "Are you sure you want to delete this discount?",
+        "deleteDiscount",
+        id
+      );
+    });
+  });
+
+  const toggleDiscountBtns = document.querySelectorAll(".btn--toggle-discount");
+  toggleDiscountBtns.forEach((btn) => {
+    btn.addEventListener("click", async (e) => {
+      const id = e.target.dataset.id;
+      const action = e.target.dataset.action;
+      try {
+        const res = await axios({
+          method: "PATCH",
+          url: `/api/v1/admin/discounts/${id}`,
+          data: { action },
+        });
+        if (res.data.status === "success") {
+          showAlert("success", "Discount status updated!");
+          setTimeout(() => location.reload(), 1000);
+        }
+      } catch (err) {
+        showAlert("error", err.response.data.message);
+      }
+    });
+  });
 };

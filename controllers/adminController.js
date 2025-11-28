@@ -3,8 +3,10 @@ const AppError = require(`../utils/appError`);
 const Job = require(`./../models/jobModel`);
 const User = require(`./../models/userModel`);
 const BugReport = require("../models/bugReportModel");
+const Discount = require("../models/discountModel");
 const crypto = require("crypto");
 const Email = require("../utils/email");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 exports.approveEmployer = catchAsync(async (req, res, next) => {
   const user = await User.findByIdAndUpdate(req.params.id, {
@@ -328,4 +330,102 @@ exports.sendClaimEmail = catchAsync(async (req, res, next) => {
       500
     );
   }
+});
+
+exports.createDiscount = catchAsync(async (req, res, next) => {
+  const { code, percentage, expiresAt } = req.body;
+
+  // 1. Create Coupon in Stripe
+  // We use try-catch for Stripe creation to handle duplicates gracefully or errors
+  let coupon;
+  try {
+    coupon = await stripe.coupons.create({
+      percent_off: percentage,
+      duration: "once", // Applies to the first payment only
+      name: code,
+      id: code, // Use the code as the ID
+    });
+  } catch (err) {
+    // If coupon already exists in Stripe, retrieve it
+    if (err.code === "resource_already_exists") {
+      coupon = await stripe.coupons.retrieve(code);
+    } else {
+      return next(new AppError(`Stripe Error: ${err.message}`, 400));
+    }
+  }
+
+  // 2. Create Discount in DB
+  // Deactivate others first if we want only one active global discount
+  await Discount.updateMany({}, { isActive: false });
+
+  const discount = await Discount.create({
+    code,
+    percentage,
+    stripeId: coupon.id,
+    isActive: true,
+    expiresAt: expiresAt ? new Date(expiresAt) : undefined,
+  });
+
+  res.status(201).json({
+    status: "success",
+    data: {
+      discount,
+    },
+  });
+});
+
+exports.getAllDiscounts = catchAsync(async (req, res, next) => {
+  const discounts = await Discount.find().sort("-createdAt");
+  res.status(200).json({
+    status: "success",
+    results: discounts.length,
+    data: {
+      discounts,
+    },
+  });
+});
+
+exports.deleteDiscount = catchAsync(async (req, res, next) => {
+  const discount = await Discount.findByIdAndDelete(req.params.id);
+  if (!discount)
+    return next(new AppError("No discount found with that ID", 404));
+
+  try {
+    await stripe.coupons.del(discount.stripeId);
+  } catch (err) {
+    // Ignore
+  }
+
+  res.status(204).json({
+    status: "success",
+    data: null,
+  });
+});
+
+exports.toggleDiscountStatus = catchAsync(async (req, res, next) => {
+  const discount = await Discount.findById(req.params.id);
+  if (!discount) return next(new AppError("No discount found", 404));
+
+  const { action } = req.body;
+
+  if (action === "activate") {
+    // Deactivate all others first
+    await Discount.updateMany({}, { isActive: false });
+    discount.isActive = true;
+  } else if (action === "deactivate") {
+    discount.isActive = false;
+  } else {
+    // Fallback to toggle if no action provided (legacy support)
+    if (!discount.isActive) {
+      await Discount.updateMany({}, { isActive: false });
+    }
+    discount.isActive = !discount.isActive;
+  }
+
+  await discount.save();
+
+  res.status(200).json({
+    status: "success",
+    data: { discount },
+  });
 });

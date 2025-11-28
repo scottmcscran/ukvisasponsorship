@@ -3,6 +3,7 @@ const { catchAsync } = require(`./../utils/catchAsync`);
 
 const User = require(`./../models/userModel`);
 const Job = require(`../models/jobModel`);
+const Discount = require("../models/discountModel");
 const {
   handleSubscriptionStatusChange,
 } = require("../services/subscriptionService");
@@ -40,7 +41,21 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     await user.save({ validateBeforeSave: false });
   }
 
-  const session = await stripe.checkout.sessions.create({
+  // Check for active discount
+  let activeDiscount = await Discount.findOne({ isActive: true });
+
+  // Check expiration
+  if (
+    activeDiscount &&
+    activeDiscount.expiresAt &&
+    new Date() > activeDiscount.expiresAt
+  ) {
+    activeDiscount.isActive = false;
+    await activeDiscount.save();
+    activeDiscount = null;
+  }
+
+  const sessionParams = {
     payment_method_types: [`card`],
     success_url: `${req.protocol}://${req.get(`host`)}/employer-dashboard?alert=subscription_success`,
     cancel_url: `${req.protocol}://${req.get(`host`)}/employer-dashboard?alert=subscription_cancelled`,
@@ -56,7 +71,13 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
       },
     ],
     mode: `subscription`,
-  });
+  };
+
+  if (activeDiscount) {
+    sessionParams.discounts = [{ coupon: activeDiscount.stripeId }];
+  }
+
+  const session = await stripe.checkout.sessions.create(sessionParams);
 
   res.status(200).json({
     status: `success`,
