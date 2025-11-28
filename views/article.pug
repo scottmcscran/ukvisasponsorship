@@ -1,0 +1,24 @@
+extends base
+
+block content
+  section.section-article
+    .container
+      .article-container
+        .article-header
+          .article-nav
+            a.btn-text.ma-bt-md(href='/blog') &larr; Back to Blog
+          .article-title-box
+            h1.heading-secondary= article.title
+            .article-meta
+              span.article-date= article.createdAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+            hr.article-divider
+
+        .article-content
+          //- Render raw HTML content safely
+          | !{article.content}
+
+        .article-footer
+          h3.heading-tertiary.ma-bt-sm Share this article
+          .share-buttons
+            a.btn.btn--small.btn--linkedin(href=`https://www.linkedin.com/sharing/share-offsite/?url=https://ukvisasponsorship.com/blog/${article.slug}` target="_blank") Share on LinkedIn
+            a.btn.btn--small.btn--twitter(href=`https://twitter.com/intent/tweet?url=https://ukvisasponsorship.com/blog/${article.slug}&text=${article.title}` target="_blank") Share on Twitter

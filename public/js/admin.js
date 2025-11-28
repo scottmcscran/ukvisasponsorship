@@ -479,4 +479,39 @@ export const initAdmin = () => {
       }
     });
   }
+
+  // --- BLOG POST LOGIC ---
+  const blogForm = document.querySelector(".form--create-blog");
+
+  if (blogForm) {
+    blogForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById("createBlogBtn");
+      btn.textContent = "Publishing...";
+
+      const title = document.getElementById("blogTitle").value;
+      const summary = document.getElementById("blogSummary").value;
+      const content = document.getElementById("blogContent").value;
+
+      try {
+        const res = await axios.post("/api/v1/articles", {
+          title,
+          summary,
+          content,
+        });
+
+        if (res.data.status === "success") {
+          showAlert("success", "Article published successfully!");
+          btn.textContent = "Publish Article";
+          blogForm.reset();
+        }
+      } catch (err) {
+        showAlert(
+          "error",
+          err.response?.data?.message || "Error publishing article"
+        );
+        btn.textContent = "Publish Article";
+      }
+    });
+  }
 };

@@ -1,0 +1,25 @@
+extends base
+
+block content
+  section.section-blog
+    .container
+      .blog-header
+        h1.heading-secondary.ma-bt-lg.margin-top Articles
+
+      .blog-grid
+        if articles.length > 0
+          each article in articles
+            .blog-card
+              .blog-card__content
+                .blog-card__meta
+                  span.blog-card__date= article.createdAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+                h3.blog-card__title
+                  a(href=`/blog/${article.slug}`)= article.title
+                p.blog-card__summary= article.summary
+                .blog-card__actions
+                  a.btn-text(href=`/blog/${article.slug}`) Read more &rarr;
+                  if user && user.role === 'admin'
+                    button.btn.btn--small.btn--delete.btn--delete-article(data-article-id=article.id) Delete
+        else
+          .no-articles
+            p No articles yet. Check back soon!

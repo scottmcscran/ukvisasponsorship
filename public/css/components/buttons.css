@@ -231,3 +231,29 @@
     background-color: #27ae60;
   }
 }
+
+.btn-text {
+  color: var(--brand-primary);
+  display: inline-block;
+  text-decoration: none;
+  border-bottom: 1px solid var(--brand-primary);
+  padding: 3px;
+  transition: all 0.2s;
+  font-size: var(--font-size-base);
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--brand-primary);
+  cursor: pointer;
+}
+
+.btn-text:hover {
+  background-color: var(--brand-primary);
+  color: #fff;
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.btn-text:active {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  transform: translateY(0);
+}

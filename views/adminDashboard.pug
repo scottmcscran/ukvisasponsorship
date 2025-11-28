@@ -14,6 +14,7 @@ block content
         button.tab-btn(data-tab='bugs') Bug Reports
         button.tab-btn(data-tab='export') Data Export
         button.tab-btn(data-tab='shadow') Shadow Accounts
+        button.tab-btn(data-tab='blog') Post Blog
 
       .dashboard-content
         //- SHADOW ACCOUNTS TAB
@@ -271,6 +272,26 @@ block content
                     li
                       span= emp.companyName
                       strong= emp.jobCount
+
+        //- BLOG POST TAB
+        .tab-content(id='blog')
+          .blog-post-section
+            h3.heading-tertiary.ma-bt-sm Create New Blog Post
+            form.form.form--create-blog
+              .form__group
+                label.form__label(for='blogTitle') Title
+                input#blogTitle.form__input(type='text', required, placeholder='Enter article title')
+              
+              .form__group
+                label.form__label(for='blogSummary') Summary
+                textarea#blogSummary.form__input(rows='3', required, placeholder='Short summary for the card view')
+
+              .form__group
+                label.form__label(for='blogContent') Content (HTML supported)
+                textarea#blogContent.form__input(rows='15', required, placeholder='<p>Article content goes here...</p>')
+
+              .form__group
+                button.btn.btn--small.btn--green#createBlogBtn(type='submit') Publish Article
 
   //- CONFIRMATION MODAL
   .modal-overlay.hidden#confirmModal

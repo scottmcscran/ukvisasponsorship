@@ -42,6 +42,9 @@ var _require6 = require("./bugReport"),
 var _require7 = require("./cookieConsent"),
     initCookieConsent = _require7.initCookieConsent;
 
+var _require8 = require("./blog"),
+    initBlog = _require8.initBlog;
+
 var logOutBtn = document.querySelector(".nav__el--logout");
 if (logOutBtn) logOutBtn.addEventListener("click", logout); // Init Cookie Consent
 
@@ -53,7 +56,9 @@ initJobDetail(); // Init Dashboard
 
 initDashboard(); // Init Admin
 
-initAdmin(); // Profile Page Logic
+initAdmin(); // Init Blog
+
+initBlog(); // Profile Page Logic
 
 var userDataForm = document.querySelector(".form-user-data");
 var userPasswordForm = document.querySelector(".form-user-password");

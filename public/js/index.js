@@ -26,6 +26,7 @@ const { initDashboard } = require(`./dashboard`);
 const { initAdmin } = require(`./admin`);
 const { initBugReport } = require(`./bugReport`);
 const { initCookieConsent } = require("./cookieConsent");
+const { initBlog } = require("./blog");
 
 const logOutBtn = document.querySelector(".nav__el--logout");
 if (logOutBtn) logOutBtn.addEventListener("click", logout);
@@ -44,6 +45,9 @@ initDashboard();
 
 // Init Admin
 initAdmin();
+
+// Init Blog
+initBlog();
 
 // Profile Page Logic
 const userDataForm = document.querySelector(".form-user-data");

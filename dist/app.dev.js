@@ -24,7 +24,9 @@ var viewRouter = require("./routers/viewRouter");
 
 var adminRouter = require("./routers/adminRouter");
 
-var bugReportRouter = require("./routers/bugReportRouter"); // const reviewRouter = require(`./routers/reviewRouter`);
+var bugReportRouter = require("./routers/bugReportRouter");
+
+var articleRouter = require("./routers/articleRouter"); // const reviewRouter = require(`./routers/reviewRouter`);
 // eslint-disable-next-line import/no-extraneous-dependencies
 
 
@@ -95,6 +97,8 @@ app.get("/bundle.js.map", function (req, res) {
   res.sendFile(path.join(__dirname, "public/js/bundle.js.map"));
 }); // Routes
 
+app.use("/blog", articleRouter);
+app.use("/api/v1/articles", articleRouter);
 app.use("/", viewRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/jobs", jobRouter);
