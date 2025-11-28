@@ -69,7 +69,7 @@
   height: 0;
 }
 
-/* Unified Thumb Styles for ALL Range Inputs */
+/* Thumb Styles */
 .range-input::-webkit-slider-thumb {
   pointer-events: auto;
   -webkit-appearance: none;
@@ -77,15 +77,14 @@
   width: 20px;
   height: 20px;
   border-radius: var(--border-radius-round);
-  background: var(--slider-thumb) !important; /* Force grey thumb */
+  background: var(--slider-thumb) !important;
   cursor: pointer;
   border: 2px solid var(--bg-body);
   box-shadow: var(--shadow-sm);
   transition: background 0.2s;
-  margin-top: -7px; /* Center on track for single slider */
+  margin-top: -7px;
 }
 
-/* Reset margin for double slider thumbs as they are absolutely positioned */
 .double-slider .range-input::-webkit-slider-thumb {
   margin-top: 0;
 }
@@ -106,7 +105,7 @@
   transition: background 0.2s;
 }
 
-/* Single Slider (Distance) Styling */
+/* Single Slider */
 input[type="range"].range-input:not(.min-salary):not(.max-salary) {
   -webkit-appearance: none;
   appearance: none;
@@ -124,7 +123,7 @@ input[type="range"].range-input:not(.min-salary):not(
   width: 100%;
   height: 6px;
   cursor: pointer;
-  background: transparent; /* Background handled by input itself via JS gradient */
+  background: transparent;
   border-radius: var(--border-radius-sm);
 }
 
@@ -136,15 +135,14 @@ input[type="range"].range-input:not(.min-salary):not(
   margin-top: var(--spacing-xs);
 }
 
-/* Force uniform background for disabled sliders */
+/* Disabled State */
 .disabled-filter .range-input,
 .disabled-filter .slider-track {
   background: var(--slider-disabled) !important;
-  background-image: none !important; /* Ensure gradient is removed */
+  background-image: none !important;
   background-color: var(--slider-disabled) !important;
 }
 
-/* Ensure thumb is also grey/disabled style */
 .disabled-filter .range-input::-webkit-slider-thumb {
   background: var(--slider-thumb) !important;
   border-color: var(--slider-disabled) !important;
@@ -155,7 +153,7 @@ input[type="range"].range-input:not(.min-salary):not(
   border-color: var(--slider-disabled) !important;
 }
 
-/* General Form Styles */
+/* General Form */
 .login-form {
   max-width: 60rem;
   margin: 4rem auto;
