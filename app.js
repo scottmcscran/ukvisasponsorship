@@ -43,6 +43,8 @@ app.use(
           `http://localhost:*`,
           `https://www.google-analytics.com`,
           `https://analytics.google.com`,
+          `https://api.stripe.com`,
+          `https://checkout.stripe.com`,
         ],
         scriptSrc: [
           `'self'`,
@@ -50,6 +52,11 @@ app.use(
           `'unsafe-eval'`,
           `'unsafe-inline'`,
           `https://www.googletagmanager.com`,
+        ],
+        frameSrc: [
+          `'self'`,
+          `https://js.stripe.com`,
+          `https://hooks.stripe.com`,
         ],
         styleSrc: [`'self'`, `https://fonts.googleapis.com`, `'unsafe-inline'`],
         fontSrc: [`'self'`, `https://fonts.gstatic.com`],
