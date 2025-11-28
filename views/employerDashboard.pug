@@ -178,6 +178,20 @@ block content
       .tab-content(id='subscription' style=user.companyProfile.accStatus === 'banned' ? 'display: none !important' : '')
         .user-view__form-container
           h2.heading-secondary.ma-bt-md Subscription Management
+
+          if user.companyProfile.accStatus !== 'verified'
+            if user.companyProfile.accStatus === 'rejected'
+              .banned-message-container(style="text-align: center; padding: 2rem; background-color: #fee2e2; border-radius: 8px; border: 1px solid #ef4444; margin-bottom: 2rem;")
+                h3.heading-tertiary(style="color: #b91c1c; margin-bottom: 1rem;") Account Rejected
+                p(style="font-size: 1.6rem; color: #b91c1c;") Your account was rejected by an admin. You cannot upgrade your subscription.
+            else if user.companyProfile.accStatus === 'banned'
+              .banned-message-container(style="text-align: center; padding: 2rem; background-color: #fee2e2; border-radius: 8px; border: 1px solid #ef4444; margin-bottom: 2rem;")
+                h3.heading-tertiary(style="color: #b91c1c; margin-bottom: 1rem;") Account Banned
+                p(style="font-size: 1.6rem; color: #b91c1c;") Your account has been banned. You cannot upgrade your subscription.
+            else
+              .banned-message-container(style="text-align: center; padding: 2rem; background-color: #fff7ed; border-radius: 8px; border: 1px solid #f97316; margin-bottom: 2rem;")
+                h3.heading-tertiary(style="color: #c2410c; margin-bottom: 1rem;") Account Unverified
+                p(style="font-size: 1.6rem; color: #c2410c;") Your account is pending verification. You cannot upgrade your subscription until verified.
           
           .subscription-card
             .subscription-header
@@ -223,7 +237,8 @@ block content
                     ul.pricing-features
                       li Unlimited Active Jobs
                       li 3 Featured Jobs
-                    button.btn.btn--small.btn--standard#sub-starter Upgrade
+                    if user.companyProfile.accStatus === 'verified'
+                      button.btn.btn--small.btn--standard#sub-starter Upgrade
                   
                   .pricing-card
                     h4.pricing-title Professional
@@ -231,18 +246,21 @@ block content
                     ul.pricing-features
                       li Unlimited Active Jobs
                       li 10 Featured Jobs
-                    button.btn.btn--small.btn--standard#sub-pro Upgrade
+                    if user.companyProfile.accStatus === 'verified'
+                      button.btn.btn--small.btn--standard#sub-pro Upgrade
               
               else if user.subscription.tier === 'starter'
                  p.ma-bt-sm You are on the Starter plan.
                  .pricing-actions
-                   button.btn.btn--small.btn--standard#sub-pro Upgrade (£149/mo)
+                   if user.companyProfile.accStatus === 'verified'
+                     button.btn.btn--small.btn--standard#sub-pro Upgrade (£149/mo)
                    button.btn.btn--small.btn--text#btn-billing-portal Manage Billing
 
               else
                  p.ma-bt-sm You are on the Professional plan.
                  .pricing-actions
-                   button.btn.btn--small.btn--text#btn-downgrade-starter Downgrade to Starter
+                   if user.companyProfile.accStatus === 'verified'
+                     button.btn.btn--small.btn--text#btn-downgrade-starter Downgrade to Starter
                    button.btn.btn--small.btn--text#btn-billing-portal Manage Billing
 
     //- Post Job Modal

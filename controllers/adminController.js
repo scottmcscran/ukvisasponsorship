@@ -13,7 +13,14 @@ exports.approveEmployer = catchAsync(async (req, res, next) => {
 
   if (!user) return next(new AppError(`No user with that ID.`, 404));
 
-  // ADD EMAIL HERE LATER
+  try {
+    const dashboardUrl = `${req.protocol}://${req.get(
+      "host"
+    )}/employer-dashboard`;
+    await new Email(user, dashboardUrl).sendAccountVerified();
+  } catch (err) {
+    console.log("Error sending verification email:", err);
+  }
 
   res.status(200).json({
     status: `success`,

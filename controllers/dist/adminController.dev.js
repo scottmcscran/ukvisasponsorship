@@ -24,7 +24,7 @@ var crypto = require("crypto");
 var Email = require("../utils/email");
 
 exports.approveEmployer = catchAsync(function _callee(req, res, next) {
-  var user;
+  var user, dashboardUrl;
   return regeneratorRuntime.async(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
@@ -45,18 +45,32 @@ exports.approveEmployer = catchAsync(function _callee(req, res, next) {
           return _context.abrupt("return", next(new AppError("No user with that ID.", 404)));
 
         case 5:
-          // ADD EMAIL HERE LATER
+          _context.prev = 5;
+          dashboardUrl = "".concat(req.protocol, "://").concat(req.get("host"), "/employer-dashboard");
+          _context.next = 9;
+          return regeneratorRuntime.awrap(new Email(user, dashboardUrl).sendAccountVerified());
+
+        case 9:
+          _context.next = 14;
+          break;
+
+        case 11:
+          _context.prev = 11;
+          _context.t0 = _context["catch"](5);
+          console.log("Error sending verification email:", _context.t0);
+
+        case 14:
           res.status(200).json({
             status: "success",
             message: "".concat(user.companyProfile.legalOrgName, " has been verified.")
           });
 
-        case 6:
+        case 15:
         case "end":
           return _context.stop();
       }
     }
-  });
+  }, null, null, [[5, 11]]);
 });
 exports.rejectEmployer = catchAsync(function _callee2(req, res, next) {
   var user;

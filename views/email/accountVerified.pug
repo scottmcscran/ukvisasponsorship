@@ -1,0 +1,17 @@
+extends baseEmail
+
+block content
+  p Hi #{firstName},
+  p Great news! Your employer account has been verified by our admin team.
+  p You can now access all features of the employer dashboard, including posting jobs and managing your subscription.
+  table.btn.btn-primary(role='presentation', border='0', cellpadding='0', cellspacing='0')
+    tbody
+      tr
+        td(align='left')
+          table(role='presentation', border='0', cellpadding='0', cellspacing='0')
+            tbody
+              tr
+                td
+                  a(href=url, target='_blank') Go to Dashboard
+  p If you have any questions, please don't hesitate to contact us.
+  p - The UK Visa Sponsorship Team

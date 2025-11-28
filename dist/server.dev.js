@@ -8,7 +8,7 @@ var _require = require("./services/subscriptionService"),
     dailySubscriptionCheck = _require.dailySubscriptionCheck,
     checkShadowAccountExpirations = _require.checkShadowAccountExpirations;
 
-var cron = require("node-cron"); // Trigger restart 12
+var cron = require("node-cron"); // Trigger restart 15
 
 
 process.on("uncaughtExeption", function (err) {

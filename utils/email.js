@@ -83,18 +83,11 @@ module.exports = class Email {
   async sendPasswordReset() {
     await this.send(
       `passwordReset`,
-      `Your password reset token (valid for 10 min)`
+      `Your password reset token (valid for 10 minutes)`
     );
   }
 
-  async sendVerification() {
-    await this.send("verifyEmail", "Verify your email address");
-  }
-
-  async sendClaimAccount() {
-    await this.send(
-      "claimAccount",
-      "Claim your UK Visa Sponsorship Employer Account"
-    );
+  async sendAccountVerified() {
+    await this.send(`accountVerified`, `Your account has been verified!`);
   }
 };
