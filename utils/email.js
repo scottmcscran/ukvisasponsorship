@@ -87,6 +87,10 @@ module.exports = class Email {
     );
   }
 
+  async sendVerification() {
+    await this.send(`verifyEmail`, `Verify your email address`);
+  }
+
   async sendAccountVerified() {
     await this.send(`accountVerified`, `Your account has been verified!`);
   }

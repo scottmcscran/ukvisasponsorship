@@ -279,6 +279,19 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   if (!user) return next(new AppError(`No user with this email.`, 404));
 
+  if (typeof user.createPasswordResetToken !== "function") {
+    console.error(
+      "CRITICAL ERROR: user.createPasswordResetToken is not a function. User object:",
+      user
+    );
+    return next(
+      new AppError(
+        "Internal Server Error: User model configuration error.",
+        500
+      )
+    );
+  }
+
   const resetToken = user.createPasswordResetToken();
   await user.save({ validateBeforeSave: false });
 

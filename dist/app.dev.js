@@ -75,7 +75,10 @@ if (process.env.NODE_ENV === "development") {
 var limiter = rateLimit({
   max: 100,
   windowMs: 60 * 60 * 1000,
-  message: "Request limit reached, try again in 1hr"
+  message: "Request limit reached, try again in 1hr",
+  validate: {
+    trustProxy: false
+  }
 });
 app.use("/api", limiter);
 app.use(express.json({

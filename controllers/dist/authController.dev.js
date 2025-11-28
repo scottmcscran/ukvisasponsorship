@@ -490,48 +490,57 @@ exports.forgotPassword = catchAsync(function _callee8(req, res, next) {
           return _context8.abrupt("return", next(new AppError("No user with this email.", 404)));
 
         case 5:
+          if (!(typeof user.createPasswordResetToken !== "function")) {
+            _context8.next = 8;
+            break;
+          }
+
+          console.error("CRITICAL ERROR: user.createPasswordResetToken is not a function. User object:", user);
+          return _context8.abrupt("return", next(new AppError("Internal Server Error: User model configuration error.", 500)));
+
+        case 8:
           resetToken = user.createPasswordResetToken();
-          _context8.next = 8;
+          _context8.next = 11;
           return regeneratorRuntime.awrap(user.save({
             validateBeforeSave: false
           }));
 
-        case 8:
-          _context8.prev = 8;
+        case 11:
+          _context8.prev = 11;
           resetURL = "".concat(req.protocol, "://").concat(req.get("host"), "/reset-password/").concat(resetToken);
-          _context8.next = 12;
+          _context8.next = 15;
           return regeneratorRuntime.awrap(new Email(user, resetURL).sendPasswordReset());
 
-        case 12:
-          _context8.next = 22;
+        case 15:
+          _context8.next = 25;
           break;
 
-        case 14:
-          _context8.prev = 14;
-          _context8.t0 = _context8["catch"](8);
+        case 17:
+          _context8.prev = 17;
+          _context8.t0 = _context8["catch"](11);
           console.log(_context8.t0);
           user.passwordResetToken = undefined;
           user.passwordResetExpires = undefined;
-          _context8.next = 21;
+          _context8.next = 24;
           return regeneratorRuntime.awrap(user.save({
             validateBeforeSave: false
           }));
 
-        case 21:
+        case 24:
           return _context8.abrupt("return", next(new AppError("There was an error sending the email.", 500)));
 
-        case 22:
+        case 25:
           res.status(200).json({
             status: "success",
             message: "Reset token has been sent to your email."
           });
 
-        case 23:
+        case 26:
         case "end":
           return _context8.stop();
       }
     }
-  }, null, null, [[8, 14]]);
+  }, null, null, [[11, 17]]);
 });
 exports.resetPassword = catchAsync(function _callee9(req, res, next) {
   var hashedToken, user;
