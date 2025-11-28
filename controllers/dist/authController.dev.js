@@ -38,7 +38,6 @@ var createSendToken = function createSendToken(user, statusCode, res) {
     token: token,
     data: user
   });
-  console.log("cookie set");
 };
 
 exports.signUpEmployer = catchAsync(function _callee(req, res, next) {
@@ -583,34 +582,33 @@ exports.updatePassword = catchAsync(function _callee10(req, res, next) {
     while (1) {
       switch (_context10.prev = _context10.next) {
         case 0:
-          console.log("UpdatePassword Req Body:", req.body);
-          _context10.next = 3;
+          _context10.next = 2;
           return regeneratorRuntime.awrap(User.findById(req.user.id).select("+password"));
 
-        case 3:
+        case 2:
           user = _context10.sent;
-          _context10.next = 6;
+          _context10.next = 5;
           return regeneratorRuntime.awrap(user.correctPassword(req.body.passwordCurrent, user.password));
 
-        case 6:
+        case 5:
           if (_context10.sent) {
-            _context10.next = 8;
+            _context10.next = 7;
             break;
           }
 
           return _context10.abrupt("return", next(new AppError("Incorrect current password", 401)));
 
-        case 8:
+        case 7:
           user.password = req.body.password;
           user.passwordConfirm = req.body.passwordConfirm;
           user.passwordChangedAt = Date.now() - 1000;
-          _context10.next = 13;
+          _context10.next = 12;
           return regeneratorRuntime.awrap(user.save());
 
-        case 13:
+        case 12:
           createSendToken(user, 200, res);
 
-        case 14:
+        case 13:
         case "end":
           return _context10.stop();
       }

@@ -87,24 +87,22 @@ exports.rejectEmployer = catchAsync(function _callee2(req, res, next) {
 
         case 2:
           user = _context2.sent;
-          console.log(user);
-          console.log(req.params);
 
           if (user) {
-            _context2.next = 7;
+            _context2.next = 5;
             break;
           }
 
           return _context2.abrupt("return", next(new AppError("No user with that ID.", 404)));
 
-        case 7:
+        case 5:
           // ADD EMAIL HERE LATER
           res.status(200).json({
             status: "success",
             message: "".concat(user.companyProfile.legalOrgName, " has been rejected.")
           });
 
-        case 8:
+        case 6:
         case "end":
           return _context2.stop();
       }

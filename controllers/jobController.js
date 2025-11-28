@@ -378,8 +378,6 @@ exports.getAllJobs = catchAsync(async (req, res, next) => {
       filter.$and = searchConditions;
     }
 
-    console.log("Search Filter:", JSON.stringify(filter, null, 2));
-
     delete req.query.search;
   }
 

@@ -210,28 +210,52 @@ block content
           .stats-grid
             .stat-card
               h4.stat-card__title Total Jobs
-              p.stat-card__value= stats.totalJobs
+              p.stat-card__value
+                | #{stats.totalJobs}
+                if stats.totalJobsChange != 0
+                  span(style=`font-size: 1.4rem; margin-left: 0.5rem; color: ${stats.totalJobsChange > 0 ? '#2ecc71' : '#e74c3c'}`) #{stats.totalJobsChange > 0 ? '+' : ''}#{stats.totalJobsChange}%
             .stat-card
               h4.stat-card__title Active Jobs
-              p.stat-card__value= stats.activeJobs
+              p.stat-card__value
+                | #{stats.activeJobs}
+                if stats.activeJobsChange != 0
+                  span(style=`font-size: 1.4rem; margin-left: 0.5rem; color: ${stats.activeJobsChange > 0 ? '#2ecc71' : '#e74c3c'}`) #{stats.activeJobsChange > 0 ? '+' : ''}#{stats.activeJobsChange}%
             .stat-card
               h4.stat-card__title Featured Jobs
-              p.stat-card__value= stats.featuredJobs
+              p.stat-card__value
+                | #{stats.featuredJobs}
+                if stats.featuredJobsChange != 0
+                  span(style=`font-size: 1.4rem; margin-left: 0.5rem; color: ${stats.featuredJobsChange > 0 ? '#2ecc71' : '#e74c3c'}`) #{stats.featuredJobsChange > 0 ? '+' : ''}#{stats.featuredJobsChange}%
             .stat-card
               h4.stat-card__title Total Users
-              p.stat-card__value= stats.totalUsers
+              p.stat-card__value
+                | #{stats.totalUsers}
+                if stats.totalUsersChange != 0
+                  span(style=`font-size: 1.4rem; margin-left: 0.5rem; color: ${stats.totalUsersChange > 0 ? '#2ecc71' : '#e74c3c'}`) #{stats.totalUsersChange > 0 ? '+' : ''}#{stats.totalUsersChange}%
             .stat-card
               h4.stat-card__title Verified Employers
-              p.stat-card__value= stats.verifiedEmployers
+              p.stat-card__value
+                | #{stats.verifiedEmployers}
+                if stats.verifiedEmployersChange != 0
+                  span(style=`font-size: 1.4rem; margin-left: 0.5rem; color: ${stats.verifiedEmployersChange > 0 ? '#2ecc71' : '#e74c3c'}`) #{stats.verifiedEmployersChange > 0 ? '+' : ''}#{stats.verifiedEmployersChange}%
             .stat-card
               h4.stat-card__title Free Users
-              p.stat-card__value= stats.freeUsers
+              p.stat-card__value
+                | #{stats.freeUsers}
+                if stats.freeUsersChange != 0
+                  span(style=`font-size: 1.4rem; margin-left: 0.5rem; color: ${stats.freeUsersChange > 0 ? '#2ecc71' : '#e74c3c'}`) #{stats.freeUsersChange > 0 ? '+' : ''}#{stats.freeUsersChange}%
             .stat-card
               h4.stat-card__title Starter Users
-              p.stat-card__value= stats.starterUsers
+              p.stat-card__value
+                | #{stats.starterUsers}
+                if stats.starterUsersChange != 0
+                  span(style=`font-size: 1.4rem; margin-left: 0.5rem; color: ${stats.starterUsersChange > 0 ? '#2ecc71' : '#e74c3c'}`) #{stats.starterUsersChange > 0 ? '+' : ''}#{stats.starterUsersChange}%
             .stat-card
               h4.stat-card__title Pro Users
-              p.stat-card__value= stats.professionalUsers
+              p.stat-card__value
+                | #{stats.professionalUsers}
+                if stats.professionalUsersChange != 0
+                  span(style=`font-size: 1.4rem; margin-left: 0.5rem; color: ${stats.professionalUsersChange > 0 ? '#2ecc71' : '#e74c3c'}`) #{stats.professionalUsersChange > 0 ? '+' : ''}#{stats.professionalUsersChange}%
 
           .analytics-sections
             .analytics-row

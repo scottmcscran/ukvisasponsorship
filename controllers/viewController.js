@@ -9,14 +9,28 @@ const { catchAsync } = require(`./../utils/catchAsync`);
 const AppError = require(`./../utils/appError`);
 const ApiFeatures = require(`./../utils/apiFeatures`);
 
+// Helper to calculate % change
+const calculateChange = async (Model, query = {}) => {
+  const now = new Date();
+  const yesterday = new Date(now - 24 * 60 * 60 * 1000);
+
+  const totalNow = await Model.countDocuments(query);
+  const totalYesterday = await Model.countDocuments({
+    ...query,
+    createdAt: { $lt: yesterday },
+  });
+
+  if (totalYesterday === 0) return totalNow > 0 ? 100 : 0;
+
+  const change = ((totalNow - totalYesterday) / totalYesterday) * 100;
+  return change.toFixed(1);
+};
+
 exports.getAdminDashboard = catchAsync(async (req, res, next) => {
   // 1. Get Reported Jobs
   const reportedJobs = await Job.find({ status: "reported" })
     .select("+reports")
     .populate("postedBy");
-
-  // Debugging: Check if any jobs are reported
-  console.log(`Reported Jobs Found: ${reportedJobs.length}`);
 
   // 2. Get Unverified Employers
   const unverifiedEmployers = await User.find({
@@ -27,19 +41,38 @@ exports.getAdminDashboard = catchAsync(async (req, res, next) => {
   // 3. Get Basic Stats
   const stats = {
     totalJobs: await Job.countDocuments(),
+    totalJobsChange: await calculateChange(Job),
+
     activeJobs: await Job.countDocuments({ status: "active" }),
-    featuredJobs: await Job.countDocuments({
-      featured: true,
-      status: "active",
-    }),
+    activeJobsChange: await calculateChange(Job, { status: "active" }),
+
+    featuredJobs: await Job.countDocuments({ featured: true }),
+    featuredJobsChange: await calculateChange(Job, { featured: true }),
+
     totalUsers: await User.countDocuments(),
+    totalUsersChange: await calculateChange(User),
+
     verifiedEmployers: await User.countDocuments({
       role: "employer",
       "companyProfile.accStatus": "verified",
     }),
+    verifiedEmployersChange: await calculateChange(User, {
+      role: "employer",
+      "companyProfile.accStatus": "verified",
+    }),
+
     freeUsers: await User.countDocuments({ "subscription.tier": "free" }),
+    freeUsersChange: await calculateChange(User, { "subscription.tier": "free" }),
+
     starterUsers: await User.countDocuments({ "subscription.tier": "starter" }),
+    starterUsersChange: await calculateChange(User, {
+      "subscription.tier": "starter",
+    }),
+
     professionalUsers: await User.countDocuments({
+      "subscription.tier": "professional",
+    }),
+    professionalUsersChange: await calculateChange(User, {
       "subscription.tier": "professional",
     }),
   };

@@ -23,97 +23,204 @@ var _require2 = require("./../utils/catchAsync"),
 
 var AppError = require("./../utils/appError");
 
-var ApiFeatures = require("./../utils/apiFeatures");
+var ApiFeatures = require("./../utils/apiFeatures"); // Helper to calculate % change
 
-exports.getAdminDashboard = catchAsync(function _callee(req, res, next) {
-  var reportedJobs, unverifiedEmployers, stats, jobsByVisaType, jobsByLocation, topEmployers, platformAnalytics, bugReports;
-  return regeneratorRuntime.async(function _callee$(_context) {
+
+var calculateChange = function calculateChange(Model) {
+  var query,
+      now,
+      yesterday,
+      totalNow,
+      totalYesterday,
+      change,
+      _args = arguments;
+  return regeneratorRuntime.async(function calculateChange$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          _context.next = 2;
+          query = _args.length > 1 && _args[1] !== undefined ? _args[1] : {};
+          now = new Date();
+          yesterday = new Date(now - 24 * 60 * 60 * 1000);
+          _context.next = 5;
+          return regeneratorRuntime.awrap(Model.countDocuments(query));
+
+        case 5:
+          totalNow = _context.sent;
+          _context.next = 8;
+          return regeneratorRuntime.awrap(Model.countDocuments(_objectSpread({}, query, {
+            createdAt: {
+              $lt: yesterday
+            }
+          })));
+
+        case 8:
+          totalYesterday = _context.sent;
+
+          if (!(totalYesterday === 0)) {
+            _context.next = 11;
+            break;
+          }
+
+          return _context.abrupt("return", totalNow > 0 ? 100 : 0);
+
+        case 11:
+          change = (totalNow - totalYesterday) / totalYesterday * 100;
+          return _context.abrupt("return", change.toFixed(1));
+
+        case 13:
+        case "end":
+          return _context.stop();
+      }
+    }
+  });
+};
+
+exports.getAdminDashboard = catchAsync(function _callee(req, res, next) {
+  var reportedJobs, unverifiedEmployers, stats, jobsByVisaType, jobsByLocation, topEmployers, platformAnalytics, bugReports;
+  return regeneratorRuntime.async(function _callee$(_context2) {
+    while (1) {
+      switch (_context2.prev = _context2.next) {
+        case 0:
+          _context2.next = 2;
           return regeneratorRuntime.awrap(Job.find({
             status: "reported"
           }).select("+reports").populate("postedBy"));
 
         case 2:
-          reportedJobs = _context.sent;
-          // Debugging: Check if any jobs are reported
-          console.log("Reported Jobs Found: ".concat(reportedJobs.length)); // 2. Get Unverified Employers
-
-          _context.next = 6;
+          reportedJobs = _context2.sent;
+          _context2.next = 5;
           return regeneratorRuntime.awrap(User.find({
             role: "employer",
             "companyProfile.accStatus": "unverified"
           }));
 
-        case 6:
-          unverifiedEmployers = _context.sent;
-          _context.next = 9;
+        case 5:
+          unverifiedEmployers = _context2.sent;
+          _context2.next = 8;
           return regeneratorRuntime.awrap(Job.countDocuments());
 
-        case 9:
-          _context.t0 = _context.sent;
-          _context.next = 12;
+        case 8:
+          _context2.t0 = _context2.sent;
+          _context2.next = 11;
+          return regeneratorRuntime.awrap(calculateChange(Job));
+
+        case 11:
+          _context2.t1 = _context2.sent;
+          _context2.next = 14;
           return regeneratorRuntime.awrap(Job.countDocuments({
             status: "active"
           }));
 
-        case 12:
-          _context.t1 = _context.sent;
-          _context.next = 15;
-          return regeneratorRuntime.awrap(Job.countDocuments({
-            featured: true,
+        case 14:
+          _context2.t2 = _context2.sent;
+          _context2.next = 17;
+          return regeneratorRuntime.awrap(calculateChange(Job, {
             status: "active"
           }));
 
-        case 15:
-          _context.t2 = _context.sent;
-          _context.next = 18;
+        case 17:
+          _context2.t3 = _context2.sent;
+          _context2.next = 20;
+          return regeneratorRuntime.awrap(Job.countDocuments({
+            featured: true
+          }));
+
+        case 20:
+          _context2.t4 = _context2.sent;
+          _context2.next = 23;
+          return regeneratorRuntime.awrap(calculateChange(Job, {
+            featured: true
+          }));
+
+        case 23:
+          _context2.t5 = _context2.sent;
+          _context2.next = 26;
           return regeneratorRuntime.awrap(User.countDocuments());
 
-        case 18:
-          _context.t3 = _context.sent;
-          _context.next = 21;
+        case 26:
+          _context2.t6 = _context2.sent;
+          _context2.next = 29;
+          return regeneratorRuntime.awrap(calculateChange(User));
+
+        case 29:
+          _context2.t7 = _context2.sent;
+          _context2.next = 32;
           return regeneratorRuntime.awrap(User.countDocuments({
             role: "employer",
             "companyProfile.accStatus": "verified"
           }));
 
-        case 21:
-          _context.t4 = _context.sent;
-          _context.next = 24;
+        case 32:
+          _context2.t8 = _context2.sent;
+          _context2.next = 35;
+          return regeneratorRuntime.awrap(calculateChange(User, {
+            role: "employer",
+            "companyProfile.accStatus": "verified"
+          }));
+
+        case 35:
+          _context2.t9 = _context2.sent;
+          _context2.next = 38;
           return regeneratorRuntime.awrap(User.countDocuments({
             "subscription.tier": "free"
           }));
 
-        case 24:
-          _context.t5 = _context.sent;
-          _context.next = 27;
+        case 38:
+          _context2.t10 = _context2.sent;
+          _context2.next = 41;
+          return regeneratorRuntime.awrap(calculateChange(User, {
+            "subscription.tier": "free"
+          }));
+
+        case 41:
+          _context2.t11 = _context2.sent;
+          _context2.next = 44;
           return regeneratorRuntime.awrap(User.countDocuments({
             "subscription.tier": "starter"
           }));
 
-        case 27:
-          _context.t6 = _context.sent;
-          _context.next = 30;
+        case 44:
+          _context2.t12 = _context2.sent;
+          _context2.next = 47;
+          return regeneratorRuntime.awrap(calculateChange(User, {
+            "subscription.tier": "starter"
+          }));
+
+        case 47:
+          _context2.t13 = _context2.sent;
+          _context2.next = 50;
           return regeneratorRuntime.awrap(User.countDocuments({
             "subscription.tier": "professional"
           }));
 
-        case 30:
-          _context.t7 = _context.sent;
+        case 50:
+          _context2.t14 = _context2.sent;
+          _context2.next = 53;
+          return regeneratorRuntime.awrap(calculateChange(User, {
+            "subscription.tier": "professional"
+          }));
+
+        case 53:
+          _context2.t15 = _context2.sent;
           stats = {
-            totalJobs: _context.t0,
-            activeJobs: _context.t1,
-            featuredJobs: _context.t2,
-            totalUsers: _context.t3,
-            verifiedEmployers: _context.t4,
-            freeUsers: _context.t5,
-            starterUsers: _context.t6,
-            professionalUsers: _context.t7
+            totalJobs: _context2.t0,
+            totalJobsChange: _context2.t1,
+            activeJobs: _context2.t2,
+            activeJobsChange: _context2.t3,
+            featuredJobs: _context2.t4,
+            featuredJobsChange: _context2.t5,
+            totalUsers: _context2.t6,
+            totalUsersChange: _context2.t7,
+            verifiedEmployers: _context2.t8,
+            verifiedEmployersChange: _context2.t9,
+            freeUsers: _context2.t10,
+            freeUsersChange: _context2.t11,
+            starterUsers: _context2.t12,
+            starterUsersChange: _context2.t13,
+            professionalUsers: _context2.t14,
+            professionalUsersChange: _context2.t15
           };
-          _context.next = 34;
+          _context2.next = 57;
           return regeneratorRuntime.awrap(Job.aggregate([{
             $match: {
               status: {
@@ -141,9 +248,9 @@ exports.getAdminDashboard = catchAsync(function _callee(req, res, next) {
             }
           }]));
 
-        case 34:
-          jobsByVisaType = _context.sent;
-          _context.next = 37;
+        case 57:
+          jobsByVisaType = _context2.sent;
+          _context2.next = 60;
           return regeneratorRuntime.awrap(Job.aggregate([{
             $match: {
               status: {
@@ -171,9 +278,9 @@ exports.getAdminDashboard = catchAsync(function _callee(req, res, next) {
             }
           }]));
 
-        case 37:
-          jobsByLocation = _context.sent;
-          _context.next = 40;
+        case 60:
+          jobsByLocation = _context2.sent;
+          _context2.next = 63;
           return regeneratorRuntime.awrap(Job.aggregate([{
             $match: {
               status: {
@@ -210,9 +317,9 @@ exports.getAdminDashboard = catchAsync(function _callee(req, res, next) {
             }
           }]));
 
-        case 40:
-          topEmployers = _context.sent;
-          _context.next = 43;
+        case 63:
+          topEmployers = _context2.sent;
+          _context2.next = 66;
           return regeneratorRuntime.awrap(Job.aggregate([{
             $match: {
               status: "active"
@@ -232,15 +339,15 @@ exports.getAdminDashboard = catchAsync(function _callee(req, res, next) {
             }
           }]));
 
-        case 43:
-          platformAnalytics = _context.sent;
-          _context.next = 46;
+        case 66:
+          platformAnalytics = _context2.sent;
+          _context2.next = 69;
           return regeneratorRuntime.awrap(BugReport.find().sort({
             createdAt: -1
           }).populate("reportedBy", "name email"));
 
-        case 46:
-          bugReports = _context.sent;
+        case 69:
+          bugReports = _context2.sent;
           res.status(200).render("adminDashboard", {
             title: "Admin Dashboard",
             reportedJobs: reportedJobs,
@@ -259,26 +366,26 @@ exports.getAdminDashboard = catchAsync(function _callee(req, res, next) {
             }
           });
 
-        case 48:
+        case 71:
         case "end":
-          return _context.stop();
+          return _context2.stop();
       }
     }
   });
 });
 exports.getEmployerDashboard = catchAsync(function _callee2(req, res, next) {
   var jobs, featuredJobs, regularJobs, calculateAnalytics, analytics;
-  return regeneratorRuntime.async(function _callee2$(_context2) {
+  return regeneratorRuntime.async(function _callee2$(_context3) {
     while (1) {
-      switch (_context2.prev = _context2.next) {
+      switch (_context3.prev = _context3.next) {
         case 0:
-          _context2.next = 2;
+          _context3.next = 2;
           return regeneratorRuntime.awrap(Job.find({
             postedBy: req.user._id
           }).select("title analytics.views analytics.applicationClicks analytics.saves postedDate featured status isAdminPosted").sort("-postedDate"));
 
         case 2:
-          jobs = _context2.sent;
+          jobs = _context3.sent;
           featuredJobs = jobs.filter(function (job) {
             return job.featured;
           });
@@ -323,7 +430,7 @@ exports.getEmployerDashboard = catchAsync(function _callee2(req, res, next) {
 
         case 8:
         case "end":
-          return _context2.stop();
+          return _context3.stop();
       }
     }
   });
@@ -351,9 +458,9 @@ exports.getClaimAccount = function (req, res) {
 exports.getJobResults = catchAsync(function _callee3(req, res, next) {
   var _req$query, search, location, distance, queryObj, searchTerms, searchConditions, coords, jobs;
 
-  return regeneratorRuntime.async(function _callee3$(_context3) {
+  return regeneratorRuntime.async(function _callee3$(_context4) {
     while (1) {
-      switch (_context3.prev = _context3.next) {
+      switch (_context4.prev = _context4.next) {
         case 0:
           _req$query = req.query, search = _req$query.search, location = _req$query.location, distance = _req$query.distance;
           queryObj = {
@@ -396,16 +503,16 @@ exports.getJobResults = catchAsync(function _callee3(req, res, next) {
           }
 
           if (!(location && distance)) {
-            _context3.next = 16;
+            _context4.next = 16;
             break;
           }
 
-          _context3.prev = 4;
-          _context3.next = 7;
+          _context4.prev = 4;
+          _context4.next = 7;
           return regeneratorRuntime.awrap(geoPostcode(location));
 
         case 7:
-          coords = _context3.sent;
+          coords = _context4.sent;
 
           if (coords && coords.coordinates) {
             queryObj["location.coordinates"] = {
@@ -420,19 +527,19 @@ exports.getJobResults = catchAsync(function _callee3(req, res, next) {
             };
           }
 
-          _context3.next = 14;
+          _context4.next = 14;
           break;
 
         case 11:
-          _context3.prev = 11;
-          _context3.t0 = _context3["catch"](4);
+          _context4.prev = 11;
+          _context4.t0 = _context4["catch"](4);
           queryObj["location.city"] = {
             $regex: location,
             $options: "i"
           };
 
         case 14:
-          _context3.next = 17;
+          _context4.next = 17;
           break;
 
         case 16:
@@ -444,11 +551,11 @@ exports.getJobResults = catchAsync(function _callee3(req, res, next) {
           }
 
         case 17:
-          _context3.next = 19;
+          _context4.next = 19;
           return regeneratorRuntime.awrap(Job.find(queryObj).populate("postedBy", "name").select("title visaTypes location experienceLevel salaryRange jobType postedDate postedBy description featured").sort("-featured -postedDated"));
 
         case 19:
-          jobs = _context3.sent;
+          jobs = _context4.sent;
           res.status(200).render("search-results", {
             title: "Search Results",
             jobs: jobs,
@@ -461,18 +568,18 @@ exports.getJobResults = catchAsync(function _callee3(req, res, next) {
 
         case 21:
         case "end":
-          return _context3.stop();
+          return _context4.stop();
       }
     }
   }, null, null, [[4, 11]]);
 });
 exports.getJob = catchAsync(function _callee4(req, res, next) {
   var job;
-  return regeneratorRuntime.async(function _callee4$(_context4) {
+  return regeneratorRuntime.async(function _callee4$(_context5) {
     while (1) {
-      switch (_context4.prev = _context4.next) {
+      switch (_context5.prev = _context5.next) {
         case 0:
-          _context4.next = 2;
+          _context5.next = 2;
           return regeneratorRuntime.awrap(Job.findByIdAndUpdate(req.params.id, {
             $inc: {
               "analytics.views": 1
@@ -483,14 +590,14 @@ exports.getJob = catchAsync(function _callee4(req, res, next) {
           }).populate("postedBy"));
 
         case 2:
-          job = _context4.sent;
+          job = _context5.sent;
 
           if (job) {
-            _context4.next = 5;
+            _context5.next = 5;
             break;
           }
 
-          return _context4.abrupt("return", next(new AppError("Job not found", 404)));
+          return _context5.abrupt("return", next(new AppError("Job not found", 404)));
 
         case 5:
           res.render("job-detail", {
@@ -500,7 +607,7 @@ exports.getJob = catchAsync(function _callee4(req, res, next) {
 
         case 6:
         case "end":
-          return _context4.stop();
+          return _context5.stop();
       }
     }
   });
@@ -515,18 +622,18 @@ exports.getClaimAccount = function (req, res) {
 
 exports.getSitemap = catchAsync(function _callee5(req, res, next) {
   var baseUrl, jobs, staticPages, sitemap;
-  return regeneratorRuntime.async(function _callee5$(_context5) {
+  return regeneratorRuntime.async(function _callee5$(_context6) {
     while (1) {
-      switch (_context5.prev = _context5.next) {
+      switch (_context6.prev = _context6.next) {
         case 0:
           baseUrl = "".concat(req.protocol, "://").concat(req.get("host"));
-          _context5.next = 3;
+          _context6.next = 3;
           return regeneratorRuntime.awrap(Job.find({
             status: "active"
           }).select("title _id updatedAt"));
 
         case 3:
-          jobs = _context5.sent;
+          jobs = _context6.sent;
           staticPages = ["", "/search", "/employer-signup", "/login", "/signup", "/privacy", "/terms"];
           sitemap = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n  ".concat(staticPages.map(function (url) {
             return "\n  <url>\n    <loc>".concat(baseUrl).concat(url, "</loc>\n    <changefreq>weekly</changefreq>\n    <priority>").concat(url === "" ? 1.0 : 0.8, "</priority>\n  </url>");
@@ -539,18 +646,18 @@ exports.getSitemap = catchAsync(function _callee5(req, res, next) {
 
         case 8:
         case "end":
-          return _context5.stop();
+          return _context6.stop();
       }
     }
   });
 });
 exports.getSavedJobs = catchAsync(function _callee6(req, res, next) {
   var jobs;
-  return regeneratorRuntime.async(function _callee6$(_context6) {
+  return regeneratorRuntime.async(function _callee6$(_context7) {
     while (1) {
-      switch (_context6.prev = _context6.next) {
+      switch (_context7.prev = _context7.next) {
         case 0:
-          _context6.next = 2;
+          _context7.next = 2;
           return regeneratorRuntime.awrap(Job.find({
             _id: {
               $in: req.user.savedJobs
@@ -561,7 +668,7 @@ exports.getSavedJobs = catchAsync(function _callee6(req, res, next) {
           }).populate("postedBy", "name").select("title visaTypes location experienceLevel salaryRange jobType postedDate postedBy description featured").sort("-featured -postedDate"));
 
         case 2:
-          jobs = _context6.sent;
+          jobs = _context7.sent;
           res.status(200).render("saved-jobs", {
             title: "Saved Jobs",
             jobs: jobs,
@@ -570,7 +677,7 @@ exports.getSavedJobs = catchAsync(function _callee6(req, res, next) {
 
         case 4:
         case "end":
-          return _context6.stop();
+          return _context7.stop();
       }
     }
   });
@@ -597,21 +704,21 @@ exports.getProfile = function (req, res) {
 exports.getCv = catchAsync(function _callee7(req, res, next) {
   var filename, _ref, stream, contentType;
 
-  return regeneratorRuntime.async(function _callee7$(_context7) {
+  return regeneratorRuntime.async(function _callee7$(_context8) {
     while (1) {
-      switch (_context7.prev = _context7.next) {
+      switch (_context8.prev = _context8.next) {
         case 0:
           filename = req.params.filename; // Optional: Check if user is allowed to view this CV
           // For now, we assume if they have the link (filename), they can view it,
           // or you can restrict it to the owner:
           // if (req.user.cv !== filename && req.user.role !== 'admin') ...
 
-          _context7.prev = 1;
-          _context7.next = 4;
+          _context8.prev = 1;
+          _context8.next = 4;
           return regeneratorRuntime.awrap(r2.getFileStream(filename));
 
         case 4:
-          _ref = _context7.sent;
+          _ref = _context8.sent;
           stream = _ref.stream;
           contentType = _ref.contentType;
 
@@ -622,17 +729,17 @@ exports.getCv = catchAsync(function _callee7(req, res, next) {
           }
 
           stream.pipe(res);
-          _context7.next = 14;
+          _context8.next = 14;
           break;
 
         case 11:
-          _context7.prev = 11;
-          _context7.t0 = _context7["catch"](1);
-          return _context7.abrupt("return", next(new AppError("CV not found", 404)));
+          _context8.prev = 11;
+          _context8.t0 = _context8["catch"](1);
+          return _context8.abrupt("return", next(new AppError("CV not found", 404)));
 
         case 14:
         case "end":
-          return _context7.stop();
+          return _context8.stop();
       }
     }
   }, null, null, [[1, 11]]);

@@ -37,8 +37,6 @@ exports.rejectEmployer = catchAsync(async (req, res, next) => {
     { new: true }
   );
 
-  console.log(user);
-  console.log(req.params);
   if (!user) return next(new AppError(`No user with that ID.`, 404));
 
   // ADD EMAIL HERE LATER

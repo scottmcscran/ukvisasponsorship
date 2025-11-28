@@ -32,7 +32,6 @@ const createSendToken = (user, statusCode, res) => {
   user.password = undefined;
 
   res.status(statusCode).json({ status: `success`, token, data: user });
-  console.log(`cookie set`);
 };
 
 exports.signUpEmployer = catchAsync(async (req, res, next) => {
@@ -328,8 +327,6 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
-  console.log("UpdatePassword Req Body:", req.body);
-
   const user = await User.findById(req.user.id).select(`+password`);
 
   if (!(await user.correctPassword(req.body.passwordCurrent, user.password)))
