@@ -65,9 +65,7 @@ block content
         .dashboard-content
           .content-header
             h3.heading-tertiary Your Jobs
-            if user.companyProfile.accStatus === 'rejected'
-              p.error-text(style="color: var(--status-error); font-weight: bold;") Your account was rejected by an admin. This means it was not on the public list of licensed sponsors.
-            else
+            if user.companyProfile.accStatus !== 'rejected'
               button.btn.btn--small.btn--standard#postJobBtn Post a Job
           
           if jobs.allJobs.length > 0
@@ -112,7 +110,13 @@ block content
                     button.btn.btn--small.btn--edit(data-job-id=job._id) Edit
                     button.btn.btn--small.btn--delete(data-job-id=job._id) Delete
           else
-            p.no-jobs You haven't posted any jobs yet.
+            if user.companyProfile.accStatus === 'rejected'
+              .banned-message-container(style="text-align: center; padding: 4rem; background-color: #fee2e2; border-radius: 8px; border: 1px solid #ef4444;")
+                h2.heading-secondary.ma-bt-md(style="color: #b91c1c;") Account Rejected
+                p.error-text(style="font-size: 1.8rem; color: #b91c1c; font-weight: bold; max-width: none;") Your account was rejected by an admin.
+                p.ma-top-md(style="font-size: 1.6rem; color: #7f1d1d; max-width: none;") This means it was not on the public list of licensed sponsors.
+            else
+              p.no-jobs You haven't posted any jobs yet.
 
       .tab-content(id='settings' style=user.companyProfile.accStatus === 'banned' ? 'display: none !important' : '')
         .user-view__form-container
