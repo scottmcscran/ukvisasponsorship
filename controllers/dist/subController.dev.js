@@ -468,7 +468,7 @@ exports.expireMySub = catchAsync(function _callee6(req, res, next) {
     while (1) {
       switch (_context6.prev = _context6.next) {
         case 0:
-          if (!(process.env.NODE_ENV !== "development")) {
+          if (!(process.env.NODE_ENV !== "development" && req.user.role !== "admin")) {
             _context6.next = 2;
             break;
           }

@@ -43,9 +43,10 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      connectSrc: ["'self'", "ws://127.0.0.1:*", "ws://localhost:*", "http://127.0.0.1:*", "http://localhost:*", "https://www.google-analytics.com", "https://analytics.google.com", "https://api.stripe.com", "https://checkout.stripe.com"],
+      connectSrc: ["'self'", "ws://127.0.0.1:*", "ws://localhost:*", "http://127.0.0.1:*", "http://localhost:*", "https://www.google-analytics.com", "https://analytics.google.com", "https://api.stripe.com", "https://checkout.stripe.com", "https://r.stripe.com"],
       scriptSrc: ["'self'", "https://js.stripe.com", "'unsafe-eval'", "'unsafe-inline'", "https://www.googletagmanager.com"],
       frameSrc: ["'self'", "https://js.stripe.com", "https://hooks.stripe.com"],
+      imgSrc: ["'self'", "data:", "https://ukvisasponsorship.s3.us-east-1.amazonaws.com", "https://ukvisasponsorship.com", "https://*.stripe.com"],
       styleSrc: ["'self'", "https://fonts.googleapis.com", "'unsafe-inline'"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       upgradeInsecureRequests: null
@@ -53,7 +54,12 @@ app.use(helmet({
   },
   hsts: false // Disable Strict-Transport-Security for IP access
 
-})); // Stripe Webhook
+})); // Suppress Permissions-Policy warnings
+
+app.use(function (req, res, next) {
+  res.setHeader("Permissions-Policy", "browsing-topics=(), interest-cohort=(), join-ad-interest-group=(), run-ad-auction=()");
+  next();
+}); // Stripe Webhook
 
 app.post("/webhook-checkout", express.raw({
   type: "application/json"

@@ -45,6 +45,7 @@ app.use(
           `https://analytics.google.com`,
           `https://api.stripe.com`,
           `https://checkout.stripe.com`,
+          `https://r.stripe.com`,
         ],
         scriptSrc: [
           `'self'`,
@@ -58,6 +59,13 @@ app.use(
           `https://js.stripe.com`,
           `https://hooks.stripe.com`,
         ],
+        imgSrc: [
+          `'self'`,
+          `data:`,
+          `https://ukvisasponsorship.s3.us-east-1.amazonaws.com`,
+          `https://ukvisasponsorship.com`,
+          `https://*.stripe.com`,
+        ],
         styleSrc: [`'self'`, `https://fonts.googleapis.com`, `'unsafe-inline'`],
         fontSrc: [`'self'`, `https://fonts.gstatic.com`],
         upgradeInsecureRequests: null,
@@ -66,6 +74,15 @@ app.use(
     hsts: false, // Disable Strict-Transport-Security for IP access
   })
 );
+
+// Suppress Permissions-Policy warnings
+app.use((req, res, next) => {
+  res.setHeader(
+    "Permissions-Policy",
+    "browsing-topics=(), interest-cohort=(), join-ad-interest-group=(), run-ad-auction=()"
+  );
+  next();
+});
 
 // Stripe Webhook
 app.post(

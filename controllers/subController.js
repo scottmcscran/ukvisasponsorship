@@ -275,7 +275,8 @@ exports.downgradeToStarter = catchAsync(async (req, res, next) => {
 });
 
 exports.expireMySub = catchAsync(async (req, res, next) => {
-  if (process.env.NODE_ENV !== "development") {
+  // Allow in Development OR if user is an Admin
+  if (process.env.NODE_ENV !== "development" && req.user.role !== "admin") {
     return next(
       new AppError("This route is for development testing only.", 403)
     );
