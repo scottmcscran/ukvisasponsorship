@@ -4,7 +4,7 @@ import axios from "axios";
 import { showAlert } from "./alerts";
 
 const stripe = Stripe(
-  "pk_test_51SSIpcApRaXrsBnwU1cFVHAZW4ze2xi2IJaJkGRRQlpIcHltRAVgCwQlc4S8PRYNTpcWzXO3BLn1NLpjapQErQfU00JN9Gm3wk"
+  "pk_live_51SSIpLA465v2gfXhbrBgOiEOe7xpbtI8rwP2zevGKpwadc7QmtXFzicLkoiLgMYg2x3mCwUkuJ4ZvrEOROMTYsfD000BF1oKyb"
 );
 
 exports.subscribe = async (plan) => {

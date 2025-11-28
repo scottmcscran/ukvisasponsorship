@@ -210,7 +210,7 @@ exports.webhookCheckout = function _callee3(req, res) {
           return regeneratorRuntime.awrap(handleSubscriptionStatusChange(userId, tier, "active"));
 
         case 18:
-          _context3.next = 61;
+          _context3.next = 60;
           break;
 
         case 20:
@@ -237,7 +237,7 @@ exports.webhookCheckout = function _callee3(req, res) {
           return regeneratorRuntime.awrap(handleSubscriptionStatusChange(user._id, user.subscription.tier, "expired"));
 
         case 28:
-          _context3.next = 61;
+          _context3.next = 60;
           break;
 
         case 30:
@@ -275,7 +275,7 @@ exports.webhookCheckout = function _callee3(req, res) {
           return regeneratorRuntime.awrap(handleSubscriptionStatusChange(_user._id, newTier, _subscription.status === "active" ? "active" : "expired"));
 
         case 43:
-          _context3.next = 61;
+          _context3.next = 60;
           break;
 
         case 45:
@@ -302,12 +302,12 @@ exports.webhookCheckout = function _callee3(req, res) {
           return regeneratorRuntime.awrap(handleSubscriptionStatusChange(_user2._id, _user2.subscription.tier, "active"));
 
         case 53:
-          _context3.next = 61;
+          _context3.next = 60;
           break;
 
         case 55:
           if (!(event.type === "invoice.payment_failed")) {
-            _context3.next = 61;
+            _context3.next = 60;
             break;
           }
 
@@ -320,16 +320,12 @@ exports.webhookCheckout = function _callee3(req, res) {
         case 59:
           _user3 = _context3.sent;
 
-          if (_user3) {// Optionally handle grace periods, but for now we can mark as expired or past_due
-            // handleSubscriptionStatusChange(user._id, user.subscription.tier, 'expired');
-          }
-
-        case 61:
+        case 60:
           res.status(200).json({
             received: true
           });
 
-        case 62:
+        case 61:
         case "end":
           return _context3.stop();
       }

@@ -193,11 +193,6 @@ exports.webhookCheckout = async (req, res) => {
     const user = await User.findOne({
       "subscription.stripeCustomerId": invoice.customer,
     });
-
-    if (user) {
-      // Optionally handle grace periods, but for now we can mark as expired or past_due
-      // handleSubscriptionStatusChange(user._id, user.subscription.tier, 'expired');
-    }
   }
 
   res.status(200).json({ received: true });
