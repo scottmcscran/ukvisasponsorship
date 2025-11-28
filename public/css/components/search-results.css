@@ -49,9 +49,11 @@
   gap: var(--spacing-xs);
 }
 
-.disabled-filter {
-  opacity: 0.5;
-  /* filter: grayscale(100%); Removed to prevent double-grey effect on gradients */
+/* .disabled-filter opacity removed from container to fix slider colors */
+
+.disabled-filter .range-values,
+.disabled-filter .filter-title {
+  opacity: 0.5; /* Keep text semi-transparent to indicate disabled state */
 }
 
 .disabled-filter .slider-container,
