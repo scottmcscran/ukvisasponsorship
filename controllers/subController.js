@@ -273,3 +273,26 @@ exports.downgradeToStarter = catchAsync(async (req, res, next) => {
     message: "Downgraded to Starter successfully",
   });
 });
+
+exports.expireMySub = catchAsync(async (req, res, next) => {
+  if (process.env.NODE_ENV !== "development") {
+    return next(
+      new AppError("This route is for development testing only.", 403)
+    );
+  }
+
+  const user = await User.findById(req.user.id);
+
+  // Force expiration logic
+  await handleSubscriptionStatusChange(
+    user._id,
+    user.subscription.tier,
+    "expired"
+  );
+
+  res.status(200).json({
+    status: "success",
+    message:
+      "Subscription manually expired. Jobs should now be hidden/limited.",
+  });
+});

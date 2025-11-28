@@ -178,6 +178,17 @@ if (userPasswordForm) {
   });
 }
 
+var updateCvUI = function updateCvUI(cvFilename) {
+  var container = document.getElementById("cv-status-container");
+  if (!container) return;
+
+  if (cvFilename) {
+    container.innerHTML = "\n      <div class=\"cv-display\">\n        <a class=\"btn-text\" href=\"/cvs/".concat(cvFilename, "\" target=\"_blank\">View CV</a>\n        <button class=\"btn btn--small btn--standard\" id=\"deleteCvBtn\">Delete CV</button>\n      </div>\n    ");
+  } else {
+    container.innerHTML = "<p class=\"ma-bt-md\">No CV uploaded yet.</p>";
+  }
+};
+
 if (userCvForm) {
   var cvInput = document.getElementById("cv-upload");
   var cvLabel = document.querySelector("label[for='cv-upload']");
@@ -192,25 +203,82 @@ if (userCvForm) {
     });
   }
 
-  userCvForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-    var form = new FormData();
-    var cvFile = document.getElementById("cv-upload").files[0];
+  userCvForm.addEventListener("submit", function _callee2(e) {
+    var form, cvFile, res;
+    return regeneratorRuntime.async(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            e.preventDefault();
+            form = new FormData();
+            cvFile = document.getElementById("cv-upload").files[0];
 
-    if (cvFile) {
-      form.append("cv", cvFile);
-      updateSettings(form, "data");
-    }
+            if (!cvFile) {
+              _context2.next = 9;
+              break;
+            }
+
+            form.append("cv", cvFile);
+            _context2.next = 7;
+            return regeneratorRuntime.awrap(updateSettings(form, "data"));
+
+          case 7:
+            res = _context2.sent;
+
+            if (res && res.updatedUser && res.updatedUser.cv) {
+              updateCvUI(res.updatedUser.cv); // Reset file input
+
+              cvInput.value = "";
+              cvLabel.textContent = "Choose new CV";
+            }
+
+          case 9:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    });
   });
-}
+} // Event delegation for delete CV button since it can be dynamically added/removed
 
-if (deleteCvBtn) {
-  deleteCvBtn.addEventListener("click", function (e) {
-    e.preventDefault();
 
-    if (confirm("Are you sure you want to delete your CV?")) {
-      deleteCv();
-    }
+var cvSection = document.getElementById("cv");
+
+if (cvSection) {
+  cvSection.addEventListener("click", function _callee3(e) {
+    var success;
+    return regeneratorRuntime.async(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            if (!(e.target && e.target.id === "deleteCvBtn")) {
+              _context3.next = 7;
+              break;
+            }
+
+            e.preventDefault();
+
+            if (!confirm("Are you sure you want to delete your CV?")) {
+              _context3.next = 7;
+              break;
+            }
+
+            _context3.next = 5;
+            return regeneratorRuntime.awrap(deleteCv());
+
+          case 5:
+            success = _context3.sent;
+
+            if (success) {
+              updateCvUI(null);
+            }
+
+          case 7:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    });
   });
 } // Tab Logic
 
@@ -328,11 +396,11 @@ if (btnSubPro) {
 }
 
 if (btnDowngradeStarter) {
-  btnDowngradeStarter.addEventListener("click", function _callee2(e) {
+  btnDowngradeStarter.addEventListener("click", function _callee4(e) {
     var modal, closeBtn, keepProBtn, confirmBtn, featuredJobSelectionContainer, featuredJobSelectionList, featuredJobs, featuredJobCount, checkboxes, closeModal;
-    return regeneratorRuntime.async(function _callee2$(_context2) {
+    return regeneratorRuntime.async(function _callee4$(_context4) {
       while (1) {
-        switch (_context2.prev = _context2.next) {
+        switch (_context4.prev = _context4.next) {
           case 0:
             e.preventDefault();
             modal = document.getElementById("downgradeStarterModal");
@@ -401,7 +469,7 @@ if (btnDowngradeStarter) {
 
           case 15:
           case "end":
-            return _context2.stop();
+            return _context4.stop();
         }
       }
     });

@@ -189,32 +189,38 @@ exports.updateSettings = function _callee5(data, type) {
         case 4:
           res = _context5.sent;
 
-          if (res.data.status === "success") {
-            typeCapitalized = type.charAt(0).toUpperCase() + type.slice(1);
-            (0, _alerts.showAlert)("success", "".concat(typeCapitalized, " updated successfully!"));
-
-            if (type === "password") {
-              document.getElementById("password-current").value = "";
-              document.getElementById("password").value = "";
-              document.getElementById("password-confirm").value = "";
-              document.querySelector(".btn--save-password").textContent = "Save password";
-            }
+          if (!(res.data.status === "success")) {
+            _context5.next = 10;
+            break;
           }
 
-          _context5.next = 11;
+          typeCapitalized = type.charAt(0).toUpperCase() + type.slice(1);
+          (0, _alerts.showAlert)("success", "".concat(typeCapitalized, " updated successfully!"));
+
+          if (type === "password") {
+            document.getElementById("password-current").value = "";
+            document.getElementById("password").value = "";
+            document.getElementById("password-confirm").value = "";
+            document.querySelector(".btn--save-password").textContent = "Save password";
+          }
+
+          return _context5.abrupt("return", res.data);
+
+        case 10:
+          _context5.next = 15;
           break;
 
-        case 8:
-          _context5.prev = 8;
+        case 12:
+          _context5.prev = 12;
           _context5.t0 = _context5["catch"](0);
           (0, _alerts.showAlert)("error", _context5.t0.response.data.message);
 
-        case 11:
+        case 15:
         case "end":
           return _context5.stop();
       }
     }
-  }, null, null, [[0, 8]]);
+  }, null, null, [[0, 12]]);
 };
 
 exports.deleteCv = function _callee6() {
@@ -233,27 +239,29 @@ exports.deleteCv = function _callee6() {
         case 3:
           res = _context6.sent;
 
-          if (res.data.status === "success") {
-            (0, _alerts.showAlert)("success", "CV deleted successfully!");
-            window.setTimeout(function () {
-              location.reload();
-            }, 1000);
+          if (!(res.data.status === "success")) {
+            _context6.next = 7;
+            break;
           }
 
-          _context6.next = 10;
-          break;
+          (0, _alerts.showAlert)("success", "CV deleted successfully!");
+          return _context6.abrupt("return", true);
 
         case 7:
-          _context6.prev = 7;
+          _context6.next = 12;
+          break;
+
+        case 9:
+          _context6.prev = 9;
           _context6.t0 = _context6["catch"](0);
           (0, _alerts.showAlert)("error", _context6.t0.response.data.message);
 
-        case 10:
+        case 12:
         case "end":
           return _context6.stop();
       }
     }
-  }, null, null, [[0, 7]]);
+  }, null, null, [[0, 9]]);
 };
 
 exports.deleteAccount = function _callee7() {

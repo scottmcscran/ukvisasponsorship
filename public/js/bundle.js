@@ -6953,26 +6953,30 @@ exports.updateSettings = /*#__PURE__*/function () {
           });
         case 1:
           res = _context5.v;
-          if (res.data.status === "success") {
-            typeCapitalized = type.charAt(0).toUpperCase() + type.slice(1);
-            (0, _alerts.showAlert)("success", "".concat(typeCapitalized, " updated successfully!"));
-            if (type === "password") {
-              document.getElementById("password-current").value = "";
-              document.getElementById("password").value = "";
-              document.getElementById("password-confirm").value = "";
-              document.querySelector(".btn--save-password").textContent = "Save password";
-            }
+          if (!(res.data.status === "success")) {
+            _context5.n = 2;
+            break;
           }
-          _context5.n = 3;
-          break;
+          typeCapitalized = type.charAt(0).toUpperCase() + type.slice(1);
+          (0, _alerts.showAlert)("success", "".concat(typeCapitalized, " updated successfully!"));
+          if (type === "password") {
+            document.getElementById("password-current").value = "";
+            document.getElementById("password").value = "";
+            document.getElementById("password-confirm").value = "";
+            document.querySelector(".btn--save-password").textContent = "Save password";
+          }
+          return _context5.a(2, res.data);
         case 2:
-          _context5.p = 2;
+          _context5.n = 4;
+          break;
+        case 3:
+          _context5.p = 3;
           _t5 = _context5.v;
           (0, _alerts.showAlert)("error", _t5.response.data.message);
-        case 3:
+        case 4:
           return _context5.a(2);
       }
-    }, _callee5, null, [[0, 2]]);
+    }, _callee5, null, [[0, 3]]);
   }));
   return function (_x8, _x9) {
     return _ref5.apply(this, arguments);
@@ -6991,22 +6995,23 @@ exports.deleteCv = /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(
         });
       case 1:
         res = _context6.v;
-        if (res.data.status === "success") {
-          (0, _alerts.showAlert)("success", "CV deleted successfully!");
-          window.setTimeout(function () {
-            location.reload();
-          }, 1000);
+        if (!(res.data.status === "success")) {
+          _context6.n = 2;
+          break;
         }
-        _context6.n = 3;
-        break;
+        (0, _alerts.showAlert)("success", "CV deleted successfully!");
+        return _context6.a(2, true);
       case 2:
-        _context6.p = 2;
+        _context6.n = 4;
+        break;
+      case 3:
+        _context6.p = 3;
         _t6 = _context6.v;
         (0, _alerts.showAlert)("error", _t6.response.data.message);
-      case 3:
+      case 4:
         return _context6.a(2);
     }
-  }, _callee6, null, [[0, 2]]);
+  }, _callee6, null, [[0, 3]]);
 }));
 exports.deleteAccount = /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7() {
   var res, _t7;
@@ -8392,6 +8397,15 @@ if (userPasswordForm) {
     };
   }());
 }
+var updateCvUI = function updateCvUI(cvFilename) {
+  var container = document.getElementById("cv-status-container");
+  if (!container) return;
+  if (cvFilename) {
+    container.innerHTML = "\n      <div class=\"cv-display\">\n        <a class=\"btn-text\" href=\"/cvs/".concat(cvFilename, "\" target=\"_blank\">View CV</a>\n        <button class=\"btn btn--small btn--standard\" id=\"deleteCvBtn\">Delete CV</button>\n      </div>\n    ");
+  } else {
+    container.innerHTML = "<p class=\"ma-bt-md\">No CV uploaded yet.</p>";
+  }
+};
 if (userCvForm) {
   var cvInput = document.getElementById("cv-upload");
   var cvLabel = document.querySelector("label[for='cv-upload']");
@@ -8404,23 +8418,75 @@ if (userCvForm) {
       }
     });
   }
-  userCvForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-    var form = new FormData();
-    var cvFile = document.getElementById("cv-upload").files[0];
-    if (cvFile) {
-      form.append("cv", cvFile);
-      updateSettings(form, "data");
-    }
-  });
+  userCvForm.addEventListener("submit", /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(e) {
+      var form, cvFile, res;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            e.preventDefault();
+            form = new FormData();
+            cvFile = document.getElementById("cv-upload").files[0];
+            if (!cvFile) {
+              _context2.n = 2;
+              break;
+            }
+            form.append("cv", cvFile);
+            _context2.n = 1;
+            return updateSettings(form, "data");
+          case 1:
+            res = _context2.v;
+            if (res && res.updatedUser && res.updatedUser.cv) {
+              updateCvUI(res.updatedUser.cv);
+              // Reset file input
+              cvInput.value = "";
+              cvLabel.textContent = "Choose new CV";
+            }
+          case 2:
+            return _context2.a(2);
+        }
+      }, _callee2);
+    }));
+    return function (_x2) {
+      return _ref2.apply(this, arguments);
+    };
+  }());
 }
-if (deleteCvBtn) {
-  deleteCvBtn.addEventListener("click", function (e) {
-    e.preventDefault();
-    if (confirm("Are you sure you want to delete your CV?")) {
-      deleteCv();
-    }
-  });
+
+// Event delegation for delete CV button since it can be dynamically added/removed
+var cvSection = document.getElementById("cv");
+if (cvSection) {
+  cvSection.addEventListener("click", /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(e) {
+      var success;
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            if (!(e.target && e.target.id === "deleteCvBtn")) {
+              _context3.n = 2;
+              break;
+            }
+            e.preventDefault();
+            if (!confirm("Are you sure you want to delete your CV?")) {
+              _context3.n = 2;
+              break;
+            }
+            _context3.n = 1;
+            return deleteCv();
+          case 1:
+            success = _context3.v;
+            if (success) {
+              updateCvUI(null);
+            }
+          case 2:
+            return _context3.a(2);
+        }
+      }, _callee3);
+    }));
+    return function (_x3) {
+      return _ref3.apply(this, arguments);
+    };
+  }());
 }
 
 // Tab Logic
@@ -8530,10 +8596,10 @@ if (btnSubPro) {
 }
 if (btnDowngradeStarter) {
   btnDowngradeStarter.addEventListener("click", /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(e) {
+    var _ref4 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(e) {
       var modal, closeBtn, keepProBtn, confirmBtn, featuredJobSelectionContainer, featuredJobSelectionList, featuredJobs, featuredJobCount, checkboxes, closeModal;
-      return _regenerator().w(function (_context2) {
-        while (1) switch (_context2.n) {
+      return _regenerator().w(function (_context4) {
+        while (1) switch (_context4.n) {
           case 0:
             e.preventDefault();
             modal = document.getElementById("downgradeStarterModal");
@@ -8594,12 +8660,12 @@ if (btnDowngradeStarter) {
               downgradeToStarter(selectedJobIds);
             };
           case 1:
-            return _context2.a(2);
+            return _context4.a(2);
         }
-      }, _callee2);
+      }, _callee4);
     }));
-    return function (_x2) {
-      return _ref2.apply(this, arguments);
+    return function (_x4) {
+      return _ref4.apply(this, arguments);
     };
   }());
 }

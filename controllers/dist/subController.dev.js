@@ -462,3 +462,38 @@ exports.downgradeToStarter = catchAsync(function _callee5(req, res, next) {
     }
   });
 });
+exports.expireMySub = catchAsync(function _callee6(req, res, next) {
+  var user;
+  return regeneratorRuntime.async(function _callee6$(_context6) {
+    while (1) {
+      switch (_context6.prev = _context6.next) {
+        case 0:
+          if (!(process.env.NODE_ENV !== "development")) {
+            _context6.next = 2;
+            break;
+          }
+
+          return _context6.abrupt("return", next(new AppError("This route is for development testing only.", 403)));
+
+        case 2:
+          _context6.next = 4;
+          return regeneratorRuntime.awrap(User.findById(req.user.id));
+
+        case 4:
+          user = _context6.sent;
+          _context6.next = 7;
+          return regeneratorRuntime.awrap(handleSubscriptionStatusChange(user._id, user.subscription.tier, "expired"));
+
+        case 7:
+          res.status(200).json({
+            status: "success",
+            message: "Subscription manually expired. Jobs should now be hidden/limited."
+          });
+
+        case 8:
+        case "end":
+          return _context6.stop();
+      }
+    }
+  });
+});

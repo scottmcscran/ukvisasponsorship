@@ -113,6 +113,7 @@ exports.updateSettings = async (data, type) => {
         document.querySelector(".btn--save-password").textContent =
           "Save password";
       }
+      return res.data;
     }
   } catch (err) {
     showAlert("error", err.response.data.message);
@@ -128,9 +129,7 @@ exports.deleteCv = async () => {
 
     if (res.data.status === "success") {
       showAlert("success", "CV deleted successfully!");
-      window.setTimeout(() => {
-        location.reload();
-      }, 1000);
+      return true;
     }
   } catch (err) {
     showAlert("error", err.response.data.message);

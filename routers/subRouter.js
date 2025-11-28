@@ -24,4 +24,10 @@ router.post(
   subController.createBillingPortalSession
 );
 
+router.post(
+  "/expire-my-sub",
+  authController.protect,
+  subController.expireMySub
+);
+
 module.exports = router;

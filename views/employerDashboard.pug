@@ -179,6 +179,12 @@ block content
                   | #{user.subscription.status.charAt(0).toUpperCase() + user.subscription.status.slice(1)}
             
             .subscription-details.ma-top-md
+              if user.subscription.tier !== 'free' && user.subscription.currentPeriodEnd
+                - const daysLeft = Math.ceil((new Date(user.subscription.currentPeriodEnd) - Date.now()) / (1000 * 60 * 60 * 24));
+                p.ma-bt-sm
+                  strong Days Remaining: 
+                  | #{daysLeft > 0 ? daysLeft : 0} days
+              
               p.ma-bt-sm
                 strong Account Limits:
               ul.limits-list

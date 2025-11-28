@@ -72,12 +72,13 @@ block content
         .user-view__form-container.tab-content(id='cv')
           h2.heading-secondary.ma-bt-md My CV
           
-          if user.cv
-            .cv-display
-              a.btn-text(href=`/cvs/${user.cv}` target='_blank') View CV
-              button.btn.btn--small.btn--standard#deleteCvBtn Delete CV
-          else 
-            p.ma-bt-md No CV uploaded yet.
+          #cv-status-container
+            if user.cv
+              .cv-display
+                a.btn-text(href=`/cvs/${user.cv}` target='_blank') View CV
+                button.btn.btn--small.btn--standard#deleteCvBtn Delete CV
+            else 
+              p.ma-bt-md No CV uploaded yet.
 
           .line &nbsp;
 

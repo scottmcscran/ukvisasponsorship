@@ -161,6 +161,22 @@ if (userPasswordForm) {
   });
 }
 
+const updateCvUI = (cvFilename) => {
+  const container = document.getElementById("cv-status-container");
+  if (!container) return;
+
+  if (cvFilename) {
+    container.innerHTML = `
+      <div class="cv-display">
+        <a class="btn-text" href="/cvs/${cvFilename}" target="_blank">View CV</a>
+        <button class="btn btn--small btn--standard" id="deleteCvBtn">Delete CV</button>
+      </div>
+    `;
+  } else {
+    container.innerHTML = `<p class="ma-bt-md">No CV uploaded yet.</p>`;
+  }
+};
+
 if (userCvForm) {
   const cvInput = document.getElementById("cv-upload");
   const cvLabel = document.querySelector("label[for='cv-upload']");
@@ -175,22 +191,35 @@ if (userCvForm) {
     });
   }
 
-  userCvForm.addEventListener("submit", (e) => {
+  userCvForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const form = new FormData();
     const cvFile = document.getElementById("cv-upload").files[0];
     if (cvFile) {
       form.append("cv", cvFile);
-      updateSettings(form, "data");
+      const res = await updateSettings(form, "data");
+      if (res && res.updatedUser && res.updatedUser.cv) {
+        updateCvUI(res.updatedUser.cv);
+        // Reset file input
+        cvInput.value = "";
+        cvLabel.textContent = "Choose new CV";
+      }
     }
   });
 }
 
-if (deleteCvBtn) {
-  deleteCvBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    if (confirm("Are you sure you want to delete your CV?")) {
-      deleteCv();
+// Event delegation for delete CV button since it can be dynamically added/removed
+const cvSection = document.getElementById("cv");
+if (cvSection) {
+  cvSection.addEventListener("click", async (e) => {
+    if (e.target && e.target.id === "deleteCvBtn") {
+      e.preventDefault();
+      if (confirm("Are you sure you want to delete your CV?")) {
+        const success = await deleteCv();
+        if (success) {
+          updateCvUI(null);
+        }
+      }
     }
   });
 }
