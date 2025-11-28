@@ -13,6 +13,7 @@ var adminRouter = require("../routers/adminRouter");
 var router = express.Router(); // Ensure this route exists and points to the controller method
 
 router.route("/:id/report").patch(jobController.reportJob);
+router.route("/:id/unfeature").patch(authController.protect, authController.restrictTo("employer"), authController.checkAccountStatus, authController.checkJobPostLimits, jobController.unfeatureJob);
 router.route("/").post(authController.protect, authController.restrictTo("employer", "admin"), authController.checkAccountStatus, authController.checkJobPostLimits, jobController.createJob);
 router.route("/search").get(jobController.getAllJobs);
 router.route("/saved").get(authController.protect, jobController.getAllSavedJobs);

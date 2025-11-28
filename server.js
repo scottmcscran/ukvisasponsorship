@@ -5,6 +5,7 @@ const { dailySubscriptionCheck, checkShadowAccountExpirations } = require(
 );
 const cron = require(`node-cron`);
 
+// Trigger restart 10
 process.on(`uncaughtExeption`, (err) => {
   console.log(err.name, err.message);
   console.log(`Unhandled rejection, Shutting Down Server.`);

@@ -382,7 +382,7 @@ exports.checkJobPostLimits = catchAsync(async (req, res, next) => {
     professional: { basic: Infinity, featured: 10 },
   };
 
-  const isFeatured = req.body.featured;
+  const isFeatured = (req.body && req.body.featured) || false;
 
   const maxAllowed = isFeatured
     ? TIER_LIMITS[tier].featured

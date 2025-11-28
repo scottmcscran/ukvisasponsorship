@@ -95,6 +95,24 @@ export const getJob = async (id) => {
   }
 };
 
+export const unfeatureJob = async (id) => {
+  try {
+    const res = await axios({
+      method: "PATCH",
+      url: `/api/v1/jobs/${id}/unfeature`,
+    });
+
+    if (res.data.status === "success") {
+      showAlert("success", "Job updated successfully!");
+      window.setTimeout(() => {
+        location.reload();
+      }, 1500);
+    }
+  } catch (err) {
+    showAlert("error", err.response.data.message);
+  }
+};
+
 export const initDashboard = () => {
   const postJobBtn = document.getElementById("postJobBtn");
   const postJobBtnEmpty = document.getElementById("postJobBtnEmpty");
@@ -104,6 +122,45 @@ export const initDashboard = () => {
   const modalTitle = document.getElementById("modalTitle");
   const modalSubmitBtn = document.getElementById("modalSubmitBtn");
   const jobList = document.querySelector(".job-list");
+
+  // Unfeature Job Modal Elements
+  const unfeatureJobModal = document.getElementById("unfeatureJobModal");
+  const closeUnfeatureJobModal = document.getElementById(
+    "closeUnfeatureJobModal"
+  );
+  const cancelUnfeatureJobBtn = document.getElementById(
+    "cancelUnfeatureJobBtn"
+  );
+  const confirmUnfeatureJobBtn = document.getElementById(
+    "confirmUnfeatureJobBtn"
+  );
+  let jobToUnfeatureId = null;
+
+  const openUnfeatureModal = (jobId) => {
+    jobToUnfeatureId = jobId;
+    if (unfeatureJobModal) unfeatureJobModal.classList.remove("hidden");
+  };
+
+  const closeUnfeatureModal = () => {
+    jobToUnfeatureId = null;
+    if (unfeatureJobModal) unfeatureJobModal.classList.add("hidden");
+  };
+
+  if (unfeatureJobModal) {
+    closeUnfeatureJobModal.addEventListener("click", closeUnfeatureModal);
+    cancelUnfeatureJobBtn.addEventListener("click", closeUnfeatureModal);
+    confirmUnfeatureJobBtn.addEventListener("click", () => {
+      if (jobToUnfeatureId) {
+        unfeatureJob(jobToUnfeatureId);
+        closeUnfeatureModal();
+      }
+    });
+    unfeatureJobModal.addEventListener("click", (e) => {
+      if (e.target === unfeatureJobModal) {
+        closeUnfeatureModal();
+      }
+    });
+  }
 
   const openModal = () => {
     postJobModal.classList.remove("hidden");
@@ -157,6 +214,12 @@ export const initDashboard = () => {
     jobList.addEventListener("click", async (e) => {
       const editBtn = e.target.closest(".btn--edit");
       const deleteBtn = e.target.closest(".btn--delete");
+      const repostBtn = e.target.closest(".btn--repost");
+
+      if (repostBtn) {
+        const jobId = repostBtn.dataset.jobId;
+        openUnfeatureModal(jobId);
+      }
 
       if (editBtn) {
         const jobId = editBtn.dataset.jobId;

@@ -701,7 +701,7 @@ exports.checkJobPostLimits = catchAsync(function _callee12(req, res, next) {
               featured: 10
             }
           };
-          isFeatured = req.body.featured;
+          isFeatured = req.body && req.body.featured || false;
           maxAllowed = isFeatured ? TIER_LIMITS[tier].featured : TIER_LIMITS[tier].basic;
           currentCount = isFeatured ? user.featuredJobsCount : user.basicJobsCount;
 

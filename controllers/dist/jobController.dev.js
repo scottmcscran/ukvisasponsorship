@@ -34,7 +34,10 @@ var multerFilter = function multerFilter(req, file, cb) {
 
 var upload = multer({
   storage: multerStorage,
-  fileFilter: multerFilter
+  fileFilter: multerFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024
+  }
 });
 exports.uploadCv = upload.single("cv");
 exports.applyJob = catchAsync(function _callee(req, res, next) {
@@ -1087,3 +1090,66 @@ exports.updateJob = catchAsync(function _callee12(req, res, next) {
   });
 });
 exports.deleteJob = factory.deleteOne(Job);
+exports.unfeatureJob = catchAsync(function _callee13(req, res, next) {
+  var job;
+  return regeneratorRuntime.async(function _callee13$(_context13) {
+    while (1) {
+      switch (_context13.prev = _context13.next) {
+        case 0:
+          _context13.next = 2;
+          return regeneratorRuntime.awrap(Job.findById(req.params.id));
+
+        case 2:
+          job = _context13.sent;
+
+          if (job) {
+            _context13.next = 5;
+            break;
+          }
+
+          return _context13.abrupt("return", next(new AppError("No job found with that ID", 404)));
+
+        case 5:
+          if (!(job.postedBy.toString() !== req.user.id)) {
+            _context13.next = 7;
+            break;
+          }
+
+          return _context13.abrupt("return", next(new AppError("You do not have permission to update this job", 403)));
+
+        case 7:
+          // 3. Update job
+          job.featured = false;
+          job.status = "active"; // Attempt to reactivate
+          // Ensure coordinates are valid (fix for potential missing geo keys)
+
+          if (!(!job.location.coordinates || !job.location.coordinates.coordinates || job.location.coordinates.coordinates.length !== 2)) {
+            _context13.next = 13;
+            break;
+          }
+
+          _context13.next = 12;
+          return regeneratorRuntime.awrap(geoPostcode(job.location.postcode, next));
+
+        case 12:
+          job.location.coordinates = _context13.sent;
+
+        case 13:
+          _context13.next = 15;
+          return regeneratorRuntime.awrap(job.save());
+
+        case 15:
+          res.status(200).json({
+            status: "success",
+            data: {
+              job: job
+            }
+          });
+
+        case 16:
+        case "end":
+          return _context13.stop();
+      }
+    }
+  });
+});

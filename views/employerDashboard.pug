@@ -82,7 +82,12 @@ block content
                       if job.featured
                         span.status-badge(style="font-size: 1.2rem; padding: 0.2rem 0.8rem; background-color: var(--brand-secondary); color: white;") Featured
                       if job.status === 'sub_expired'
-                        span.status-badge.status-badge--rejected(style="font-size: 1.2rem; padding: 0.2rem 0.8rem;") Hidden (Plan Limit)
+                        span(style="display: inline-flex; align-items: center; gap: 0.5rem;")
+                          span.status-badge.status-badge--rejected(style="font-size: 1.2rem; padding: 0.2rem 0.8rem;") Hidden (Plan Limit)
+                          .info-icon-wrapper(style="cursor: pointer;")
+                            button.btn.btn--small.btn--repost(data-job-id=job._id style="height: 2rem; width: 2rem; padding: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: var(--brand-primary); border: none; cursor: pointer;")
+                              span(style="color: white; font-size: 1.2rem;") &#x21bb;
+                            span.tooltip-text(style="width: 140px; margin-left: -70px;") Update as unfeatured
                       if job.status === 'admin_expired'
                         span.status-badge.status-badge--rejected(style="font-size: 1.2rem; padding: 0.2rem 0.8rem;") Expired (Time Limit)
                       if job.isAdminPosted && job.status === 'active' && daysRemaining >= 0
@@ -377,3 +382,15 @@ block content
           .modal-actions
             button.btn.btn--text#cancelDeleteAccountBtn(type='button', style="font-size: var(--font-size-base); border-radius: var(--border-radius-sm);") Cancel
             button.btn.btn--danger#confirmDeleteAccountBtn(type='submit', disabled, style="font-size: var(--font-size-base); border-radius: var(--border-radius-sm);") Delete Account
+
+    //- Unfeature Job Modal
+    .modal-overlay.hidden#unfeatureJobModal
+      .modal
+        button.btn-close-modal#closeUnfeatureJobModal &times;
+        h2.heading-secondary.ma-bt-md Update as Unfeatured
+        p.ma-bt-md This will remove the 'Featured' status from this job and reactivate it as a standard listing.
+        p.ma-bt-md Are you sure you want to continue?
+        
+        .modal-actions
+          button.btn.btn--text#cancelUnfeatureJobBtn(style="font-size: var(--font-size-base); border-radius: var(--border-radius-sm);") Cancel
+          button.btn.btn--standard#confirmUnfeatureJobBtn(style="font-size: var(--font-size-base); border-radius: var(--border-radius-sm);") Confirm Update

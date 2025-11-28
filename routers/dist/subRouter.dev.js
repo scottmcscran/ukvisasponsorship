@@ -10,5 +10,4 @@ var router = express.Router();
 router.post("/checkout-session/", authController.protect, authController.checkAccountStatus, subController.getCheckoutSession);
 router.post("/downgrade-starter", authController.protect, authController.checkAccountStatus, subController.downgradeToStarter);
 router.post("/billing-portal", authController.protect, authController.checkAccountStatus, subController.createBillingPortalSession);
-router.post("/expire-my-sub", authController.protect, subController.expireMySub);
 module.exports = router;

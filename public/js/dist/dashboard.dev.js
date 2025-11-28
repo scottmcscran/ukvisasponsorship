@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.initDashboard = exports.getJob = exports.deleteJob = exports.updateJob = exports.createJob = void 0;
+exports.initDashboard = exports.unfeatureJob = exports.getJob = exports.deleteJob = exports.updateJob = exports.createJob = void 0;
 
 var _axios = _interopRequireDefault(require("axios"));
 
@@ -201,6 +201,47 @@ var getJob = function getJob(id) {
 
 exports.getJob = getJob;
 
+var unfeatureJob = function unfeatureJob(id) {
+  var res;
+  return regeneratorRuntime.async(function unfeatureJob$(_context5) {
+    while (1) {
+      switch (_context5.prev = _context5.next) {
+        case 0:
+          _context5.prev = 0;
+          _context5.next = 3;
+          return regeneratorRuntime.awrap((0, _axios["default"])({
+            method: "PATCH",
+            url: "/api/v1/jobs/".concat(id, "/unfeature")
+          }));
+
+        case 3:
+          res = _context5.sent;
+
+          if (res.data.status === "success") {
+            (0, _alerts.showAlert)("success", "Job updated successfully!");
+            window.setTimeout(function () {
+              location.reload();
+            }, 1500);
+          }
+
+          _context5.next = 10;
+          break;
+
+        case 7:
+          _context5.prev = 7;
+          _context5.t0 = _context5["catch"](0);
+          (0, _alerts.showAlert)("error", _context5.t0.response.data.message);
+
+        case 10:
+        case "end":
+          return _context5.stop();
+      }
+    }
+  }, null, null, [[0, 7]]);
+};
+
+exports.unfeatureJob = unfeatureJob;
+
 var initDashboard = function initDashboard() {
   var postJobBtn = document.getElementById("postJobBtn");
   var postJobBtnEmpty = document.getElementById("postJobBtnEmpty");
@@ -209,7 +250,39 @@ var initDashboard = function initDashboard() {
   var postJobForm = document.querySelector(".form--post-job");
   var modalTitle = document.getElementById("modalTitle");
   var modalSubmitBtn = document.getElementById("modalSubmitBtn");
-  var jobList = document.querySelector(".job-list");
+  var jobList = document.querySelector(".job-list"); // Unfeature Job Modal Elements
+
+  var unfeatureJobModal = document.getElementById("unfeatureJobModal");
+  var closeUnfeatureJobModal = document.getElementById("closeUnfeatureJobModal");
+  var cancelUnfeatureJobBtn = document.getElementById("cancelUnfeatureJobBtn");
+  var confirmUnfeatureJobBtn = document.getElementById("confirmUnfeatureJobBtn");
+  var jobToUnfeatureId = null;
+
+  var openUnfeatureModal = function openUnfeatureModal(jobId) {
+    jobToUnfeatureId = jobId;
+    if (unfeatureJobModal) unfeatureJobModal.classList.remove("hidden");
+  };
+
+  var closeUnfeatureModal = function closeUnfeatureModal() {
+    jobToUnfeatureId = null;
+    if (unfeatureJobModal) unfeatureJobModal.classList.add("hidden");
+  };
+
+  if (unfeatureJobModal) {
+    closeUnfeatureJobModal.addEventListener("click", closeUnfeatureModal);
+    cancelUnfeatureJobBtn.addEventListener("click", closeUnfeatureModal);
+    confirmUnfeatureJobBtn.addEventListener("click", function () {
+      if (jobToUnfeatureId) {
+        unfeatureJob(jobToUnfeatureId);
+        closeUnfeatureModal();
+      }
+    });
+    unfeatureJobModal.addEventListener("click", function (e) {
+      if (e.target === unfeatureJobModal) {
+        closeUnfeatureModal();
+      }
+    });
+  }
 
   var openModal = function openModal() {
     postJobModal.classList.remove("hidden");
@@ -257,30 +330,36 @@ var initDashboard = function initDashboard() {
 
   if (jobList) {
     jobList.addEventListener("click", function _callee(e) {
-      var editBtn, deleteBtn, jobId, job, visaTypes, _jobId;
+      var editBtn, deleteBtn, repostBtn, jobId, _jobId, job, visaTypes, _jobId2;
 
-      return regeneratorRuntime.async(function _callee$(_context5) {
+      return regeneratorRuntime.async(function _callee$(_context6) {
         while (1) {
-          switch (_context5.prev = _context5.next) {
+          switch (_context6.prev = _context6.next) {
             case 0:
               editBtn = e.target.closest(".btn--edit");
               deleteBtn = e.target.closest(".btn--delete");
+              repostBtn = e.target.closest(".btn--repost");
+
+              if (repostBtn) {
+                jobId = repostBtn.dataset.jobId;
+                openUnfeatureModal(jobId);
+              }
 
               if (!editBtn) {
-                _context5.next = 8;
+                _context6.next = 10;
                 break;
               }
 
-              jobId = editBtn.dataset.jobId;
-              _context5.next = 6;
-              return regeneratorRuntime.awrap(getJob(jobId));
+              _jobId = editBtn.dataset.jobId;
+              _context6.next = 8;
+              return regeneratorRuntime.awrap(getJob(_jobId));
 
-            case 6:
-              job = _context5.sent;
+            case 8:
+              job = _context6.sent;
 
               if (job) {
                 isEditing = true;
-                currentJobId = jobId; // Populate form
+                currentJobId = _jobId; // Populate form
 
                 document.getElementById("title").value = job.title;
                 document.getElementById("description").value = job.description;
@@ -308,18 +387,18 @@ var initDashboard = function initDashboard() {
                 openModal();
               }
 
-            case 8:
+            case 10:
               if (deleteBtn) {
-                _jobId = deleteBtn.dataset.jobId;
+                _jobId2 = deleteBtn.dataset.jobId;
 
                 if (confirm("Are you sure you want to delete this job? This action cannot be undone.")) {
-                  deleteJob(_jobId);
+                  deleteJob(_jobId2);
                 }
               }
 
-            case 9:
+            case 11:
             case "end":
-              return _context5.stop();
+              return _context6.stop();
           }
         }
       });

@@ -667,3 +667,41 @@ exports.updateJob = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteJob = factory.deleteOne(Job);
+
+exports.unfeatureJob = catchAsync(async (req, res, next) => {
+  // 1. Get the job
+  const job = await Job.findById(req.params.id);
+
+  if (!job) {
+    return next(new AppError("No job found with that ID", 404));
+  }
+
+  // 2. Check if the current user is the owner of the job
+  if (job.postedBy.toString() !== req.user.id) {
+    return next(
+      new AppError("You do not have permission to update this job", 403)
+    );
+  }
+
+  // 3. Update job
+  job.featured = false;
+  job.status = "active"; // Attempt to reactivate
+
+  // Ensure coordinates are valid (fix for potential missing geo keys)
+  if (
+    !job.location.coordinates ||
+    !job.location.coordinates.coordinates ||
+    job.location.coordinates.coordinates.length !== 2
+  ) {
+    job.location.coordinates = await geoPostcode(job.location.postcode, next);
+  }
+
+  await job.save();
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      job,
+    },
+  });
+});

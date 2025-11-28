@@ -9,6 +9,16 @@ const router = express.Router();
 router.route(`/:id/report`).patch(jobController.reportJob);
 
 router
+  .route(`/:id/unfeature`)
+  .patch(
+    authController.protect,
+    authController.restrictTo(`employer`),
+    authController.checkAccountStatus,
+    authController.checkJobPostLimits,
+    jobController.unfeatureJob
+  );
+
+router
   .route(`/`)
   .post(
     authController.protect,
