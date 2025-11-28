@@ -7080,6 +7080,7 @@ exports.resetPassword = /*#__PURE__*/function () {
       while (1) switch (_context9.p = _context9.n) {
         case 0:
           _context9.p = 0;
+          console.log("Sending reset password request...");
           _context9.n = 1;
           return (0, _axios.default)({
             method: "PATCH",
@@ -7091,6 +7092,7 @@ exports.resetPassword = /*#__PURE__*/function () {
           });
         case 1:
           res = _context9.v;
+          console.log("Reset password response:", res);
           if (res.data.status === "success") {
             (0, _alerts.showAlert)("success", "Password reset successfully!");
             window.setTimeout(function () {
@@ -7102,6 +7104,7 @@ exports.resetPassword = /*#__PURE__*/function () {
         case 2:
           _context9.p = 2;
           _t9 = _context9.v;
+          console.error("Reset password error:", _t9);
           (0, _alerts.showAlert)("error", _t9.response.data.message);
         case 3:
           return _context9.a(2);
@@ -8485,10 +8488,14 @@ if (forgotPasswordForm) {
 if (resetPasswordForm) {
   resetPasswordForm.addEventListener("submit", function (e) {
     e.preventDefault();
+    console.log("Reset password form submitted");
     var password = document.getElementById("password").value;
     var passwordConfirm = document.getElementById("passwordConfirm").value;
     // Get token from URL
     var token = window.location.pathname.split("/")[2];
+    console.log("Token extracted:", token);
+    console.log("Password:", password);
+    console.log("Password Confirm:", passwordConfirm);
     resetPassword(token, password, passwordConfirm);
   });
 }

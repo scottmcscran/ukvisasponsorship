@@ -175,6 +175,7 @@ exports.forgotPassword = async (email) => {
 
 exports.resetPassword = async (token, password, passwordConfirm) => {
   try {
+    console.log("Sending reset password request...");
     const res = await axios({
       method: "PATCH",
       url: `/api/v1/users/resetPassword/${token}`,
@@ -183,6 +184,7 @@ exports.resetPassword = async (token, password, passwordConfirm) => {
         passwordConfirm,
       },
     });
+    console.log("Reset password response:", res);
 
     if (res.data.status === "success") {
       showAlert("success", "Password reset successfully!");
@@ -191,6 +193,7 @@ exports.resetPassword = async (token, password, passwordConfirm) => {
       }, 1500);
     }
   } catch (err) {
+    console.error("Reset password error:", err);
     showAlert("error", err.response.data.message);
   }
 };

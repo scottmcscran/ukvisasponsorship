@@ -265,10 +265,14 @@ if (forgotPasswordForm) {
 if (resetPasswordForm) {
   resetPasswordForm.addEventListener("submit", (e) => {
     e.preventDefault();
+    console.log("Reset password form submitted");
     const password = document.getElementById("password").value;
     const passwordConfirm = document.getElementById("passwordConfirm").value;
     // Get token from URL
     const token = window.location.pathname.split("/")[2];
+    console.log("Token extracted:", token);
+    console.log("Password:", password);
+    console.log("Password Confirm:", passwordConfirm);
     resetPassword(token, password, passwordConfirm);
   });
 }

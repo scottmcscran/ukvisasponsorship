@@ -341,7 +341,8 @@ exports.resetPassword = function _callee9(token, password, passwordConfirm) {
       switch (_context9.prev = _context9.next) {
         case 0:
           _context9.prev = 0;
-          _context9.next = 3;
+          console.log("Sending reset password request...");
+          _context9.next = 4;
           return regeneratorRuntime.awrap((0, _axios["default"])({
             method: "PATCH",
             url: "/api/v1/users/resetPassword/".concat(token),
@@ -351,8 +352,9 @@ exports.resetPassword = function _callee9(token, password, passwordConfirm) {
             }
           }));
 
-        case 3:
+        case 4:
           res = _context9.sent;
+          console.log("Reset password response:", res);
 
           if (res.data.status === "success") {
             (0, _alerts.showAlert)("success", "Password reset successfully!");
@@ -361,20 +363,21 @@ exports.resetPassword = function _callee9(token, password, passwordConfirm) {
             }, 1500);
           }
 
-          _context9.next = 10;
+          _context9.next = 13;
           break;
 
-        case 7:
-          _context9.prev = 7;
+        case 9:
+          _context9.prev = 9;
           _context9.t0 = _context9["catch"](0);
+          console.error("Reset password error:", _context9.t0);
           (0, _alerts.showAlert)("error", _context9.t0.response.data.message);
 
-        case 10:
+        case 13:
         case "end":
           return _context9.stop();
       }
     }
-  }, null, null, [[0, 7]]);
+  }, null, null, [[0, 9]]);
 };
 
 exports.claimAccount = function _callee10(token, password, passwordConfirm) {
