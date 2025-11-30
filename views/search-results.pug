@@ -103,8 +103,8 @@ block content
             //- However, the controller aggregation DOES return it now.
             - const showFeaturedTag = job.featured && (!job.distanceGroup || job.distanceGroup === 1);
             
-            .job-card(tabindex="0" data-id=job._id data-index=index + 1)
-              .job-card__overlay
+            .job-card(data-id=job._id data-index=index + 1)
+              a.job-card__link(href="javascript:void(0)")
               if showFeaturedTag
                 p.featured__label Featured  
               h3.job-card__title= job.title

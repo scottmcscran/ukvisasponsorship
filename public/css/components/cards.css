@@ -6,36 +6,34 @@
   border: 1px solid var(--border-default);
   position: relative;
   margin-bottom: var(--spacing-xs);
-  background-color: var(--bg-card, #fff); /* Ensure background is opaque */
-  overflow: hidden; /* Keep overlay contained */
+  background-color: var(--bg-card, #fff);
+  z-index: 0; /* Match artsite */
+  display: flex;
+  flex-direction: column;
 }
 
-.job-card__overlay {
+.job-card__link {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 2;
+  z-index: 1; /* Match artsite */
   cursor: pointer;
-  background-color: transparent;
-  -webkit-tap-highlight-color: transparent;
 }
 
-/* Ensure content is below overlay but visible */
-.job-card > *:not(.job-card__overlay) {
-  position: relative;
-  z-index: 1;
-  pointer-events: none; /* Let clicks pass through to overlay if needed, or just let overlay catch them */
+/* Ensure content is visible underneath */
+.job-card > *:not(.job-card__link) {
+  position: relative; /* Keep relative positioning for content */
 }
 
 @media (hover: hover) {
-  .job-card:focus,
+  .job-card:focus-within, /* Use focus-within for accessibility */
   .job-card:hover {
     border-color: var(--brand-primary);
     box-shadow: var(--shadow-hover);
     transform: translateY(1px);
-    z-index: 10;
+    /* z-index: 10; -- Removed to avoid stacking context wars, or keep if needed for hover pop */
   }
 }
 
