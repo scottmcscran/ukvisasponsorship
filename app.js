@@ -28,9 +28,15 @@ app.set("trust proxy", 1);
 
 // Force HTTPS Redirect
 app.use((req, res, next) => {
-  if (req.secure || req.headers["x-forwarded-proto"] === "https") {
+  // Check if secure (trust proxy must be enabled for this to work behind LB)
+  if (req.secure) return next();
+
+  // Check headers explicitly (handles comma-separated lists like "https,http")
+  const xForwardedProto = req.headers["x-forwarded-proto"];
+  if (xForwardedProto && xForwardedProto.indexOf("https") !== -1) {
     return next();
   }
+
   // Allow localhost/dev
   if (
     req.hostname === "localhost" ||
@@ -39,6 +45,7 @@ app.use((req, res, next) => {
   ) {
     return next();
   }
+  
   res.redirect(`https://${req.hostname}${req.url}`);
 });
 
