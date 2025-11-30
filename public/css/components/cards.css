@@ -1,15 +1,4 @@
 .job-card {
-  /* Button Reset */
-  appearance: none;
-  -webkit-appearance: none;
-  background: none;
-  border: none;
-  text-align: left;
-  width: 100%;
-  font-family: inherit;
-  cursor: pointer;
-
-  /* Card Styles */
   border-radius: var(--border-radius-sm);
   box-shadow: var(--shadow-md);
   padding: var(--spacing-md);
@@ -18,18 +7,24 @@
   position: relative;
   margin-bottom: var(--spacing-xs);
   background-color: var(--bg-card, #fff);
-  z-index: 0;
+  z-index: 0; /* Match artsite */
   display: flex;
   flex-direction: column;
 }
 
-/* Remove the link overlay as the card itself is now the button */
-/* .job-card__link { ... } */
+.job-card__link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1; /* Match artsite */
+  cursor: pointer;
+}
 
-/* Ensure content is visible */
-.job-card > * {
-  position: relative;
-  pointer-events: none; /* Let the button capture the click */
+/* Ensure content is visible underneath */
+.job-card > *:not(.job-card__link) {
+  position: relative; /* Keep relative positioning for content */
 }
 
 @media (hover: hover) {
