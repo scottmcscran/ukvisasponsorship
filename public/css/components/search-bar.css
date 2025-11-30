@@ -147,7 +147,7 @@
   transform: translateY(-15px);
   border-radius: 0 0 var(--border-radius-sm) var(--border-radius-sm);
   box-shadow: var(--shadow-md);
-  margin-top: 1.9rem;
+  margin-top: 0.9rem;
 }
 
 .custom-select.open .custom-select__options {
