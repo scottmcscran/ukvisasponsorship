@@ -683,23 +683,67 @@ const detailsModal = document.getElementById("detailsModal");
 const closeDetailsBtn = document.getElementById("closeDetailsBtn");
 const resultsContainer = document.querySelector(".results");
 
-if (showFiltersBtn && filtersModal) {
-  showFiltersBtn.addEventListener("click", (e) => {
+// Global Event Delegation for Mobile Interactions
+document.addEventListener("click", (e) => {
+  // 1. Show Filters Button
+  const showFiltersBtn = e.target.closest("#showFiltersBtn");
+  if (showFiltersBtn) {
     e.preventDefault();
-    e.stopPropagation();
-    filtersModal.classList.add("filters--open");
-    document.body.classList.add("no-scroll");
-  });
-}
+    const filtersModal = document.getElementById("filtersModal");
+    if (filtersModal) {
+      filtersModal.classList.add("filters--open");
+      document.body.classList.add("no-scroll");
+    }
+    return;
+  }
 
-if (closeFiltersBtn && filtersModal) {
-  closeFiltersBtn.addEventListener("click", (e) => {
+  // 2. Close Filters Button
+  const closeFiltersBtn = e.target.closest("#closeFiltersBtn");
+  if (closeFiltersBtn) {
     e.preventDefault();
-    e.stopPropagation();
-    filtersModal.classList.remove("filters--open");
-    document.body.classList.remove("no-scroll");
-  });
-}
+    const filtersModal = document.getElementById("filtersModal");
+    if (filtersModal) {
+      filtersModal.classList.remove("filters--open");
+      document.body.classList.remove("no-scroll");
+    }
+    return;
+  }
+
+  // 3. Close Details Button
+  const closeDetailsBtn = e.target.closest("#closeDetailsBtn");
+  if (closeDetailsBtn) {
+    e.preventDefault();
+    const detailsModal = document.getElementById("detailsModal");
+    if (detailsModal) {
+      detailsModal.classList.remove("details--open");
+      document.body.classList.remove("no-scroll");
+    }
+    return;
+  }
+
+  // 4. Job Card Click
+  const card = e.target.closest(".job-card");
+  if (card) {
+    const detailsModal = document.getElementById("detailsModal");
+    if (detailsModal) {
+      detailsModal.classList.add("details--open");
+      document.body.classList.add("no-scroll");
+
+      const jobId = card.dataset.id;
+      const index = card.dataset.index;
+      const total = document.querySelectorAll(".job-card").length;
+      const statusEl = document.querySelector(".results-status");
+
+      if (statusEl && index) {
+        statusEl.textContent = `Result ${index} of ${total}`;
+      }
+
+      if (jobId) {
+        loadJobData(jobId);
+      }
+    }
+  }
+});
 
 const clearFiltersHandler = () => {
   const inputs = document.querySelectorAll(".filter-input");
@@ -739,6 +783,8 @@ if (clearFiltersBtnMobile) {
   clearFiltersBtnMobile.addEventListener("click", clearFiltersHandler);
 }
 
+// Removed individual listeners in favor of global delegation above
+/*
 if (resultsContainer && detailsModal) {
   resultsContainer.addEventListener("click", (e) => {
     const card = e.target.closest(".job-card");
@@ -768,6 +814,7 @@ if (closeDetailsBtn && detailsModal) {
     document.body.classList.remove("no-scroll");
   });
 }
+*/
 
 // Custom Select Logic
 const customSelect = document.querySelector(".custom-select");

@@ -733,25 +733,85 @@ var clearFiltersBtn = document.getElementById("clearFiltersBtn");
 var clearFiltersBtnMobile = document.getElementById("clearFiltersBtnMobile");
 var detailsModal = document.getElementById("detailsModal");
 var closeDetailsBtn = document.getElementById("closeDetailsBtn");
-var resultsContainer = document.querySelector(".results");
+var resultsContainer = document.querySelector(".results"); // Global Event Delegation for Mobile Interactions
 
-if (showFiltersBtn && filtersModal) {
-  showFiltersBtn.addEventListener("click", function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    filtersModal.classList.add("filters--open");
-    document.body.classList.add("no-scroll");
-  });
-}
+document.addEventListener("click", function (e) {
+  // 1. Show Filters Button
+  var showFiltersBtn = e.target.closest("#showFiltersBtn");
 
-if (closeFiltersBtn && filtersModal) {
-  closeFiltersBtn.addEventListener("click", function (e) {
+  if (showFiltersBtn) {
     e.preventDefault();
-    e.stopPropagation();
-    filtersModal.classList.remove("filters--open");
-    document.body.classList.remove("no-scroll");
-  });
-}
+
+    var _filtersModal = document.getElementById("filtersModal");
+
+    if (_filtersModal) {
+      _filtersModal.classList.add("filters--open");
+
+      document.body.classList.add("no-scroll");
+    }
+
+    return;
+  } // 2. Close Filters Button
+
+
+  var closeFiltersBtn = e.target.closest("#closeFiltersBtn");
+
+  if (closeFiltersBtn) {
+    e.preventDefault();
+
+    var _filtersModal2 = document.getElementById("filtersModal");
+
+    if (_filtersModal2) {
+      _filtersModal2.classList.remove("filters--open");
+
+      document.body.classList.remove("no-scroll");
+    }
+
+    return;
+  } // 3. Close Details Button
+
+
+  var closeDetailsBtn = e.target.closest("#closeDetailsBtn");
+
+  if (closeDetailsBtn) {
+    e.preventDefault();
+
+    var _detailsModal = document.getElementById("detailsModal");
+
+    if (_detailsModal) {
+      _detailsModal.classList.remove("details--open");
+
+      document.body.classList.remove("no-scroll");
+    }
+
+    return;
+  } // 4. Job Card Click
+
+
+  var card = e.target.closest(".job-card");
+
+  if (card) {
+    var _detailsModal2 = document.getElementById("detailsModal");
+
+    if (_detailsModal2) {
+      _detailsModal2.classList.add("details--open");
+
+      document.body.classList.add("no-scroll");
+      var jobId = card.dataset.id;
+      var index = card.dataset.index;
+      var total = document.querySelectorAll(".job-card").length;
+      var statusEl = document.querySelector(".results-status");
+
+      if (statusEl && index) {
+        statusEl.textContent = "Result ".concat(index, " of ").concat(total);
+      }
+
+      if (jobId) {
+        loadJobData(jobId);
+      }
+    }
+  }
+});
 
 var clearFiltersHandler = function clearFiltersHandler() {
   var inputs = document.querySelectorAll(".filter-input");
@@ -789,23 +849,23 @@ if (clearFiltersBtn) {
 
 if (clearFiltersBtnMobile) {
   clearFiltersBtnMobile.addEventListener("click", clearFiltersHandler);
-}
+} // Removed individual listeners in favor of global delegation above
 
+/*
 if (resultsContainer && detailsModal) {
-  resultsContainer.addEventListener("click", function (e) {
-    var card = e.target.closest(".job-card");
-
+  resultsContainer.addEventListener("click", (e) => {
+    const card = e.target.closest(".job-card");
     if (card) {
       detailsModal.classList.add("details--open");
       document.body.classList.add("no-scroll");
-      var jobId = card.dataset.id; // Update Status Text
+      const jobId = card.dataset.id;
 
-      var index = card.dataset.index;
-      var total = document.querySelectorAll(".job-card").length;
-      var statusEl = document.querySelector(".results-status");
-
+      // Update Status Text
+      const index = card.dataset.index;
+      const total = document.querySelectorAll(".job-card").length;
+      const statusEl = document.querySelector(".results-status");
       if (statusEl && index) {
-        statusEl.textContent = "Result ".concat(index, " of ").concat(total);
+        statusEl.textContent = `Result ${index} of ${total}`;
       }
 
       if (jobId) {
@@ -816,11 +876,13 @@ if (resultsContainer && detailsModal) {
 }
 
 if (closeDetailsBtn && detailsModal) {
-  closeDetailsBtn.addEventListener("click", function () {
+  closeDetailsBtn.addEventListener("click", () => {
     detailsModal.classList.remove("details--open");
     document.body.classList.remove("no-scroll");
   });
-} // Custom Select Logic
+}
+*/
+// Custom Select Logic
 
 
 var customSelect = document.querySelector(".custom-select");
