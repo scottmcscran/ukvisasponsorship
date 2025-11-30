@@ -1,4 +1,5 @@
 import axios from "axios";
+import { marked } from "marked";
 import { showAlert } from "./alerts";
 const resultsContainer = document.querySelector(`.results`);
 
@@ -165,9 +166,9 @@ exports.loadJobData = async (id) => {
           
           <div class="job-body">
             <h3>Description</h3>
-            <p>${job.description}</p>
+            <div class="job-description-content">${marked.parse(job.description)}</div>
             
-            ${job.requirements && job.requirements.length > 0 ? `<h3>Requirements</h3><p>${(job.requirements || "").toString().replace(/,/g, ", ")}</p>` : ""}
+            ${job.requirements && job.requirements.length > 0 ? `<h3>Requirements</h3><div class="job-requirements-content">${marked.parse((job.requirements || "").toString().replace(/,/g, ", "))}</div>` : ""}
             
             ${job.visaTypes && job.visaTypes.length > 0 ? `<h3>Visa Types</h3>` : ""}
             <div class="job-tags">

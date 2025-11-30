@@ -15,8 +15,8 @@ block content
         button.btn.btn--search(type="submit") Search
     .container.results__container
       .mobile-filters-actions
-        button.btn.btn--small.btn--show-filters#showFiltersBtn Show Filters
-        button.btn.btn--small.btn--clear-filters#clearFiltersBtnMobile Clear Filters
+        button.btn.btn--small.btn--show-filters#showFiltersBtn(onclick="void(0)") Show Filters
+        button.btn.btn--small.btn--clear-filters#clearFiltersBtnMobile(onclick="void(0)") Clear Filters
 
       aside.filters#filtersModal
         .filters-header
@@ -103,7 +103,7 @@ block content
             //- However, the controller aggregation DOES return it now.
             - const showFeaturedTag = job.featured && (!job.distanceGroup || job.distanceGroup === 1);
             
-            .job-card(tabindex="0" data-id=job._id data-index=index + 1)
+            .job-card(tabindex="0" data-id=job._id data-index=index + 1 onclick="void(0)")
               if showFeaturedTag
                 p.featured__label Featured  
               h3.job-card__title= job.title
