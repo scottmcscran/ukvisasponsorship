@@ -22,14 +22,14 @@ block content
         .search-bar__group.search-bar__group--select
           .custom-select-wrapper
             .custom-select
-              .custom-select__trigger
+              button.custom-select__trigger(type="button")
                 span +25 miles
                 .arrow
               .custom-select__options
-                span.custom-option(data-value="10") +10 miles
-                span.custom-option.selected(data-value="25") +25 miles
-                span.custom-option(data-value="50") +50 miles
-                span.custom-option(data-value="100") +100 miles
+                button.custom-option(type="button" data-value="10") +10 miles
+                button.custom-option.selected(type="button" data-value="25") +25 miles
+                button.custom-option(type="button" data-value="50") +50 miles
+                button.custom-option(type="button" data-value="100") +100 miles
             input#distanceInput(type="hidden" name="distance" value="25")
 
         .search-bar__divider.search-bar__divider--mobile
