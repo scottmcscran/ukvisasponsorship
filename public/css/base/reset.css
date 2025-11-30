@@ -26,7 +26,6 @@ body {
   background-color: var(--bg-body);
   width: 100%;
   overflow-x: hidden;
-  cursor: pointer;
 }
 
 .no-scroll {

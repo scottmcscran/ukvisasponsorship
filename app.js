@@ -53,10 +53,11 @@ app.use((req, res, next) => {
   ) {
     return next();
   }
-  
+
   // If none of the above, redirect to HTTPS
   res.redirect(`https://${req.hostname}${req.url}`);
-});app.set(`view engine`, `pug`);
+});
+app.set(`view engine`, `pug`);
 app.set(`views`, path.join(__dirname, `views`));
 
 app.use(express.static(path.join(__dirname, `public`)));
