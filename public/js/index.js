@@ -683,12 +683,101 @@ const detailsModal = document.getElementById("detailsModal");
 const closeDetailsBtn = document.getElementById("closeDetailsBtn");
 const resultsContainer = document.querySelector(".results");
 
-// Global Event Delegation for Mobile Interactions
+// --- ROBUST TOUCH HANDLING START ---
+// This section implements a custom tap detection system to bypass
+// potential click-blocking issues on iOS Safari/Opera.
+
+let touchStartX = 0;
+let touchStartY = 0;
+let lastTouchTime = 0;
+
+// 1. Capture Touch Start
+document.addEventListener(
+  "touchstart",
+  (e) => {
+    if (e.changedTouches && e.changedTouches.length > 0) {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }
+  },
+  { passive: true }
+);
+
+// 2. Handle Touch End (The "Tap")
+document.addEventListener("touchend", (e) => {
+  if (e.changedTouches && e.changedTouches.length > 0) {
+    const touchEndX = e.changedTouches[0].screenX;
+    const touchEndY = e.changedTouches[0].screenY;
+
+    // Calculate movement distance
+    const diffX = Math.abs(touchEndX - touchStartX);
+    const diffY = Math.abs(touchEndY - touchStartY);
+
+    // If movement is small (< 10px), consider it a tap
+    if (diffX < 10 && diffY < 10) {
+      // Check if we tapped a target we care about
+      const target = e.target;
+
+      // A. Job Card Tap
+      if (target.closest(".job-card")) {
+        // Prevent default to stop ghost clicks if we handle it here
+        // But be careful not to block scrolling if the user dragged (handled by diff check)
+        // We use preventDefault to stop the browser from firing a delayed click
+        if (e.cancelable) e.preventDefault();
+
+        handleGlobalInteraction(e);
+        lastTouchTime = Date.now();
+        return;
+      }
+
+      // B. Custom Select Trigger Tap
+      if (target.closest(".custom-select__trigger")) {
+        if (e.cancelable) e.preventDefault();
+        handleGlobalInteraction(e);
+        lastTouchTime = Date.now();
+        return;
+      }
+
+      // C. Custom Select Option Tap
+      if (target.closest(".custom-option")) {
+        if (e.cancelable) e.preventDefault();
+        handleGlobalInteraction(e);
+        lastTouchTime = Date.now();
+        return;
+      }
+
+      // D. Close Buttons
+      if (
+        target.closest("#closeDetailsBtn") ||
+        target.closest("#closeFiltersBtn") ||
+        target.closest("#showFiltersBtn")
+      ) {
+        if (e.cancelable) e.preventDefault();
+        handleGlobalInteraction(e);
+        lastTouchTime = Date.now();
+        return;
+      }
+    }
+  }
+});
+
+// 3. Handle Standard Clicks
 document.addEventListener("click", (e) => {
+  // If a touch event was just handled (< 500ms ago), ignore this click
+  // to prevent double-firing logic
+  if (Date.now() - lastTouchTime < 500) return;
+
+  handleGlobalInteraction(e);
+});
+
+// Unified Interaction Handler (called by both Click and TouchEnd)
+const handleGlobalInteraction = (e) => {
   // 1. Show Filters Button
   const showFiltersBtn = e.target.closest("#showFiltersBtn");
   if (showFiltersBtn) {
-    e.preventDefault();
+    // e.preventDefault() might have been called already in touchend
+    if (e.type === "click") e.preventDefault();
+
     const filtersModal = document.getElementById("filtersModal");
     if (filtersModal) {
       filtersModal.classList.add("filters--open");
@@ -700,7 +789,7 @@ document.addEventListener("click", (e) => {
   // 2. Close Filters Button
   const closeFiltersBtn = e.target.closest("#closeFiltersBtn");
   if (closeFiltersBtn) {
-    e.preventDefault();
+    if (e.type === "click") e.preventDefault();
     const filtersModal = document.getElementById("filtersModal");
     if (filtersModal) {
       filtersModal.classList.remove("filters--open");
@@ -712,7 +801,7 @@ document.addEventListener("click", (e) => {
   // 3. Close Details Button
   const closeDetailsBtn = e.target.closest("#closeDetailsBtn");
   if (closeDetailsBtn) {
-    e.preventDefault();
+    if (e.type === "click") e.preventDefault();
     const detailsModal = document.getElementById("detailsModal");
     if (detailsModal) {
       detailsModal.classList.remove("details--open");
@@ -782,7 +871,8 @@ document.addEventListener("click", (e) => {
   if (openSelect && !e.target.closest(".custom-select")) {
     openSelect.classList.remove("open");
   }
-});
+};
+// --- ROBUST TOUCH HANDLING END ---
 
 const clearFiltersHandler = () => {
   const inputs = document.querySelectorAll(".filter-input");
