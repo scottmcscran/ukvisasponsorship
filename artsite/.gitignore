@@ -1,7 +1,0 @@
-node_modules/
-config.env
-.DS_Store
-.cache/
-.vscode/
-*.log
-COLOUR PALLETS.rtf
