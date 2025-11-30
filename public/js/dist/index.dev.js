@@ -736,14 +736,20 @@ var closeDetailsBtn = document.getElementById("closeDetailsBtn");
 var resultsContainer = document.querySelector(".results");
 
 if (showFiltersBtn && filtersModal) {
-  showFiltersBtn.addEventListener("click", function () {
+  showFiltersBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
     filtersModal.classList.add("filters--open");
+    document.body.classList.add("no-scroll");
   });
 }
 
 if (closeFiltersBtn && filtersModal) {
-  closeFiltersBtn.addEventListener("click", function () {
+  closeFiltersBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
     filtersModal.classList.remove("filters--open");
+    document.body.classList.remove("no-scroll");
   });
 }
 
@@ -790,6 +796,10 @@ if (resultsContainer && detailsModal) {
     var card = e.target.closest(".job-card");
 
     if (card) {
+      // Force reflow/repaint for Safari
+      card.style.display = "none";
+      card.offsetHeight;
+      card.style.display = "";
       detailsModal.classList.add("details--open");
       document.body.classList.add("no-scroll");
       var jobId = card.dataset.id; // Update Status Text

@@ -9261,13 +9261,19 @@ var detailsModal = document.getElementById("detailsModal");
 var closeDetailsBtn = document.getElementById("closeDetailsBtn");
 var resultsContainer = document.querySelector(".results");
 if (showFiltersBtn && filtersModal) {
-  showFiltersBtn.addEventListener("click", function () {
+  showFiltersBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
     filtersModal.classList.add("filters--open");
+    document.body.classList.add("no-scroll");
   });
 }
 if (closeFiltersBtn && filtersModal) {
-  closeFiltersBtn.addEventListener("click", function () {
+  closeFiltersBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
     filtersModal.classList.remove("filters--open");
+    document.body.classList.remove("no-scroll");
   });
 }
 var clearFiltersHandler = function clearFiltersHandler() {
@@ -9306,6 +9312,10 @@ if (resultsContainer && detailsModal) {
   resultsContainer.addEventListener("click", function (e) {
     var card = e.target.closest(".job-card");
     if (card) {
+      // Force reflow/repaint for Safari
+      card.style.display = "none";
+      card.offsetHeight;
+      card.style.display = "";
       detailsModal.classList.add("details--open");
       document.body.classList.add("no-scroll");
       var jobId = card.dataset.id;
@@ -9419,7 +9429,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64821" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65356" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

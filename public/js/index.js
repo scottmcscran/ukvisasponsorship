@@ -684,14 +684,20 @@ const closeDetailsBtn = document.getElementById("closeDetailsBtn");
 const resultsContainer = document.querySelector(".results");
 
 if (showFiltersBtn && filtersModal) {
-  showFiltersBtn.addEventListener("click", () => {
+  showFiltersBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     filtersModal.classList.add("filters--open");
+    document.body.classList.add("no-scroll");
   });
 }
 
 if (closeFiltersBtn && filtersModal) {
-  closeFiltersBtn.addEventListener("click", () => {
+  closeFiltersBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     filtersModal.classList.remove("filters--open");
+    document.body.classList.remove("no-scroll");
   });
 }
 
@@ -737,6 +743,11 @@ if (resultsContainer && detailsModal) {
   resultsContainer.addEventListener("click", (e) => {
     const card = e.target.closest(".job-card");
     if (card) {
+      // Force reflow/repaint for Safari
+      card.style.display = "none";
+      card.offsetHeight;
+      card.style.display = "";
+
       detailsModal.classList.add("details--open");
       document.body.classList.add("no-scroll");
       const jobId = card.dataset.id;
