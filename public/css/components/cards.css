@@ -4,16 +4,29 @@
   padding: var(--spacing-md);
   transition: all 0.3s ease;
   border: 1px solid var(--border-default);
-  cursor: pointer;
-  z-index: 1;
   position: relative;
   margin-bottom: var(--spacing-xs);
-  touch-action: manipulation;
+  background-color: var(--bg-card, #fff); /* Ensure background is opaque */
+  overflow: hidden; /* Keep overlay contained */
+}
+
+.job-card__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  cursor: pointer;
+  background-color: transparent;
   -webkit-tap-highlight-color: transparent;
 }
 
-.job-card * {
-  cursor: pointer;
+/* Ensure content is below overlay but visible */
+.job-card > *:not(.job-card__overlay) {
+  position: relative;
+  z-index: 1;
+  pointer-events: none; /* Let clicks pass through to overlay if needed, or just let overlay catch them */
 }
 
 @media (hover: hover) {
@@ -23,7 +36,6 @@
     box-shadow: var(--shadow-hover);
     transform: translateY(1px);
     z-index: 10;
-    position: relative;
   }
 }
 

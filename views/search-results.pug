@@ -104,6 +104,7 @@ block content
             - const showFeaturedTag = job.featured && (!job.distanceGroup || job.distanceGroup === 1);
             
             .job-card(tabindex="0" data-id=job._id data-index=index + 1)
+              .job-card__overlay
               if showFeaturedTag
                 p.featured__label Featured  
               h3.job-card__title= job.title
