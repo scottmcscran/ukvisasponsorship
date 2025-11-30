@@ -448,6 +448,46 @@ export const initAdmin = () => {
     });
   }
 
+  // --- SHADOW QUEUE LOGIC ---
+  const loadShadowQueue = async () => {
+    const list = document.getElementById("shadowQueueList");
+    if (!list) return;
+
+    try {
+      const res = await axios.get("/api/v1/admin/shadow-email-queue");
+      const queue = res.data.data.queue;
+
+      if (queue.length === 0) {
+        list.innerHTML = "<p>No emails in queue.</p>";
+        return;
+      }
+
+      list.innerHTML = queue
+        .map(
+          (item) => `
+        <div class="shadow-queue-item">
+          <div class="shadow-queue-info">
+            <h4>${item.user.companyName}</h4>
+            <p>${item.user.email}</p>
+            <p>Jobs: ${item.user.jobCount}</p>
+          </div>
+          <div class="shadow-queue-date">
+            <p>Queued: ${new Date(item.createdAt).toLocaleDateString()}</p>
+          </div>
+        </div>
+      `
+        )
+        .join("");
+    } catch (err) {
+      console.error(err);
+      list.innerHTML = "<p>Error loading queue.</p>";
+    }
+  };
+
+  if (document.getElementById("shadowQueueList")) {
+    loadShadowQueue();
+  }
+
   if (sendClaimEmailBtn) {
     sendClaimEmailBtn.addEventListener("click", async (e) => {
       e.preventDefault();
@@ -456,12 +496,12 @@ export const initAdmin = () => {
 
       if (
         !confirm(
-          "Are you sure you want to send the claim email? Make sure you have added all jobs first."
+          "Are you sure you want to queue the claim email? Make sure you have added all jobs first."
         )
       )
         return;
 
-      sendClaimEmailBtn.textContent = "Sending...";
+      sendClaimEmailBtn.textContent = "Queuing...";
 
       try {
         const res = await axios.post(
@@ -469,18 +509,30 @@ export const initAdmin = () => {
         );
 
         if (res.data.status === "success") {
-          showAlert("success", "Claim email sent!");
-          sendClaimEmailBtn.textContent = "Email Sent";
+          showAlert("success", "Claim email queued!");
+          sendClaimEmailBtn.textContent = "Email Queued";
           sendClaimEmailBtn.disabled = true;
 
-          // Reset everything after delay
+          // Refresh queue list
+          await loadShadowQueue();
+
+          // Reset form for next user after delay
           setTimeout(() => {
-            location.reload();
+            // Reset UI for next entry
+            document.querySelector(".form--shadow-employer").reset();
+            document.querySelector(".form--shadow-job").reset();
+            document.getElementById("shadowJobSection").classList.add("hidden");
+            document.getElementById("shadowJobsListUl").innerHTML = "";
+            sendClaimEmailBtn.textContent = "Queue Claim Email";
+            sendClaimEmailBtn.disabled = false;
+
+            // Clear hidden user ID
+            shadowUserIdInput.value = "";
           }, 2000);
         }
       } catch (err) {
         showAlert("error", err.response.data.message);
-        sendClaimEmailBtn.textContent = "Send Claim Email";
+        sendClaimEmailBtn.textContent = "Queue Claim Email";
       }
     });
   }

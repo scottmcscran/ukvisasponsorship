@@ -98,14 +98,14 @@ exports.loadJobData = async (id) => {
 
       let applyHtml;
       if (isApplied) {
-        applyHtml = `<button class="btn--standard btn--apply" disabled style="background-color: #1a73c2; cursor: default;">Applied</button>`;
+        applyHtml = `<button class="btn--standard btn--apply" disabled style="background-color: #1a73c2; cursor: default;">Scheduled</button>`;
       } else if (job.applicationLink) {
         applyHtml = `<a href="${job.applicationLink}" class="btn--standard btn--apply" target="_blank">Apply Now</a>`;
       } else {
         if (userCv) {
           applyHtml = `
               <div class="apply-actions">
-                  <button class="btn--standard btn--apply" id="applyProfileCvBtn">Apply with Profile CV</button>
+                  <button class="btn--standard btn--apply" id="applyProfileCvBtn">Schedule with Profile CV</button>
                   <button class="btn--text" id="applyUploadCvBtn" style="margin-top: 10px; display: block; font-size: 0.9em; background: none; border: none; color: var(--brand-primary); cursor: pointer; text-decoration: underline;">Upload different CV</button>
                   <input type="file" id="cvUpload" style="display: none;" accept=".pdf,.doc,.docx" />
               </div>
@@ -113,7 +113,7 @@ exports.loadJobData = async (id) => {
         } else {
           applyHtml = `
               <div class="apply-actions">
-                  <button class="btn--standard btn--apply" id="applyUploadCvBtn">Apply Now</button>
+                  <button class="btn--standard btn--apply" id="applyUploadCvBtn">Schedule Application</button>
                   <input type="file" id="cvUpload" style="display: none;" accept=".pdf,.doc,.docx" />
                   <div class="save-cv-option" style="margin-top: 10px;">
                       <input type="checkbox" id="saveCvCheck">
@@ -202,17 +202,17 @@ exports.loadJobData = async (id) => {
       if (applyProfileCvBtn) {
         applyProfileCvBtn.addEventListener("click", async () => {
           try {
-            applyProfileCvBtn.textContent = "Applying...";
+            applyProfileCvBtn.textContent = "Scheduling...";
             applyProfileCvBtn.disabled = true;
             await axios.post(`/api/v1/jobs/${job._id}/apply`, {
               useProfileCv: "true",
             });
-            showAlert("success", "Application sent successfully!");
-            applyProfileCvBtn.textContent = "Applied";
+            showAlert("success", "Application scheduled successfully!");
+            applyProfileCvBtn.textContent = "Scheduled";
             if (applyUploadCvBtn) applyUploadCvBtn.style.display = "none";
           } catch (err) {
             applyProfileCvBtn.disabled = false;
-            applyProfileCvBtn.textContent = "Apply with Profile CV";
+            applyProfileCvBtn.textContent = "Schedule with Profile CV";
             showAlert(
               "error",
               err.response && err.response.data.message
@@ -239,21 +239,21 @@ exports.loadJobData = async (id) => {
           }
 
           try {
-            applyUploadCvBtn.textContent = "Uploading...";
+            applyUploadCvBtn.textContent = "Scheduling...";
             applyUploadCvBtn.disabled = true;
             await axios.post(`/api/v1/jobs/${job._id}/apply`, formData, {
               headers: {
                 "Content-Type": "multipart/form-data",
               },
             });
-            showAlert("success", "Application sent successfully!");
-            applyUploadCvBtn.textContent = "Applied";
+            showAlert("success", "Application scheduled successfully!");
+            applyUploadCvBtn.textContent = "Scheduled";
             if (saveCvCheck) saveCvCheck.parentElement.style.display = "none";
           } catch (err) {
             applyUploadCvBtn.disabled = false;
             applyUploadCvBtn.textContent = userCv
               ? "Upload different CV"
-              : "Apply Now";
+              : "Schedule Application";
             showAlert(
               "error",
               err.response && err.response.data.message

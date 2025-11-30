@@ -22,6 +22,7 @@ router.route("/get-users").get(userController.getAllUsers); // .post(userControl
 
 router.route("/user-control/:id").get(userController.getUser).patch(userController.updateUser)["delete"](userController.deleteUser);
 router.post("/export-user-data", adminController.exportUserData);
+router.get("/shadow-email-queue", adminController.getShadowEmailQueue);
 router.post("/shadow-employer", adminController.createShadowEmployer);
 router.post("/users/:id/send-claim-email", adminController.sendClaimEmail);
 module.exports = router;

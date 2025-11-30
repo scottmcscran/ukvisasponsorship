@@ -21,30 +21,37 @@ block content
         //- SHADOW ACCOUNTS TAB
         .tab-content(id='shadow')
           .shadow-account-section
-            h3.heading-tertiary.ma-bt-sm Create Shadow Employer
-            form.form.form--shadow-employer
-              .form__group
-                label.form__label(for='shadowCompanyName') Company Name
-                input#shadowCompanyName.form__input(type='text', required)
-              .form__group
-                label.form__label(for='shadowEmail') Email Address
-                input#shadowEmail.form__input(type='email', required)
-              .form__group
-                label.form__label(for='shadowIndustry') Industry
-                select#shadowIndustry.form__input
-                  option(value='Technology') Technology
-                  option(value='Healthcare') Healthcare
-                  option(value='Finance') Finance
-                  option(value='Engineering') Engineering
-                  option(value='Education') Education
-                  option(value='Manufacturing') Manufacturing
-                  option(value='Retail') Retail
-                  option(value='Hospitality') Hospitality
-                  option(value='Other') Other
-              .form__group
-                button.btn.btn--small.btn--green#createShadowBtn(type='button') Create Account
+            .shadow-account-grid
+              .shadow-account-form
+                h3.heading-tertiary.ma-bt-sm Create Shadow Employer
+                form.form.form--shadow-employer
+                  .form__group
+                    label.form__label(for='shadowCompanyName') Company Name
+                    input#shadowCompanyName.form__input(type='text', required)
+                  .form__group
+                    label.form__label(for='shadowEmail') Email Address
+                    input#shadowEmail.form__input(type='email', required)
+                  .form__group
+                    label.form__label(for='shadowIndustry') Industry
+                    select#shadowIndustry.form__input
+                      option(value='Technology') Technology
+                      option(value='Healthcare') Healthcare
+                      option(value='Finance') Finance
+                      option(value='Engineering') Engineering
+                      option(value='Education') Education
+                      option(value='Manufacturing') Manufacturing
+                      option(value='Retail') Retail
+                      option(value='Hospitality') Hospitality
+                      option(value='Other') Other
+                  .form__group
+                    button.btn.btn--small.btn--green#createShadowBtn(type='button') Create Account
 
-            .shadow-job-section.hidden#shadowJobSection
+              .shadow-account-queue
+                h3.heading-tertiary.ma-bt-sm Queued Emails (Next Tuesday 10:15)
+                .shadow-queue-list#shadowQueueList
+                  p Loading queue...
+
+          .shadow-job-section.hidden#shadowJobSection
               h3.heading-tertiary.ma-bt-sm.ma-top-md Post Job for <span id="shadowCompanyNameDisplay"></span>
               
               //- List of jobs added for this session
@@ -102,8 +109,8 @@ block content
                   button.btn.btn--small.btn--green#postShadowJobBtn(type='button') Post Job
               
               .shadow-actions.ma-top-md
-                button.btn.btn--small.btn--standard#sendClaimEmailBtn Send Claim Email
-                p.ma-top-sm.text-small(style="color: #777;") *Send this email only after adding all jobs.
+                button.btn.btn--small.btn--standard#sendClaimEmailBtn Queue Claim Email
+                p.ma-top-sm.text-small(style="color: #777;") *Queue this email after adding all jobs.
 
         //- REPORTED JOBS TAB
         .tab-content.tab-content--active(id='reported')

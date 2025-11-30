@@ -94,4 +94,8 @@ module.exports = class Email {
   async sendAccountVerified() {
     await this.send(`accountVerified`, `Your account has been verified!`);
   }
+
+  async sendClaimAccount() {
+    await this.send(`claimAccount`, `Claim your employer account`);
+  }
 };

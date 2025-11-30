@@ -3,6 +3,7 @@ const dotenv = require(`dotenv`);
 const { dailySubscriptionCheck, checkShadowAccountExpirations } = require(
   `./services/subscriptionService`
 );
+const { processShadowEmailQueue } = require("./services/shadowEmailService");
 const cron = require(`node-cron`);
 
 // Trigger restart 16
@@ -38,6 +39,16 @@ const server = app.listen(port, () => {
       await checkShadowAccountExpirations();
     } catch (error) {
       console.error(`Daily subscription check failed:`, error);
+    }
+  });
+
+  // Run at 10:15 every Tuesday
+  cron.schedule("15 10 * * 2", async () => {
+    console.log(`Running weekly shadow email queue processing...`);
+    try {
+      await processShadowEmailQueue();
+    } catch (error) {
+      console.error(`Shadow email queue processing failed:`, error);
     }
   });
 });

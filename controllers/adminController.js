@@ -4,6 +4,7 @@ const Job = require(`./../models/jobModel`);
 const User = require(`./../models/userModel`);
 const BugReport = require("../models/bugReportModel");
 const Discount = require("../models/discountModel");
+const ShadowEmailQueue = require("../models/shadowEmailQueueModel");
 const crypto = require("crypto");
 const Email = require("../utils/email");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
@@ -306,30 +307,48 @@ exports.sendClaimEmail = catchAsync(async (req, res, next) => {
     return next(new AppError("Account already claimed", 400));
   }
 
-  const claimToken = user.createClaimToken();
-  await user.save({ validateBeforeSave: false });
-
-  const claimUrl = `${req.protocol}://${req.get(
-    "host"
-  )}/claim-account/${claimToken}`;
-
-  try {
-    await new Email(user, claimUrl).sendClaimAccount();
-
-    res.status(200).json({
-      status: "success",
-      message: "Claim email sent successfully",
-    });
-  } catch (err) {
-    user.claimToken = undefined;
-    user.claimTokenExpires = undefined;
-    await user.save({ validateBeforeSave: false });
-
-    return next(
-      new AppError("There was an error sending the email. Try again later!"),
-      500
-    );
+  // Check if already in queue
+  const existingQueue = await ShadowEmailQueue.findOne({ user: user._id });
+  if (existingQueue) {
+    return next(new AppError("Email already queued for this user", 400));
   }
+
+  await ShadowEmailQueue.create({ user: user._id });
+
+  res.status(200).json({
+    status: "success",
+    message: "Claim email has been queued for Tuesday 10:15 AM",
+  });
+});
+
+exports.getShadowEmailQueue = catchAsync(async (req, res, next) => {
+  const queueItems = await ShadowEmailQueue.find().populate({
+    path: "user",
+    populate: { path: "activeJobsCount" },
+  });
+
+  const formattedQueue = queueItems
+    .map((item) => {
+      if (!item.user) return null;
+      return {
+        _id: item._id,
+        user: {
+          _id: item.user._id,
+          email: item.user.email,
+          companyName: item.user.companyProfile?.companyName,
+          jobCount: item.user.activeJobsCount || 0,
+        },
+        createdAt: item.createdAt,
+      };
+    })
+    .filter((item) => item !== null);
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      queue: formattedQueue,
+    },
+  });
 });
 
 exports.createDiscount = catchAsync(async (req, res, next) => {

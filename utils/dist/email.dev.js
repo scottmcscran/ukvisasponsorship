@@ -180,6 +180,23 @@ function () {
         }
       }, null, this);
     }
+  }, {
+    key: "sendClaimAccount",
+    value: function sendClaimAccount() {
+      return regeneratorRuntime.async(function sendClaimAccount$(_context7) {
+        while (1) {
+          switch (_context7.prev = _context7.next) {
+            case 0:
+              _context7.next = 2;
+              return regeneratorRuntime.awrap(this.send("claimAccount", "Claim your employer account"));
+
+            case 2:
+            case "end":
+              return _context7.stop();
+          }
+        }
+      }, null, this);
+    }
   }]);
 
   return Email;

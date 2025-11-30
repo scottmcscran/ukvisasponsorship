@@ -6497,14 +6497,14 @@ exports.loadJobData = /*#__PURE__*/function () {
             saveBtnText = isSaved ? "Saved" : "Save Job";
             saveBtnClass = isSaved ? "btn--save btn--saved" : "btn--save";
             if (isApplied) {
-              applyHtml = "<button class=\"btn--standard btn--apply\" disabled style=\"background-color: #1a73c2; cursor: default;\">Applied</button>";
+              applyHtml = "<button class=\"btn--standard btn--apply\" disabled style=\"background-color: #1a73c2; cursor: default;\">Scheduled</button>";
             } else if (job.applicationLink) {
               applyHtml = "<a href=\"".concat(job.applicationLink, "\" class=\"btn--standard btn--apply\" target=\"_blank\">Apply Now</a>");
             } else {
               if (userCv) {
-                applyHtml = "\n              <div class=\"apply-actions\">\n                  <button class=\"btn--standard btn--apply\" id=\"applyProfileCvBtn\">Apply with Profile CV</button>\n                  <button class=\"btn--text\" id=\"applyUploadCvBtn\" style=\"margin-top: 10px; display: block; font-size: 0.9em; background: none; border: none; color: var(--brand-primary); cursor: pointer; text-decoration: underline;\">Upload different CV</button>\n                  <input type=\"file\" id=\"cvUpload\" style=\"display: none;\" accept=\".pdf,.doc,.docx\" />\n              </div>\n            ";
+                applyHtml = "\n              <div class=\"apply-actions\">\n                  <button class=\"btn--standard btn--apply\" id=\"applyProfileCvBtn\">Schedule with Profile CV</button>\n                  <button class=\"btn--text\" id=\"applyUploadCvBtn\" style=\"margin-top: 10px; display: block; font-size: 0.9em; background: none; border: none; color: var(--brand-primary); cursor: pointer; text-decoration: underline;\">Upload different CV</button>\n                  <input type=\"file\" id=\"cvUpload\" style=\"display: none;\" accept=\".pdf,.doc,.docx\" />\n              </div>\n            ";
               } else {
-                applyHtml = "\n              <div class=\"apply-actions\">\n                  <button class=\"btn--standard btn--apply\" id=\"applyUploadCvBtn\">Apply Now</button>\n                  <input type=\"file\" id=\"cvUpload\" style=\"display: none;\" accept=\".pdf,.doc,.docx\" />\n                  <div class=\"save-cv-option\" style=\"margin-top: 10px;\">\n                      <input type=\"checkbox\" id=\"saveCvCheck\">\n                      <label for=\"saveCvCheck\" style=\"font-size: 1.2rem;\">Save CV to profile</label>\n                  </div>\n              </div>\n            ";
+                applyHtml = "\n              <div class=\"apply-actions\">\n                  <button class=\"btn--standard btn--apply\" id=\"applyUploadCvBtn\">Schedule Application</button>\n                  <input type=\"file\" id=\"cvUpload\" style=\"display: none;\" accept=\".pdf,.doc,.docx\" />\n                  <div class=\"save-cv-option\" style=\"margin-top: 10px;\">\n                      <input type=\"checkbox\" id=\"saveCvCheck\">\n                      <label for=\"saveCvCheck\" style=\"font-size: 1.2rem;\">Save CV to profile</label>\n                  </div>\n              </div>\n            ";
               }
             }
             isRestrictedUser = ["admin", "employer"].includes(userRole);
@@ -6533,15 +6533,15 @@ exports.loadJobData = /*#__PURE__*/function () {
                   while (1) switch (_context2.p = _context2.n) {
                     case 0:
                       _context2.p = 0;
-                      applyProfileCvBtn.textContent = "Applying...";
+                      applyProfileCvBtn.textContent = "Scheduling...";
                       applyProfileCvBtn.disabled = true;
                       _context2.n = 1;
                       return _axios.default.post("/api/v1/jobs/".concat(job._id, "/apply"), {
                         useProfileCv: "true"
                       });
                     case 1:
-                      (0, _alerts.showAlert)("success", "Application sent successfully!");
-                      applyProfileCvBtn.textContent = "Applied";
+                      (0, _alerts.showAlert)("success", "Application scheduled successfully!");
+                      applyProfileCvBtn.textContent = "Scheduled";
                       if (applyUploadCvBtn) applyUploadCvBtn.style.display = "none";
                       _context2.n = 3;
                       break;
@@ -6549,7 +6549,7 @@ exports.loadJobData = /*#__PURE__*/function () {
                       _context2.p = 2;
                       _t2 = _context2.v;
                       applyProfileCvBtn.disabled = false;
-                      applyProfileCvBtn.textContent = "Apply with Profile CV";
+                      applyProfileCvBtn.textContent = "Schedule with Profile CV";
                       (0, _alerts.showAlert)("error", _t2.response && _t2.response.data.message ? _t2.response.data.message : "Error applying");
                     case 3:
                       return _context2.a(2);
@@ -6580,7 +6580,7 @@ exports.loadJobData = /*#__PURE__*/function () {
                           formData.append("saveCvToProfile", "true");
                         }
                         _context3.p = 2;
-                        applyUploadCvBtn.textContent = "Uploading...";
+                        applyUploadCvBtn.textContent = "Scheduling...";
                         applyUploadCvBtn.disabled = true;
                         _context3.n = 3;
                         return _axios.default.post("/api/v1/jobs/".concat(job._id, "/apply"), formData, {
@@ -6589,8 +6589,8 @@ exports.loadJobData = /*#__PURE__*/function () {
                           }
                         });
                       case 3:
-                        (0, _alerts.showAlert)("success", "Application sent successfully!");
-                        applyUploadCvBtn.textContent = "Applied";
+                        (0, _alerts.showAlert)("success", "Application scheduled successfully!");
+                        applyUploadCvBtn.textContent = "Scheduled";
                         if (saveCvCheck) saveCvCheck.parentElement.style.display = "none";
                         _context3.n = 5;
                         break;
@@ -6598,7 +6598,7 @@ exports.loadJobData = /*#__PURE__*/function () {
                         _context3.p = 4;
                         _t3 = _context3.v;
                         applyUploadCvBtn.disabled = false;
-                        applyUploadCvBtn.textContent = userCv ? "Upload different CV" : "Apply Now";
+                        applyUploadCvBtn.textContent = userCv ? "Upload different CV" : "Schedule Application";
                         (0, _alerts.showAlert)("error", _t3.response && _t3.response.data.message ? _t3.response.data.message : "Error uploading CV");
                       case 5:
                         return _context3.a(2);
@@ -8128,57 +8128,123 @@ var initAdmin = exports.initAdmin = function initAdmin() {
       };
     }());
   }
+
+  // --- SHADOW QUEUE LOGIC ---
+  var loadShadowQueue = /*#__PURE__*/function () {
+    var _ref6 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6() {
+      var list, res, queue, _t6;
+      return _regenerator().w(function (_context6) {
+        while (1) switch (_context6.p = _context6.n) {
+          case 0:
+            list = document.getElementById("shadowQueueList");
+            if (list) {
+              _context6.n = 1;
+              break;
+            }
+            return _context6.a(2);
+          case 1:
+            _context6.p = 1;
+            _context6.n = 2;
+            return _axios.default.get("/api/v1/admin/shadow-email-queue");
+          case 2:
+            res = _context6.v;
+            queue = res.data.data.queue;
+            if (!(queue.length === 0)) {
+              _context6.n = 3;
+              break;
+            }
+            list.innerHTML = "<p>No emails in queue.</p>";
+            return _context6.a(2);
+          case 3:
+            list.innerHTML = queue.map(function (item) {
+              return "\n        <div class=\"shadow-queue-item\">\n          <div class=\"shadow-queue-info\">\n            <h4>".concat(item.user.companyName, "</h4>\n            <p>").concat(item.user.email, "</p>\n            <p>Jobs: ").concat(item.user.jobCount, "</p>\n          </div>\n          <div class=\"shadow-queue-date\">\n            <p>Queued: ").concat(new Date(item.createdAt).toLocaleDateString(), "</p>\n          </div>\n        </div>\n      ");
+            }).join("");
+            _context6.n = 5;
+            break;
+          case 4:
+            _context6.p = 4;
+            _t6 = _context6.v;
+            console.error(_t6);
+            list.innerHTML = "<p>Error loading queue.</p>";
+          case 5:
+            return _context6.a(2);
+        }
+      }, _callee6, null, [[1, 4]]);
+    }));
+    return function loadShadowQueue() {
+      return _ref6.apply(this, arguments);
+    };
+  }();
+  if (document.getElementById("shadowQueueList")) {
+    loadShadowQueue();
+  }
   if (sendClaimEmailBtn) {
     sendClaimEmailBtn.addEventListener("click", /*#__PURE__*/function () {
-      var _ref6 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(e) {
-        var userId, res, _t6;
-        return _regenerator().w(function (_context6) {
-          while (1) switch (_context6.p = _context6.n) {
+      var _ref7 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(e) {
+        var userId, res, _t7;
+        return _regenerator().w(function (_context7) {
+          while (1) switch (_context7.p = _context7.n) {
             case 0:
               e.preventDefault();
               userId = shadowUserIdInput.value;
               if (userId) {
-                _context6.n = 1;
+                _context7.n = 1;
                 break;
               }
-              return _context6.a(2, (0, _alerts.showAlert)("error", "No user selected"));
+              return _context7.a(2, (0, _alerts.showAlert)("error", "No user selected"));
             case 1:
-              if (confirm("Are you sure you want to send the claim email? Make sure you have added all jobs first.")) {
-                _context6.n = 2;
+              if (confirm("Are you sure you want to queue the claim email? Make sure you have added all jobs first.")) {
+                _context7.n = 2;
                 break;
               }
-              return _context6.a(2);
+              return _context7.a(2);
             case 2:
-              sendClaimEmailBtn.textContent = "Sending...";
-              _context6.p = 3;
-              _context6.n = 4;
+              sendClaimEmailBtn.textContent = "Queuing...";
+              _context7.p = 3;
+              _context7.n = 4;
               return _axios.default.post("/api/v1/admin/users/".concat(userId, "/send-claim-email"));
             case 4:
-              res = _context6.v;
-              if (res.data.status === "success") {
-                (0, _alerts.showAlert)("success", "Claim email sent!");
-                sendClaimEmailBtn.textContent = "Email Sent";
-                sendClaimEmailBtn.disabled = true;
-
-                // Reset everything after delay
-                setTimeout(function () {
-                  location.reload();
-                }, 2000);
+              res = _context7.v;
+              if (!(res.data.status === "success")) {
+                _context7.n = 6;
+                break;
               }
-              _context6.n = 6;
-              break;
+              (0, _alerts.showAlert)("success", "Claim email queued!");
+              sendClaimEmailBtn.textContent = "Email Queued";
+              sendClaimEmailBtn.disabled = true;
+
+              // Refresh queue list
+              _context7.n = 5;
+              return loadShadowQueue();
             case 5:
-              _context6.p = 5;
-              _t6 = _context6.v;
-              (0, _alerts.showAlert)("error", _t6.response.data.message);
-              sendClaimEmailBtn.textContent = "Send Claim Email";
+              // Reset form for next user after delay
+              setTimeout(function () {
+                // Reset UI for next entry
+                document.querySelector(".form--shadow-employer").reset();
+                document.querySelector(".form--shadow-job").reset();
+                document.getElementById("shadowJobSection").classList.add("hidden");
+                document.getElementById("shadowJobsListUl").innerHTML = "";
+                sendClaimEmailBtn.textContent = "Queue Claim Email";
+                sendClaimEmailBtn.disabled = false;
+
+                // Clear hidden user ID
+                shadowUserIdInput.value = "";
+              }, 2000);
             case 6:
-              return _context6.a(2);
+              _context7.n = 8;
+              break;
+            case 7:
+              _context7.p = 7;
+              _t7 = _context7.v;
+              (0, _alerts.showAlert)("error", _t7.response.data.message);
+              sendClaimEmailBtn.textContent = "Queue Claim Email";
+            case 8:
+              return _context7.a(2);
           }
-        }, _callee6, null, [[3, 5]]);
+        }, _callee7, null, [[3, 7]]);
       }));
       return function (_x5) {
-        return _ref6.apply(this, arguments);
+        return _ref7.apply(this, arguments);
       };
     }());
   }
@@ -8187,10 +8253,10 @@ var initAdmin = exports.initAdmin = function initAdmin() {
   var blogForm = document.querySelector(".form--create-blog");
   if (blogForm) {
     blogForm.addEventListener("submit", /*#__PURE__*/function () {
-      var _ref7 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(e) {
-        var btn, title, summary, content, res, _err$response4, _t7;
-        return _regenerator().w(function (_context7) {
-          while (1) switch (_context7.p = _context7.n) {
+      var _ref8 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8(e) {
+        var btn, title, summary, content, res, _err$response4, _t8;
+        return _regenerator().w(function (_context8) {
+          while (1) switch (_context8.p = _context8.n) {
             case 0:
               e.preventDefault();
               btn = document.getElementById("createBlogBtn");
@@ -8198,34 +8264,34 @@ var initAdmin = exports.initAdmin = function initAdmin() {
               title = document.getElementById("blogTitle").value;
               summary = document.getElementById("blogSummary").value;
               content = document.getElementById("blogContent").value;
-              _context7.p = 1;
-              _context7.n = 2;
+              _context8.p = 1;
+              _context8.n = 2;
               return _axios.default.post("/api/v1/articles", {
                 title: title,
                 summary: summary,
                 content: content
               });
             case 2:
-              res = _context7.v;
+              res = _context8.v;
               if (res.data.status === "success") {
                 (0, _alerts.showAlert)("success", "Article published successfully!");
                 btn.textContent = "Publish Article";
                 blogForm.reset();
               }
-              _context7.n = 4;
+              _context8.n = 4;
               break;
             case 3:
-              _context7.p = 3;
-              _t7 = _context7.v;
-              (0, _alerts.showAlert)("error", ((_err$response4 = _t7.response) === null || _err$response4 === void 0 || (_err$response4 = _err$response4.data) === null || _err$response4 === void 0 ? void 0 : _err$response4.message) || "Error publishing article");
+              _context8.p = 3;
+              _t8 = _context8.v;
+              (0, _alerts.showAlert)("error", ((_err$response4 = _t8.response) === null || _err$response4 === void 0 || (_err$response4 = _err$response4.data) === null || _err$response4 === void 0 ? void 0 : _err$response4.message) || "Error publishing article");
               btn.textContent = "Publish Article";
             case 4:
-              return _context7.a(2);
+              return _context8.a(2);
           }
-        }, _callee7, null, [[1, 3]]);
+        }, _callee8, null, [[1, 3]]);
       }));
       return function (_x6) {
-        return _ref7.apply(this, arguments);
+        return _ref8.apply(this, arguments);
       };
     }());
   }
@@ -8234,10 +8300,10 @@ var initAdmin = exports.initAdmin = function initAdmin() {
   var createDiscountForm = document.querySelector(".form--create-discount");
   if (createDiscountForm) {
     createDiscountForm.addEventListener("submit", /*#__PURE__*/function () {
-      var _ref8 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8(e) {
-        var code, percentage, expiresAt, btn, res, _t8;
-        return _regenerator().w(function (_context8) {
-          while (1) switch (_context8.p = _context8.n) {
+      var _ref9 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee9(e) {
+        var code, percentage, expiresAt, btn, res, _t9;
+        return _regenerator().w(function (_context9) {
+          while (1) switch (_context9.p = _context9.n) {
             case 0:
               e.preventDefault();
               code = document.getElementById("discountCode").value;
@@ -8245,8 +8311,8 @@ var initAdmin = exports.initAdmin = function initAdmin() {
               expiresAt = document.getElementById("discountExpires").value;
               btn = document.getElementById("createDiscountBtn");
               btn.textContent = "Creating...";
-              _context8.p = 1;
-              _context8.n = 2;
+              _context9.p = 1;
+              _context9.n = 2;
               return (0, _axios.default)({
                 method: "POST",
                 url: "/api/v1/admin/discounts",
@@ -8257,27 +8323,27 @@ var initAdmin = exports.initAdmin = function initAdmin() {
                 }
               });
             case 2:
-              res = _context8.v;
+              res = _context9.v;
               if (res.data.status === "success") {
                 (0, _alerts.showAlert)("success", "Discount created successfully!");
                 setTimeout(function () {
                   return location.reload();
                 }, 1500);
               }
-              _context8.n = 4;
+              _context9.n = 4;
               break;
             case 3:
-              _context8.p = 3;
-              _t8 = _context8.v;
-              (0, _alerts.showAlert)("error", _t8.response.data.message);
+              _context9.p = 3;
+              _t9 = _context9.v;
+              (0, _alerts.showAlert)("error", _t9.response.data.message);
               btn.textContent = "Create Discount";
             case 4:
-              return _context8.a(2);
+              return _context9.a(2);
           }
-        }, _callee8, null, [[1, 3]]);
+        }, _callee9, null, [[1, 3]]);
       }));
       return function (_x7) {
-        return _ref8.apply(this, arguments);
+        return _ref9.apply(this, arguments);
       };
     }());
   }
@@ -8291,15 +8357,15 @@ var initAdmin = exports.initAdmin = function initAdmin() {
   var toggleDiscountBtns = document.querySelectorAll(".btn--toggle-discount");
   toggleDiscountBtns.forEach(function (btn) {
     btn.addEventListener("click", /*#__PURE__*/function () {
-      var _ref9 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee9(e) {
-        var id, action, res, _t9;
-        return _regenerator().w(function (_context9) {
-          while (1) switch (_context9.p = _context9.n) {
+      var _ref0 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee0(e) {
+        var id, action, res, _t0;
+        return _regenerator().w(function (_context0) {
+          while (1) switch (_context0.p = _context0.n) {
             case 0:
               id = e.target.dataset.id;
               action = e.target.dataset.action;
-              _context9.p = 1;
-              _context9.n = 2;
+              _context0.p = 1;
+              _context0.n = 2;
               return (0, _axios.default)({
                 method: "PATCH",
                 url: "/api/v1/admin/discounts/".concat(id),
@@ -8308,26 +8374,26 @@ var initAdmin = exports.initAdmin = function initAdmin() {
                 }
               });
             case 2:
-              res = _context9.v;
+              res = _context0.v;
               if (res.data.status === "success") {
                 (0, _alerts.showAlert)("success", "Discount status updated!");
                 setTimeout(function () {
                   return location.reload();
                 }, 1000);
               }
-              _context9.n = 4;
+              _context0.n = 4;
               break;
             case 3:
-              _context9.p = 3;
-              _t9 = _context9.v;
-              (0, _alerts.showAlert)("error", _t9.response.data.message);
+              _context0.p = 3;
+              _t0 = _context0.v;
+              (0, _alerts.showAlert)("error", _t0.response.data.message);
             case 4:
-              return _context9.a(2);
+              return _context0.a(2);
           }
-        }, _callee9, null, [[1, 3]]);
+        }, _callee0, null, [[1, 3]]);
       }));
       return function (_x8) {
-        return _ref9.apply(this, arguments);
+        return _ref0.apply(this, arguments);
       };
     }());
   });
@@ -9353,7 +9419,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51924" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65434" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

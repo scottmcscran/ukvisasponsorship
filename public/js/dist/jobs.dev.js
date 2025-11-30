@@ -158,14 +158,14 @@ exports.loadJobData = function _callee5(id) {
             saveBtnClass = isSaved ? "btn--save btn--saved" : "btn--save";
 
             if (isApplied) {
-              applyHtml = "<button class=\"btn--standard btn--apply\" disabled style=\"background-color: #1a73c2; cursor: default;\">Applied</button>";
+              applyHtml = "<button class=\"btn--standard btn--apply\" disabled style=\"background-color: #1a73c2; cursor: default;\">Scheduled</button>";
             } else if (job.applicationLink) {
               applyHtml = "<a href=\"".concat(job.applicationLink, "\" class=\"btn--standard btn--apply\" target=\"_blank\">Apply Now</a>");
             } else {
               if (userCv) {
-                applyHtml = "\n              <div class=\"apply-actions\">\n                  <button class=\"btn--standard btn--apply\" id=\"applyProfileCvBtn\">Apply with Profile CV</button>\n                  <button class=\"btn--text\" id=\"applyUploadCvBtn\" style=\"margin-top: 10px; display: block; font-size: 0.9em; background: none; border: none; color: var(--brand-primary); cursor: pointer; text-decoration: underline;\">Upload different CV</button>\n                  <input type=\"file\" id=\"cvUpload\" style=\"display: none;\" accept=\".pdf,.doc,.docx\" />\n              </div>\n            ";
+                applyHtml = "\n              <div class=\"apply-actions\">\n                  <button class=\"btn--standard btn--apply\" id=\"applyProfileCvBtn\">Schedule with Profile CV</button>\n                  <button class=\"btn--text\" id=\"applyUploadCvBtn\" style=\"margin-top: 10px; display: block; font-size: 0.9em; background: none; border: none; color: var(--brand-primary); cursor: pointer; text-decoration: underline;\">Upload different CV</button>\n                  <input type=\"file\" id=\"cvUpload\" style=\"display: none;\" accept=\".pdf,.doc,.docx\" />\n              </div>\n            ";
               } else {
-                applyHtml = "\n              <div class=\"apply-actions\">\n                  <button class=\"btn--standard btn--apply\" id=\"applyUploadCvBtn\">Apply Now</button>\n                  <input type=\"file\" id=\"cvUpload\" style=\"display: none;\" accept=\".pdf,.doc,.docx\" />\n                  <div class=\"save-cv-option\" style=\"margin-top: 10px;\">\n                      <input type=\"checkbox\" id=\"saveCvCheck\">\n                      <label for=\"saveCvCheck\" style=\"font-size: 1.2rem;\">Save CV to profile</label>\n                  </div>\n              </div>\n            ";
+                applyHtml = "\n              <div class=\"apply-actions\">\n                  <button class=\"btn--standard btn--apply\" id=\"applyUploadCvBtn\">Schedule Application</button>\n                  <input type=\"file\" id=\"cvUpload\" style=\"display: none;\" accept=\".pdf,.doc,.docx\" />\n                  <div class=\"save-cv-option\" style=\"margin-top: 10px;\">\n                      <input type=\"checkbox\" id=\"saveCvCheck\">\n                      <label for=\"saveCvCheck\" style=\"font-size: 1.2rem;\">Save CV to profile</label>\n                  </div>\n              </div>\n            ";
               }
             }
 
@@ -196,7 +196,7 @@ exports.loadJobData = function _callee5(id) {
                     switch (_context2.prev = _context2.next) {
                       case 0:
                         _context2.prev = 0;
-                        applyProfileCvBtn.textContent = "Applying...";
+                        applyProfileCvBtn.textContent = "Scheduling...";
                         applyProfileCvBtn.disabled = true;
                         _context2.next = 5;
                         return regeneratorRuntime.awrap(_axios["default"].post("/api/v1/jobs/".concat(job._id, "/apply"), {
@@ -204,8 +204,8 @@ exports.loadJobData = function _callee5(id) {
                         }));
 
                       case 5:
-                        (0, _alerts.showAlert)("success", "Application sent successfully!");
-                        applyProfileCvBtn.textContent = "Applied";
+                        (0, _alerts.showAlert)("success", "Application scheduled successfully!");
+                        applyProfileCvBtn.textContent = "Scheduled";
                         if (applyUploadCvBtn) applyUploadCvBtn.style.display = "none";
                         _context2.next = 15;
                         break;
@@ -214,7 +214,7 @@ exports.loadJobData = function _callee5(id) {
                         _context2.prev = 10;
                         _context2.t0 = _context2["catch"](0);
                         applyProfileCvBtn.disabled = false;
-                        applyProfileCvBtn.textContent = "Apply with Profile CV";
+                        applyProfileCvBtn.textContent = "Schedule with Profile CV";
                         (0, _alerts.showAlert)("error", _context2.t0.response && _context2.t0.response.data.message ? _context2.t0.response.data.message : "Error applying");
 
                       case 15:
@@ -254,7 +254,7 @@ exports.loadJobData = function _callee5(id) {
                         }
 
                         _context3.prev = 6;
-                        applyUploadCvBtn.textContent = "Uploading...";
+                        applyUploadCvBtn.textContent = "Scheduling...";
                         applyUploadCvBtn.disabled = true;
                         _context3.next = 11;
                         return regeneratorRuntime.awrap(_axios["default"].post("/api/v1/jobs/".concat(job._id, "/apply"), formData, {
@@ -264,8 +264,8 @@ exports.loadJobData = function _callee5(id) {
                         }));
 
                       case 11:
-                        (0, _alerts.showAlert)("success", "Application sent successfully!");
-                        applyUploadCvBtn.textContent = "Applied";
+                        (0, _alerts.showAlert)("success", "Application scheduled successfully!");
+                        applyUploadCvBtn.textContent = "Scheduled";
                         if (saveCvCheck) saveCvCheck.parentElement.style.display = "none";
                         _context3.next = 21;
                         break;
@@ -274,7 +274,7 @@ exports.loadJobData = function _callee5(id) {
                         _context3.prev = 16;
                         _context3.t0 = _context3["catch"](6);
                         applyUploadCvBtn.disabled = false;
-                        applyUploadCvBtn.textContent = userCv ? "Upload different CV" : "Apply Now";
+                        applyUploadCvBtn.textContent = userCv ? "Upload different CV" : "Schedule Application";
                         (0, _alerts.showAlert)("error", _context3.t0.response && _context3.t0.response.data.message ? _context3.t0.response.data.message : "Error uploading CV");
 
                       case 21:
