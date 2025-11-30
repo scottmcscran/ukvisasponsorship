@@ -684,20 +684,28 @@ const closeDetailsBtn = document.getElementById("closeDetailsBtn");
 const resultsContainer = document.querySelector(".results");
 
 if (showFiltersBtn && filtersModal) {
-  showFiltersBtn.addEventListener("click", (e) => {
+  const openFilters = (e) => {
     e.preventDefault();
     e.stopPropagation();
     filtersModal.classList.add("filters--open");
     document.body.classList.add("no-scroll");
+  };
+  showFiltersBtn.addEventListener("click", openFilters);
+  showFiltersBtn.addEventListener("touchstart", openFilters, {
+    passive: false,
   });
 }
 
 if (closeFiltersBtn && filtersModal) {
-  closeFiltersBtn.addEventListener("click", (e) => {
+  const closeFilters = (e) => {
     e.preventDefault();
     e.stopPropagation();
     filtersModal.classList.remove("filters--open");
     document.body.classList.remove("no-scroll");
+  };
+  closeFiltersBtn.addEventListener("click", closeFilters);
+  closeFiltersBtn.addEventListener("touchstart", closeFilters, {
+    passive: false,
   });
 }
 

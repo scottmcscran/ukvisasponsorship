@@ -736,20 +736,30 @@ var closeDetailsBtn = document.getElementById("closeDetailsBtn");
 var resultsContainer = document.querySelector(".results");
 
 if (showFiltersBtn && filtersModal) {
-  showFiltersBtn.addEventListener("click", function (e) {
+  var openFilters = function openFilters(e) {
     e.preventDefault();
     e.stopPropagation();
     filtersModal.classList.add("filters--open");
     document.body.classList.add("no-scroll");
+  };
+
+  showFiltersBtn.addEventListener("click", openFilters);
+  showFiltersBtn.addEventListener("touchstart", openFilters, {
+    passive: false
   });
 }
 
 if (closeFiltersBtn && filtersModal) {
-  closeFiltersBtn.addEventListener("click", function (e) {
+  var closeFilters = function closeFilters(e) {
     e.preventDefault();
     e.stopPropagation();
     filtersModal.classList.remove("filters--open");
     document.body.classList.remove("no-scroll");
+  };
+
+  closeFiltersBtn.addEventListener("click", closeFilters);
+  closeFiltersBtn.addEventListener("touchstart", closeFilters, {
+    passive: false
   });
 }
 

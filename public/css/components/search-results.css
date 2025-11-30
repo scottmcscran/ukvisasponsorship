@@ -93,6 +93,8 @@
     flex: 1;
     width: auto;
     margin: 0;
+    position: relative;
+    z-index: 10; /* Ensure buttons are clickable */
   }
 
   .btn--show-filters {
@@ -110,7 +112,7 @@
   .filters {
     position: fixed;
     top: 0;
-    left: 0;
+    left: -100%; /* Move off-screen */
     width: 100%;
     height: 100%;
     background: var(--bg-body);
@@ -121,21 +123,26 @@
     visibility: hidden;
     opacity: 0;
     pointer-events: none;
-    transform: translateX(-100%);
     transition:
-      transform 0.3s ease-in-out,
-      opacity 0.3s ease-in-out,
+      left 0s 0.3s,
+      /* Delay moving off-screen until fade out is done */ opacity 0.3s
+        ease-in-out,
       visibility 0.3s;
 
     border-right: none;
     max-height: none;
+    transform: none; /* Remove transform */
   }
 
   .filters.filters--open {
+    left: 0; /* Move on-screen */
     visibility: visible;
     opacity: 1;
     pointer-events: auto;
-    transform: translateX(0);
+    transition:
+      left 0s,
+      /* Move immediately */ opacity 0.3s ease-in-out,
+      visibility 0s;
   }
 
   .filters-header {
@@ -153,7 +160,7 @@
   .details {
     position: fixed;
     top: 0;
-    left: 0;
+    left: 100%; /* Move off-screen */
     width: 100%;
     height: 100%;
     background: var(--bg-body);
@@ -164,23 +171,27 @@
     visibility: hidden;
     opacity: 0;
     pointer-events: none;
-    transform: translateX(100%);
     transition:
-      transform 0.3s ease-in-out,
-      opacity 0.3s ease-in-out,
+      left 0s 0.3s,
+      /* Delay moving off-screen */ opacity 0.3s ease-in-out,
       visibility 0.3s;
 
     overflow-y: auto;
     overflow-x: hidden;
     border: none;
     box-sizing: border-box;
+    transform: none; /* Remove transform */
   }
 
   .details.details--open {
+    left: 0; /* Move on-screen */
     visibility: visible;
     opacity: 1;
     pointer-events: auto;
-    transform: translateX(0);
+    transition:
+      left 0s,
+      /* Move immediately */ opacity 0.3s ease-in-out,
+      visibility 0s;
   }
 
   .btn-close-details {
