@@ -5,7 +5,7 @@ footer.footer
     li: a.footer-nav__el(href="/employer-signup") Employer Sign Up
     li: a.footer-nav__el(href="/privacy") Privacy
     li: a.footer-nav__el(href="/terms") Terms
-    li: a.footer-nav__el#reportBugBtn(href="#") Report Bug
+    li: a.footer-nav__el#reportBugBtn(href="#") Report Bug / Feature
     li: a.footer-nav__el(href="mailto:support@ukvisasponsorship.com") Contact
   p.footer__copyright &copy; ukvisasponsorship
 
@@ -13,16 +13,16 @@ footer.footer
   .modal-overlay.hidden#bugReportModal
     .modal
       button.btn-close-modal#closeBugReportModal &times;
-      h2.heading-secondary.ma-bt-md Report a Bug
+      h2.heading-secondary.ma-bt-md Report a Bug or Feature Request
       
       form.form.form--bug-report
         .form__group
           label.form__label(for='bugTitle') Title
-          input#bugTitle.form__input(type='text', required, placeholder='Brief summary of the issue')
+          input#bugTitle.form__input(type='text', required, placeholder='Brief summary of the issue or feature')
           
         .form__group.ma-bt-md
           label.form__label(for='bugDescription') Description
-          textarea#bugDescription.form__input(rows='5', required, placeholder='Please describe what happened, steps to reproduce, etc.')
+          textarea#bugDescription.form__input(rows='5', required, placeholder='Please describe the bug or the feature you would like to see.')
 
         .form__group.right
           button.btn.btn--small.btn--standard#submitBugReportBtn Submit Report

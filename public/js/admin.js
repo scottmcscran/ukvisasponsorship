@@ -381,13 +381,25 @@ export const initAdmin = () => {
       const description = document.getElementById("shadowJobDescription").value;
       const city = document.getElementById("shadowJobLocation").value;
       const postcode = document.getElementById("shadowJobPostcode").value;
+      const remote = document.getElementById("shadowJobRemote").value;
       const minSalary = document.getElementById("shadowJobSalaryMin").value;
       const maxSalary = document.getElementById("shadowJobSalaryMax").value;
       const jobType = document.getElementById("shadowJobType").value;
       const experienceLevel = document.getElementById(
         "shadowJobExperience"
       ).value;
+      const requirementsRaw = document.getElementById(
+        "shadowJobRequirements"
+      ).value;
+      const benefitsRaw = document.getElementById("shadowJobBenefits").value;
       const applicationUrl = document.getElementById("shadowJobLink").value;
+
+      const requirements = requirementsRaw
+        ? requirementsRaw.split("\n").filter((line) => line.trim() !== "")
+        : [];
+      const benefits = benefitsRaw
+        ? benefitsRaw.split("\n").filter((line) => line.trim() !== "")
+        : [];
 
       const visaSelect = document.getElementById("shadowJobVisa");
       const visaTypes = Array.from(visaSelect.selectedOptions).map(
@@ -414,6 +426,7 @@ export const initAdmin = () => {
           location: {
             city,
             postcode,
+            remote,
           },
           salaryRange: {
             min: minSalary,
@@ -421,6 +434,8 @@ export const initAdmin = () => {
           },
           jobType,
           experienceLevel,
+          requirements,
+          benefits,
           visaTypes,
           applicationUrl,
           postedBy: userId, // Admin override

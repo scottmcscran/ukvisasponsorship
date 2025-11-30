@@ -8739,9 +8739,13 @@ exports.loadJobData = /*#__PURE__*/function () {
               }
             }
             isRestrictedUser = ["admin", "employer"].includes(userRole);
-            html = "\n        <button class=\"btn-close btn-close-details\" id=\"closeDetailsBtn\">&times;</button>\n        <div class=\"job-details-content\">\n          <div class=\"job-header\">\n            <h2>".concat(job.title, "</h2>\n            <p class=\"company-name\">").concat(job.postedBy ? job.postedBy.name : "Company", "</p>\n            <div class=\"job-meta\">\n               <div class=\"meta-item\">\n                 <span class=\"meta-label\">Location:</span>\n                 <span class=\"meta-value\">").concat(job.location.city, ", ").concat(job.location.postcode, "</span>\n               </div>\n               <div class=\"meta-item\">\n                 <span class=\"meta-label\">Salary:</span>\n                 <span class=\"meta-value\">").concat(job.salaryRange ? (job.salaryRange.min === job.salaryRange.max ? "\xA3".concat(job.salaryRange.min.toLocaleString()) : "\xA3".concat(job.salaryRange.min.toLocaleString()).concat(job.salaryRange.max ? " - \xA3".concat(job.salaryRange.max.toLocaleString()) : "+")) + " per ".concat(job.salaryRange.period || "year") : "Negotiable", "</span>\n               </div>\n               <div class=\"meta-divider\"></div>\n               <div class=\"meta-item\">\n                 <span class=\"meta-label\">Type:</span>\n                 <span class=\"meta-value\">").concat(job.jobType || "Full-time", "</span>\n               </div>\n               <div class=\"meta-item\">\n                 <span class=\"meta-label\">Remote:</span>\n                 <span class=\"meta-value\">").concat(job.location.remote ? job.location.remote.charAt(0).toUpperCase() + job.location.remote.slice(1) : "No", "</span>\n               </div>\n            </div>\n          </div>\n          \n          <div class=\"job-body\">\n            <h3>Description</h3>\n            <div class=\"job-description-content\">").concat(_marked.marked.parse(job.description), "</div>\n            \n            ").concat(job.requirements && job.requirements.length > 0 ? "<h3>Requirements</h3><div class=\"job-requirements-content\">".concat(_marked.marked.parse((job.requirements || "").toString().replace(/,/g, ", ")), "</div>") : "", "\n            \n            ").concat(job.visaTypes && job.visaTypes.length > 0 ? "<h3>Visa Types</h3>" : "", "\n            <div class=\"job-tags\">\n               ").concat(job.visaTypes ? job.visaTypes.map(function (type) {
+            html = "\n        <button class=\"btn-close btn-close-details\" id=\"closeDetailsBtn\">&times;</button>\n        <div class=\"job-details-content\">\n          <div class=\"job-header\">\n            <h2>".concat(job.title, "</h2>\n            <p class=\"company-name\">").concat(job.postedBy ? job.postedBy.name : "Company", "</p>\n            <div class=\"job-meta\">\n               <div class=\"meta-item\">\n                 <span class=\"meta-label\">Location:</span>\n                 <span class=\"meta-value\">").concat(job.location.city, ", ").concat(job.location.postcode, "</span>\n               </div>\n               <div class=\"meta-item\">\n                 <span class=\"meta-label\">Salary:</span>\n                 <span class=\"meta-value\">").concat(job.salaryRange ? (job.salaryRange.min === job.salaryRange.max ? "\xA3".concat(job.salaryRange.min.toLocaleString()) : "\xA3".concat(job.salaryRange.min.toLocaleString()).concat(job.salaryRange.max ? " - \xA3".concat(job.salaryRange.max.toLocaleString()) : "+")) + " per ".concat(job.salaryRange.period || "year") : "Negotiable", "</span>\n               </div>\n               <div class=\"meta-divider\"></div>\n               <div class=\"meta-item\">\n                 <span class=\"meta-label\">Type:</span>\n                 <span class=\"meta-value\">").concat(job.jobType || "Full-time", "</span>\n               </div>\n               <div class=\"meta-item\">\n                 <span class=\"meta-label\">Remote:</span>\n                 <span class=\"meta-value\">").concat(job.location.remote ? job.location.remote.charAt(0).toUpperCase() + job.location.remote.slice(1) : "No", "</span>\n               </div>\n            </div>\n          </div>\n          \n          <div class=\"job-body\">\n            <div class=\"job-actions\" style=\"margin-bottom: 2rem; align-items: flex-start;\">\n              ").concat(!isRestrictedUser ? applyHtml : "", "\n              ").concat(!isRestrictedUser ? "<button class=\"".concat(saveBtnClass, "\" id=\"saveJobBtn\" data-id=\"").concat(job._id, "\">").concat(saveBtnText, "</button>") : "", "\n              <button class=\"btn--text btn--report\" id=\"reportJobBtn\" data-id=\"").concat(job._id, "\" style=\"font-size: 1.2rem; color: #999; text-decoration: underline; margin-top: 1rem; background: none; border: none; cursor: pointer;\">Report Job</button>\n            </div>\n\n            ").concat(job.visaTypes && job.visaTypes.length > 0 ? "<h3>Visa Types</h3>" : "", "\n            <div class=\"job-tags\" style=\"margin-bottom: 2rem;\">\n               ").concat(job.visaTypes ? job.visaTypes.map(function (type) {
               return "<span class=\"tag\">".concat(type, "</span>");
-            }).join("") : "", "\n            </div>\n          </div>\n          \n          <div class=\"job-actions\">\n            ").concat(!isRestrictedUser ? applyHtml : "", "\n            ").concat(!isRestrictedUser ? "<button class=\"".concat(saveBtnClass, "\" id=\"saveJobBtn\" data-id=\"").concat(job._id, "\">").concat(saveBtnText, "</button>") : "", "\n            <button class=\"btn--text btn--report\" id=\"reportJobBtn\" data-id=\"").concat(job._id, "\" style=\"font-size: 1.2rem; color: #999; text-decoration: underline; margin-top: 1rem; background: none; border: none; cursor: pointer;\">Report Job</button>\n          </div>\n        </div>\n      ");
+            }).join("") : "", "\n            </div>\n\n            <h3>Description</h3>\n            <div class=\"job-description-content\">").concat(_marked.marked.parse(job.description), "</div>\n            \n            ").concat(job.requirements && job.requirements.length > 0 ? "<h3>Requirements</h3>\n                 <div class=\"job-requirements-content\">\n                    ".concat(Array.isArray(job.requirements) ? _marked.marked.parse(job.requirements.map(function (r) {
+              return "- ".concat(r);
+            }).join("\n")) : _marked.marked.parse(job.requirements), "\n                 </div>") : "", "\n\n            ").concat(job.benefits && job.benefits.length > 0 ? "<h3>Benefits</h3>\n                 <div class=\"job-benefits-content\">\n                    ".concat(Array.isArray(job.benefits) ? _marked.marked.parse(job.benefits.map(function (b) {
+              return "- ".concat(b);
+            }).join("\n")) : _marked.marked.parse(job.benefits), "\n                 </div>") : "", "\n          </div>\n        </div>\n      ");
             detailsContainer.innerHTML = html;
 
             // Attach Report Listener
@@ -10274,7 +10278,7 @@ var initAdmin = exports.initAdmin = function initAdmin() {
   if (postShadowJobBtn) {
     postShadowJobBtn.addEventListener("click", /*#__PURE__*/function () {
       var _ref5 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5(e) {
-        var userId, title, description, city, postcode, minSalary, maxSalary, jobType, experienceLevel, applicationUrl, visaSelect, visaTypes, res, li, _t5;
+        var userId, title, description, city, postcode, remote, minSalary, maxSalary, jobType, experienceLevel, requirementsRaw, benefitsRaw, applicationUrl, requirements, benefits, visaSelect, visaTypes, res, li, _t5;
         return _regenerator().w(function (_context5) {
           while (1) switch (_context5.p = _context5.n) {
             case 0:
@@ -10290,11 +10294,20 @@ var initAdmin = exports.initAdmin = function initAdmin() {
               description = document.getElementById("shadowJobDescription").value;
               city = document.getElementById("shadowJobLocation").value;
               postcode = document.getElementById("shadowJobPostcode").value;
+              remote = document.getElementById("shadowJobRemote").value;
               minSalary = document.getElementById("shadowJobSalaryMin").value;
               maxSalary = document.getElementById("shadowJobSalaryMax").value;
               jobType = document.getElementById("shadowJobType").value;
               experienceLevel = document.getElementById("shadowJobExperience").value;
+              requirementsRaw = document.getElementById("shadowJobRequirements").value;
+              benefitsRaw = document.getElementById("shadowJobBenefits").value;
               applicationUrl = document.getElementById("shadowJobLink").value;
+              requirements = requirementsRaw ? requirementsRaw.split("\n").filter(function (line) {
+                return line.trim() !== "";
+              }) : [];
+              benefits = benefitsRaw ? benefitsRaw.split("\n").filter(function (line) {
+                return line.trim() !== "";
+              }) : [];
               visaSelect = document.getElementById("shadowJobVisa");
               visaTypes = Array.from(visaSelect.selectedOptions).map(function (option) {
                 return option.value;
@@ -10313,7 +10326,8 @@ var initAdmin = exports.initAdmin = function initAdmin() {
                 description: description,
                 location: {
                   city: city,
-                  postcode: postcode
+                  postcode: postcode,
+                  remote: remote
                 },
                 salaryRange: {
                   min: minSalary,
@@ -10321,6 +10335,8 @@ var initAdmin = exports.initAdmin = function initAdmin() {
                 },
                 jobType: jobType,
                 experienceLevel: experienceLevel,
+                requirements: requirements,
+                benefits: benefits,
                 visaTypes: visaTypes,
                 applicationUrl: applicationUrl,
                 postedBy: userId // Admin override
@@ -11828,7 +11844,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49566" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53695" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

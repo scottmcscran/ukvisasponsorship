@@ -165,21 +165,37 @@ exports.loadJobData = async (id) => {
           </div>
           
           <div class="job-body">
+            <div class="job-actions" style="margin-bottom: 2rem; align-items: flex-start;">
+              ${!isRestrictedUser ? applyHtml : ""}
+              ${!isRestrictedUser ? `<button class="${saveBtnClass}" id="saveJobBtn" data-id="${job._id}">${saveBtnText}</button>` : ""}
+              <button class="btn--text btn--report" id="reportJobBtn" data-id="${job._id}" style="font-size: 1.2rem; color: #999; text-decoration: underline; margin-top: 1rem; background: none; border: none; cursor: pointer;">Report Job</button>
+            </div>
+
+            ${job.visaTypes && job.visaTypes.length > 0 ? `<h3>Visa Types</h3>` : ""}
+            <div class="job-tags" style="margin-bottom: 2rem;">
+               ${job.visaTypes ? job.visaTypes.map((type) => `<span class="tag">${type}</span>`).join("") : ""}
+            </div>
+
             <h3>Description</h3>
             <div class="job-description-content">${marked.parse(job.description)}</div>
             
-            ${job.requirements && job.requirements.length > 0 ? `<h3>Requirements</h3><div class="job-requirements-content">${marked.parse((job.requirements || "").toString().replace(/,/g, ", "))}</div>` : ""}
-            
-            ${job.visaTypes && job.visaTypes.length > 0 ? `<h3>Visa Types</h3>` : ""}
-            <div class="job-tags">
-               ${job.visaTypes ? job.visaTypes.map((type) => `<span class="tag">${type}</span>`).join("") : ""}
-            </div>
-          </div>
-          
-          <div class="job-actions">
-            ${!isRestrictedUser ? applyHtml : ""}
-            ${!isRestrictedUser ? `<button class="${saveBtnClass}" id="saveJobBtn" data-id="${job._id}">${saveBtnText}</button>` : ""}
-            <button class="btn--text btn--report" id="reportJobBtn" data-id="${job._id}" style="font-size: 1.2rem; color: #999; text-decoration: underline; margin-top: 1rem; background: none; border: none; cursor: pointer;">Report Job</button>
+            ${
+              job.requirements && job.requirements.length > 0
+                ? `<h3>Requirements</h3>
+                 <div class="job-requirements-content">
+                    ${Array.isArray(job.requirements) ? marked.parse(job.requirements.map((r) => `- ${r}`).join("\n")) : marked.parse(job.requirements)}
+                 </div>`
+                : ""
+            }
+
+            ${
+              job.benefits && job.benefits.length > 0
+                ? `<h3>Benefits</h3>
+                 <div class="job-benefits-content">
+                    ${Array.isArray(job.benefits) ? marked.parse(job.benefits.map((b) => `- ${b}`).join("\n")) : marked.parse(job.benefits)}
+                 </div>`
+                : ""
+            }
           </div>
         </div>
       `;

@@ -67,6 +67,7 @@ block content
                   input#shadowJobTitle.form__input(type='text', required)
                 .form__group
                   label.form__label(for='shadowJobDescription') Description
+                  p.text-small.ma-bt-xs(style="color: #666; font-style: italic; margin-bottom: 0.5rem;") * Supports Markdown
                   textarea#shadowJobDescription.form__input(rows='4', required)
                 .form__group
                   label.form__label(for='shadowJobLocation') City
@@ -74,6 +75,12 @@ block content
                 .form__group
                   label.form__label(for='shadowJobPostcode') Postcode
                   input#shadowJobPostcode.form__input(type='text', required)
+                .form__group
+                  label.form__label(for='shadowJobRemote') Remote Work
+                  select#shadowJobRemote.form__input
+                    option(value='no') No
+                    option(value='hybrid') Hybrid
+                    option(value='full') Full Remote
                 .form__group
                   label.form__label(for='shadowJobSalaryMin') Min Salary
                   input#shadowJobSalaryMin.form__input(type='number', required)
@@ -102,6 +109,12 @@ block content
                     option(value='Global Talent') Global Talent
                     option(value='Graduate') Graduate
                     option(value='Senior or Specialist Worker') Senior or Specialist Worker
+                .form__group
+                  label.form__label(for='shadowJobRequirements') Requirements (One per line)
+                  textarea#shadowJobRequirements.form__input(rows='4')
+                .form__group
+                  label.form__label(for='shadowJobBenefits') Benefits (One per line)
+                  textarea#shadowJobBenefits.form__input(rows='4')
                 .form__group
                   label.form__label(for='shadowJobLink') Application Link (Optional)
                   input#shadowJobLink.form__input(type='url', placeholder='https://...')
