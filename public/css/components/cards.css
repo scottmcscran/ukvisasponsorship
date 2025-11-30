@@ -8,6 +8,8 @@
   z-index: 1;
   position: relative;
   margin-bottom: var(--spacing-xs);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .job-card:focus,

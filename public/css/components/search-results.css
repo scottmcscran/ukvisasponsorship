@@ -135,6 +135,7 @@
     min-height: 500px;
     border-bottom: none;
     width: 100%;
+    padding-bottom: 5rem;
   }
 
   .details {
@@ -209,6 +210,10 @@
 /* Job Details */
 .job-details-content {
   padding: var(--spacing-lg);
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
 }
 
 .job-header {
@@ -221,6 +226,7 @@
   font-size: 2.4rem;
   color: var(--text-main);
   margin-bottom: var(--spacing-xs);
+  overflow-wrap: break-word;
 }
 
 .company-name {
@@ -237,6 +243,12 @@
   background-color: var(--bg-meta);
   padding: var(--spacing-md);
   border-radius: var(--border-radius-md);
+}
+
+@media (max-width: 600px) {
+  .job-meta {
+    grid-template-columns: 1fr;
+  }
 }
 
 .meta-item {
