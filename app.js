@@ -24,32 +24,39 @@ const subController = require(`./controllers/subController`);
 
 const app = express();
 
-app.set("trust proxy", 1);
+app.set("trust proxy", true); // Trust all proxies to ensure req.protocol is correct
 
 // Force HTTPS Redirect
 app.use((req, res, next) => {
-  // Check if secure (trust proxy must be enabled for this to work behind LB)
+  // 1. Check standard secure property
   if (req.secure) return next();
 
-  // Check headers explicitly (handles comma-separated lists like "https,http")
+  // 2. Check standard proxy headers
   const xForwardedProto = req.headers["x-forwarded-proto"];
-  if (xForwardedProto && xForwardedProto.indexOf("https") !== -1) {
-    return next();
-  }
+  if (xForwardedProto && xForwardedProto.includes("https")) return next();
 
-  // Allow localhost/dev
+  // 3. Check Cloudflare specific headers (Flexible SSL support)
+  const cfVisitor = req.headers["cf-visitor"];
+  if (cfVisitor && cfVisitor.includes('"scheme":"https"')) return next();
+
+  // 4. Check other common headers
+  if (req.headers["x-forwarded-ssl"] === "on") return next();
+  if (req.headers["front-end-https"] === "on") return next();
+
+  // 5. Allow localhost/dev/private IPs
   if (
     req.hostname === "localhost" ||
     req.hostname === "127.0.0.1" ||
-    req.hostname.startsWith("192.168.")
+    req.hostname.startsWith("192.168.") ||
+    req.hostname.startsWith("10.") ||
+    req.hostname.endsWith(".local")
   ) {
     return next();
   }
   
+  // If none of the above, redirect to HTTPS
   res.redirect(`https://${req.hostname}${req.url}`);
-});
-
-app.set(`view engine`, `pug`);
+});app.set(`view engine`, `pug`);
 app.set(`views`, path.join(__dirname, `views`));
 
 app.use(express.static(path.join(__dirname, `public`)));
