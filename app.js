@@ -26,6 +26,18 @@ const app = express();
 
 app.set("trust proxy", 1);
 
+// Force HTTPS Redirect
+app.use((req, res, next) => {
+  if (req.secure || req.headers['x-forwarded-proto'] === 'https') {
+    return next();
+  }
+  // Allow localhost/dev
+  if (req.hostname === 'localhost' || req.hostname === '127.0.0.1' || req.hostname.startsWith('192.168.')) {
+    return next();
+  }
+  res.redirect(`https://${req.hostname}${req.url}`);
+});
+
 app.set(`view engine`, `pug`);
 app.set(`views`, path.join(__dirname, `views`));
 
