@@ -9312,10 +9312,6 @@ if (resultsContainer && detailsModal) {
   resultsContainer.addEventListener("click", function (e) {
     var card = e.target.closest(".job-card");
     if (card) {
-      // Force reflow/repaint for Safari
-      card.style.display = "none";
-      card.offsetHeight;
-      card.style.display = "";
       detailsModal.classList.add("details--open");
       document.body.classList.add("no-scroll");
       var jobId = card.dataset.id;
@@ -9429,7 +9425,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65356" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49486" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

@@ -743,11 +743,6 @@ if (resultsContainer && detailsModal) {
   resultsContainer.addEventListener("click", (e) => {
     const card = e.target.closest(".job-card");
     if (card) {
-      // Force reflow/repaint for Safari
-      card.style.display = "none";
-      card.offsetHeight;
-      card.style.display = "";
-
       detailsModal.classList.add("details--open");
       document.body.classList.add("no-scroll");
       const jobId = card.dataset.id;
