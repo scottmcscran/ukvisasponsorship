@@ -12,13 +12,19 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.job-card:focus,
-.job-card:hover {
-  border-color: var(--brand-primary);
-  box-shadow: var(--shadow-hover);
-  transform: translateY(1px);
-  z-index: 10;
-  position: relative;
+.job-card * {
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .job-card:focus,
+  .job-card:hover {
+    border-color: var(--brand-primary);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(1px);
+    z-index: 10;
+    position: relative;
+  }
 }
 
 .featured__label {

@@ -6497,14 +6497,14 @@ exports.loadJobData = /*#__PURE__*/function () {
             saveBtnText = isSaved ? "Saved" : "Save Job";
             saveBtnClass = isSaved ? "btn--save btn--saved" : "btn--save";
             if (isApplied) {
-              applyHtml = "<button class=\"btn--standard btn--apply\" disabled style=\"background-color: #1a73c2; cursor: default;\">Scheduled</button>";
+              applyHtml = "<button class=\"btn--standard btn--apply\" disabled style=\"background-color: #1a73c2; cursor: default;\">Applied</button>";
             } else if (job.applicationLink) {
               applyHtml = "<a href=\"".concat(job.applicationLink, "\" class=\"btn--standard btn--apply\" target=\"_blank\">Apply Now</a>");
             } else {
               if (userCv) {
-                applyHtml = "\n              <div class=\"apply-actions\">\n                  <button class=\"btn--standard btn--apply\" id=\"applyProfileCvBtn\">Schedule with Profile CV</button>\n                  <button class=\"btn--text\" id=\"applyUploadCvBtn\" style=\"margin-top: 10px; display: block; font-size: 0.9em; background: none; border: none; color: var(--brand-primary); cursor: pointer; text-decoration: underline;\">Upload different CV</button>\n                  <input type=\"file\" id=\"cvUpload\" style=\"display: none;\" accept=\".pdf,.doc,.docx\" />\n              </div>\n            ";
+                applyHtml = "\n              <div class=\"apply-actions\">\n                  <button class=\"btn--standard btn--apply\" id=\"applyProfileCvBtn\">Apply with Profile CV</button>\n                  <button class=\"btn--text\" id=\"applyUploadCvBtn\" style=\"margin-top: 10px; display: block; font-size: 0.9em; background: none; border: none; color: var(--brand-primary); cursor: pointer; text-decoration: underline;\">Upload different CV</button>\n                  <input type=\"file\" id=\"cvUpload\" style=\"display: none;\" accept=\".pdf,.doc,.docx\" />\n              </div>\n            ";
               } else {
-                applyHtml = "\n              <div class=\"apply-actions\">\n                  <button class=\"btn--standard btn--apply\" id=\"applyUploadCvBtn\">Schedule Application</button>\n                  <input type=\"file\" id=\"cvUpload\" style=\"display: none;\" accept=\".pdf,.doc,.docx\" />\n                  <div class=\"save-cv-option\" style=\"margin-top: 10px;\">\n                      <input type=\"checkbox\" id=\"saveCvCheck\">\n                      <label for=\"saveCvCheck\" style=\"font-size: 1.2rem;\">Save CV to profile</label>\n                  </div>\n              </div>\n            ";
+                applyHtml = "\n              <div class=\"apply-actions\">\n                  <button class=\"btn--standard btn--apply\" id=\"applyUploadCvBtn\">Apply Now</button>\n                  <input type=\"file\" id=\"cvUpload\" style=\"display: none;\" accept=\".pdf,.doc,.docx\" />\n                  <div class=\"save-cv-option\" style=\"margin-top: 10px;\">\n                      <input type=\"checkbox\" id=\"saveCvCheck\">\n                      <label for=\"saveCvCheck\" style=\"font-size: 1.2rem;\">Save CV to profile</label>\n                  </div>\n              </div>\n            ";
               }
             }
             isRestrictedUser = ["admin", "employer"].includes(userRole);
@@ -6533,15 +6533,15 @@ exports.loadJobData = /*#__PURE__*/function () {
                   while (1) switch (_context2.p = _context2.n) {
                     case 0:
                       _context2.p = 0;
-                      applyProfileCvBtn.textContent = "Scheduling...";
+                      applyProfileCvBtn.textContent = "Applying...";
                       applyProfileCvBtn.disabled = true;
                       _context2.n = 1;
                       return _axios.default.post("/api/v1/jobs/".concat(job._id, "/apply"), {
                         useProfileCv: "true"
                       });
                     case 1:
-                      (0, _alerts.showAlert)("success", "Application scheduled successfully!");
-                      applyProfileCvBtn.textContent = "Scheduled";
+                      (0, _alerts.showAlert)("success", "Application sent successfully!");
+                      applyProfileCvBtn.textContent = "Applied";
                       if (applyUploadCvBtn) applyUploadCvBtn.style.display = "none";
                       _context2.n = 3;
                       break;
@@ -6549,7 +6549,7 @@ exports.loadJobData = /*#__PURE__*/function () {
                       _context2.p = 2;
                       _t2 = _context2.v;
                       applyProfileCvBtn.disabled = false;
-                      applyProfileCvBtn.textContent = "Schedule with Profile CV";
+                      applyProfileCvBtn.textContent = "Apply with Profile CV";
                       (0, _alerts.showAlert)("error", _t2.response && _t2.response.data.message ? _t2.response.data.message : "Error applying");
                     case 3:
                       return _context2.a(2);
@@ -6580,7 +6580,7 @@ exports.loadJobData = /*#__PURE__*/function () {
                           formData.append("saveCvToProfile", "true");
                         }
                         _context3.p = 2;
-                        applyUploadCvBtn.textContent = "Scheduling...";
+                        applyUploadCvBtn.textContent = "Applying...";
                         applyUploadCvBtn.disabled = true;
                         _context3.n = 3;
                         return _axios.default.post("/api/v1/jobs/".concat(job._id, "/apply"), formData, {
@@ -6589,8 +6589,8 @@ exports.loadJobData = /*#__PURE__*/function () {
                           }
                         });
                       case 3:
-                        (0, _alerts.showAlert)("success", "Application scheduled successfully!");
-                        applyUploadCvBtn.textContent = "Scheduled";
+                        (0, _alerts.showAlert)("success", "Application sent successfully!");
+                        applyUploadCvBtn.textContent = "Applied";
                         if (saveCvCheck) saveCvCheck.parentElement.style.display = "none";
                         _context3.n = 5;
                         break;
@@ -6598,7 +6598,7 @@ exports.loadJobData = /*#__PURE__*/function () {
                         _context3.p = 4;
                         _t3 = _context3.v;
                         applyUploadCvBtn.disabled = false;
-                        applyUploadCvBtn.textContent = userCv ? "Upload different CV" : "Schedule Application";
+                        applyUploadCvBtn.textContent = userCv ? "Upload different CV" : "Apply Now";
                         (0, _alerts.showAlert)("error", _t3.response && _t3.response.data.message ? _t3.response.data.message : "Error uploading CV");
                       case 5:
                         return _context3.a(2);
@@ -9419,7 +9419,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65434" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64821" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

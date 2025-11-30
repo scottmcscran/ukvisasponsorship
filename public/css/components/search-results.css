@@ -150,7 +150,9 @@
     transform: translateX(100%);
     transition: transform 0.3s ease-in-out;
     overflow-y: auto;
+    overflow-x: hidden;
     border: none;
+    box-sizing: border-box;
   }
 
   .details.details--open {
@@ -276,6 +278,28 @@
   line-height: 1.6;
   color: var(--text-main);
   margin-bottom: var(--spacing-lg);
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.job-body img,
+.job-body iframe,
+.job-body video {
+  max-width: 100%;
+  height: auto;
+}
+
+.job-body table {
+  max-width: 100%;
+  display: block;
+  overflow-x: auto;
+}
+
+.job-body pre,
+.job-body code {
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .job-body h3 {
