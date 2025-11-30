@@ -40,12 +40,12 @@ var app = express();
 app.set("trust proxy", 1); // Force HTTPS Redirect
 
 app.use(function (req, res, next) {
-  if (req.secure || req.headers['x-forwarded-proto'] === 'https') {
+  if (req.secure || req.headers["x-forwarded-proto"] === "https") {
     return next();
   } // Allow localhost/dev
 
 
-  if (req.hostname === 'localhost' || req.hostname === '127.0.0.1' || req.hostname.startsWith('192.168.')) {
+  if (req.hostname === "localhost" || req.hostname === "127.0.0.1" || req.hostname.startsWith("192.168.")) {
     return next();
   }
 
