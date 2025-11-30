@@ -103,8 +103,7 @@ block content
             //- However, the controller aggregation DOES return it now.
             - const showFeaturedTag = job.featured && (!job.distanceGroup || job.distanceGroup === 1);
             
-            .job-card(data-id=job._id data-index=index + 1)
-              a.job-card__link(href="javascript:void(0)")
+            .job-card(tabindex="0" data-id=job._id data-index=index + 1)
               if showFeaturedTag
                 p.featured__label Featured  
               h3.job-card__title= job.title
@@ -123,7 +122,7 @@ block content
           .no-results-container
             p.no-results.text-gradient No jobs found matching your criteria.
 
-      .details#detailsModal
+      .details#detailsModal(role="dialog" aria-modal="true" aria-label="Job Details")
         button.btn-close.btn-close-details#closeDetailsBtn &times;
         .details__placeholder
           p.text-gradient Select a job to view details
