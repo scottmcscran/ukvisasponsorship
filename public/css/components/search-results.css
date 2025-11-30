@@ -154,7 +154,7 @@
     padding: var(--spacing-lg);
 
     /* Hidden State */
-    display: none;
+    display: none !important;
 
     overflow-y: auto;
     overflow-x: hidden;
@@ -163,7 +163,7 @@
   }
 
   .details.details--open {
-    display: block;
+    display: block !important;
   }
 
   .btn-close-details {

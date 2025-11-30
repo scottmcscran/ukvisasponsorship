@@ -810,6 +810,54 @@ document.addEventListener("click", function (e) {
         loadJobData(jobId);
       }
     }
+
+    return;
+  } // 5. Custom Select Trigger
+
+
+  var selectTrigger = e.target.closest(".custom-select__trigger");
+
+  if (selectTrigger) {
+    var customSelect = selectTrigger.closest(".custom-select");
+
+    if (customSelect) {
+      customSelect.classList.toggle("open");
+    }
+
+    return;
+  } // 6. Custom Select Option
+
+
+  var selectOption = e.target.closest(".custom-option");
+
+  if (selectOption) {
+    var _customSelect = selectOption.closest(".custom-select");
+
+    if (_customSelect) {
+      var triggerSpan = _customSelect.querySelector(".custom-select__trigger span");
+
+      var hiddenInput = document.getElementById("distanceInput");
+      if (triggerSpan) triggerSpan.textContent = selectOption.textContent;
+      if (hiddenInput) hiddenInput.value = selectOption.dataset.value;
+
+      var options = _customSelect.querySelectorAll(".custom-option");
+
+      options.forEach(function (opt) {
+        return opt.classList.remove("selected");
+      });
+      selectOption.classList.add("selected");
+
+      _customSelect.classList.remove("open");
+    }
+
+    return;
+  } // 7. Close Custom Select when clicking outside
+
+
+  var openSelect = document.querySelector(".custom-select.open");
+
+  if (openSelect && !e.target.closest(".custom-select")) {
+    openSelect.classList.remove("open");
   }
 });
 
@@ -882,36 +930,40 @@ if (closeDetailsBtn && detailsModal) {
   });
 }
 */
-// Custom Select Logic
+// Custom Select Logic - Moved to Global Delegation above
 
-
-var customSelect = document.querySelector(".custom-select");
-
+/*
+const customSelect = document.querySelector(".custom-select");
 if (customSelect) {
-  var trigger = customSelect.querySelector(".custom-select__trigger");
-  var options = customSelect.querySelectorAll(".custom-option");
-  var hiddenInput = document.getElementById("distanceInput");
-  trigger.addEventListener("click", function () {
+  const trigger = customSelect.querySelector(".custom-select__trigger");
+  const options = customSelect.querySelectorAll(".custom-option");
+  const hiddenInput = document.getElementById("distanceInput");
+
+  trigger.addEventListener("click", () => {
     customSelect.classList.toggle("open");
   });
-  options.forEach(function (option) {
-    option.addEventListener("click", function () {
+
+  options.forEach((option) => {
+    option.addEventListener("click", () => {
       trigger.querySelector("span").textContent = option.textContent;
       if (hiddenInput) hiddenInput.value = option.dataset.value;
-      options.forEach(function (opt) {
-        return opt.classList.remove("selected");
-      });
+
+      options.forEach((opt) => opt.classList.remove("selected"));
       option.classList.add("selected");
+
       customSelect.classList.remove("open");
     });
-  }); // Close dropdown when clicking outside
+  });
 
-  document.addEventListener("click", function (e) {
+  // Close dropdown when clicking outside
+  document.addEventListener("click", (e) => {
     if (!customSelect.contains(e.target)) {
       customSelect.classList.remove("open");
     }
   });
 }
+*/
+
 
 var signupEmployerForm = document.querySelector(".form--signup-employer");
 

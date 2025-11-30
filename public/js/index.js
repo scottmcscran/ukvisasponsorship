@@ -742,6 +742,45 @@ document.addEventListener("click", (e) => {
         loadJobData(jobId);
       }
     }
+    return;
+  }
+
+  // 5. Custom Select Trigger
+  const selectTrigger = e.target.closest(".custom-select__trigger");
+  if (selectTrigger) {
+    const customSelect = selectTrigger.closest(".custom-select");
+    if (customSelect) {
+      customSelect.classList.toggle("open");
+    }
+    return;
+  }
+
+  // 6. Custom Select Option
+  const selectOption = e.target.closest(".custom-option");
+  if (selectOption) {
+    const customSelect = selectOption.closest(".custom-select");
+    if (customSelect) {
+      const triggerSpan = customSelect.querySelector(
+        ".custom-select__trigger span"
+      );
+      const hiddenInput = document.getElementById("distanceInput");
+
+      if (triggerSpan) triggerSpan.textContent = selectOption.textContent;
+      if (hiddenInput) hiddenInput.value = selectOption.dataset.value;
+
+      const options = customSelect.querySelectorAll(".custom-option");
+      options.forEach((opt) => opt.classList.remove("selected"));
+      selectOption.classList.add("selected");
+
+      customSelect.classList.remove("open");
+    }
+    return;
+  }
+
+  // 7. Close Custom Select when clicking outside
+  const openSelect = document.querySelector(".custom-select.open");
+  if (openSelect && !e.target.closest(".custom-select")) {
+    openSelect.classList.remove("open");
   }
 });
 
@@ -816,7 +855,8 @@ if (closeDetailsBtn && detailsModal) {
 }
 */
 
-// Custom Select Logic
+// Custom Select Logic - Moved to Global Delegation above
+/*
 const customSelect = document.querySelector(".custom-select");
 if (customSelect) {
   const trigger = customSelect.querySelector(".custom-select__trigger");
@@ -846,6 +886,7 @@ if (customSelect) {
     }
   });
 }
+*/
 
 const signupEmployerForm = document.querySelector(".form--signup-employer");
 
