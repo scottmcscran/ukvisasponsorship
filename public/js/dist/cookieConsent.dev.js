@@ -52,6 +52,7 @@ var initCookieConsent = function initCookieConsent() {
 
   if (rejectBtn) {
     rejectBtn.addEventListener("click", function () {
+      console.log("Reject All clicked");
       localStorage.setItem("cookieConsent", "false");
       cookieConsent.classList.remove("show"); // Update GTM consent
 

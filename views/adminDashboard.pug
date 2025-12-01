@@ -63,17 +63,17 @@ block content
               form.form.form--shadow-job
                 input#shadowUserId(type='hidden')
                 .form__group
-                  label.form__label(for='shadowJobTitle') Job Title
+                  label.form__label(for='shadowJobTitle') Job Title <span style="color: red;">*</span>
                   input#shadowJobTitle.form__input(type='text', required)
                 .form__group
-                  label.form__label(for='shadowJobDescription') Description
+                  label.form__label(for='shadowJobDescription') Description <span style="color: red;">*</span>
                   p.text-small.ma-bt-xs(style="color: #666; font-style: italic; margin-bottom: 0.5rem;") * Supports Markdown
                   textarea#shadowJobDescription.form__input(rows='4', required)
                 .form__group
-                  label.form__label(for='shadowJobLocation') City
+                  label.form__label(for='shadowJobLocation') City <span style="color: red;">*</span>
                   input#shadowJobLocation.form__input(type='text', required)
                 .form__group
-                  label.form__label(for='shadowJobPostcode') Postcode
+                  label.form__label(for='shadowJobPostcode') Postcode <span style="color: red;">*</span>
                   input#shadowJobPostcode.form__input(type='text', required)
                 .form__group
                   label.form__label(for='shadowJobRemote') Remote Work
@@ -82,27 +82,27 @@ block content
                     option(value='hybrid') Hybrid
                     option(value='full') Full Remote
                 .form__group
-                  label.form__label(for='shadowJobSalaryMin') Min Salary
+                  label.form__label(for='shadowJobSalaryMin') Min Salary <span style="color: red;">*</span>
                   input#shadowJobSalaryMin.form__input(type='number', required)
                 .form__group
                   label.form__label(for='shadowJobSalaryMax') Max Salary
                   input#shadowJobSalaryMax.form__input(type='number')
                 .form__group
-                  label.form__label(for='shadowJobType') Job Type
+                  label.form__label(for='shadowJobType') Job Type <span style="color: red;">*</span>
                   select#shadowJobType.form__input
                     option(value='Full-time') Full-time
                     option(value='Part-time') Part-time
                     option(value='Contract') Contract
                     option(value='Temporary') Temporary
                 .form__group
-                  label.form__label(for='shadowJobExperience') Experience Level
+                  label.form__label(for='shadowJobExperience') Experience Level <span style="color: red;">*</span>
                   select#shadowJobExperience.form__input
                     option(value='Entry') Entry
                     option(value='Mid') Mid
                     option(value='Senior') Senior
                     option(value='Lead') Lead
                 .form__group
-                  label.form__label(for='shadowJobVisa') Visa Types (Hold Ctrl/Cmd to select multiple)
+                  label.form__label(for='shadowJobVisa') Visa Types (Hold Ctrl/Cmd to select multiple) <span style="color: red;">*</span>
                   select#shadowJobVisa.form__input(multiple, required, style='height: 120px;')
                     option(value='Skilled Worker') Skilled Worker
                     option(value='Health and Care') Health and Care

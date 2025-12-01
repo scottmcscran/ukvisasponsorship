@@ -287,21 +287,21 @@ block content
         
         form.form.form--post-job
           .form__group.ma-top-md
-            label.form__label(for='title') Job Title
+            label.form__label(for='title') Job Title <span style="color: red;">*</span>
             input#title.form__input(type='text', required, placeholder='e.g. Senior Software Engineer')
             
           .form__group.ma-top-md
-            label.form__label(for='description') Job Description
+            label.form__label(for='description') Job Description <span style="color: red;">*</span>
             p.text-small.ma-bt-xs(style="color: #666; font-style: italic; margin-bottom: 0.5rem;") * This field supports Markdown formatting (e.g., **bold**, - lists)
             textarea#description.form__input(rows='5', required, placeholder='Describe the role, responsibilities, and requirements...')
             small.form__text-muted Minimum 20 characters.
 
           .form__row
             .form__group.ma-top-md
-              label.form__label(for='city') City
+              label.form__label(for='city') City <span style="color: red;">*</span>
               input#city.form__input(type='text', required, placeholder='London')
             .form__group.ma-top-md
-              label.form__label(for='postcode') Postcode
+              label.form__label(for='postcode') Postcode <span style="color: red;">*</span>
               input#postcode.form__input(type='text', required, placeholder='SW1A 1AA')
           
           .form__row
@@ -312,7 +312,7 @@ block content
                 option(value='hybrid') Hybrid
                 option(value='full') Fully Remote
             .form__group.ma-top-md
-              label.form__label(for='jobType') Job Type
+              label.form__label(for='jobType') Job Type <span style="color: red;">*</span>
               select#jobType.form__input
                 option(value='Full-time') Full-time
                 option(value='Part-time') Part-time
@@ -321,7 +321,7 @@ block content
 
           .form__row
             .form__group.ma-top-md
-              label.form__label(for='salaryMin') Min Salary (£)
+              label.form__label(for='salaryMin') Min Salary (£) <span style="color: red;">*</span>
               input#salaryMin.form__input(type='number', required, placeholder='30000')
             .form__group.ma-top-md
               label.form__label(for='salaryMax') Max Salary (£)
@@ -335,7 +335,7 @@ block content
                 option(value='hour') Per Hour
 
           .form__group.ma-top-md
-            label.form__label(for='experienceLevel') Experience Level
+            label.form__label(for='experienceLevel') Experience Level <span style="color: red;">*</span>
             select#experienceLevel.form__input
               option(value='Entry') Entry Level
               option(value='Mid') Mid Level
@@ -343,7 +343,7 @@ block content
               option(value='Lead') Lead / Manager
 
           .form__group.ma-top-md
-            label.form__label Visa Sponsorship Types
+            label.form__label Visa Sponsorship Types <span style="color: red;">*</span>
             .checkbox-group
               label.checkbox-label
                 input(type='checkbox', name='visaTypes', value='Skilled Worker')
@@ -360,6 +360,14 @@ block content
               label.checkbox-label
                 input(type='checkbox', name='visaTypes', value='Senior or Specialist Worker')
                 span Senior / Specialist
+
+          .form__group.ma-top-md
+            label.form__label(for='requirements') Requirements (One per line)
+            textarea#requirements.form__input(rows='4', placeholder='- Bachelor degree\n- 3 years experience')
+
+          .form__group.ma-top-md
+            label.form__label(for='benefits') Benefits (One per line)
+            textarea#benefits.form__input(rows='4', placeholder='- Private Health Insurance\n- Gym Membership')
 
           .form__group.ma-top-md
             label.form__label(for='applicationUrl') Application Link (Optional)

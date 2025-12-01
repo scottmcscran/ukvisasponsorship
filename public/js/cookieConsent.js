@@ -48,6 +48,7 @@ export const initCookieConsent = () => {
 
   if (rejectBtn) {
     rejectBtn.addEventListener("click", () => {
+      console.log("Reject All clicked");
       localStorage.setItem("cookieConsent", "false");
       cookieConsent.classList.remove("show");
 
