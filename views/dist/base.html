@@ -34,22 +34,22 @@
         <li><a class="footer-nav__el" href="/employer-signup">Employer Sign Up</a></li>
         <li><a class="footer-nav__el" href="/privacy">Privacy</a></li>
         <li><a class="footer-nav__el" href="/terms">Terms</a></li>
-        <li><a class="footer-nav__el" id="reportBugBtn" href="#">Report Bug</a></li>
+        <li><a class="footer-nav__el" id="reportBugBtn" href="#">Report Bug / Feature</a></li>
         <li><a class="footer-nav__el" href="mailto:support@ukvisasponsorship.com">Contact</a></li>
       </ul>
       <p class="footer__copyright">&copy; ukvisasponsorship</p>
       <div class="modal-overlay hidden" id="bugReportModal">
         <div class="modal">
           <button class="btn-close-modal" id="closeBugReportModal">&times;</button>
-          <h2 class="heading-secondary ma-bt-md">Report a Bug</h2>
+          <h2 class="heading-secondary ma-bt-md">Report a Bug or Feature Request</h2>
           <form class="form form--bug-report">
             <div class="form__group">
               <label class="form__label" for="bugTitle">Title</label>
-              <input class="form__input" id="bugTitle" type="text" required="required" placeholder="Brief summary of the issue"/>
+              <input class="form__input" id="bugTitle" type="text" required="required" placeholder="Brief summary of the issue or feature"/>
             </div>
             <div class="form__group ma-bt-md">
               <label class="form__label" for="bugDescription">Description</label>
-              <textarea class="form__input" id="bugDescription" rows="5" required="required" placeholder="Please describe what happened, steps to reproduce, etc."></textarea>
+              <textarea class="form__input" id="bugDescription" rows="5" required="required" placeholder="Please describe the bug or the feature you would like to see."></textarea>
             </div>
             <div class="form__group right">
               <button class="btn btn--small btn--standard" id="submitBugReportBtn">Submit Report</button>
@@ -74,6 +74,7 @@
         <p class="cookie-consent__text">We use cookies to improve your experience on our site. By using our site, you agree to our <a class="cookie-consent__link" href="/privacy">Privacy Policy</a> and <a class="cookie-consent__link" href="/terms">Terms of Service</a>.</p>
       </div>
       <div class="cookie-consent__actions">
+        <button class="btn btn--small cookie-consent__btn--reject">Reject All</button>
         <button class="btn btn--small btn--green cookie-consent__btn--accept">Accept</button>
       </div>
     </div>
