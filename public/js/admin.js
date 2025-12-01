@@ -384,6 +384,9 @@ export const initAdmin = () => {
       const remote = document.getElementById("shadowJobRemote").value;
       const minSalary = document.getElementById("shadowJobSalaryMin").value;
       const maxSalary = document.getElementById("shadowJobSalaryMax").value;
+      const salaryPeriod = document.getElementById(
+        "shadowJobSalaryPeriod"
+      ).value;
       const jobType = document.getElementById("shadowJobType").value;
       const experienceLevel = document.getElementById(
         "shadowJobExperience"
@@ -431,6 +434,7 @@ export const initAdmin = () => {
           salaryRange: {
             min: minSalary,
             max: maxSalary || minSalary,
+            period: salaryPeriod,
           },
           jobType,
           experienceLevel,

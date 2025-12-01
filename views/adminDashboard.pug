@@ -88,6 +88,12 @@ block content
                   label.form__label(for='shadowJobSalaryMax') Max Salary
                   input#shadowJobSalaryMax.form__input(type='number')
                 .form__group
+                  label.form__label(for='shadowJobSalaryPeriod') Period
+                  select#shadowJobSalaryPeriod.form__input
+                    option(value='year') Per Year
+                    option(value='month') Per Month
+                    option(value='hour') Per Hour
+                .form__group
                   label.form__label(for='shadowJobType') Job Type <span style="color: red;">*</span>
                   select#shadowJobType.form__input
                     option(value='Full-time') Full-time
