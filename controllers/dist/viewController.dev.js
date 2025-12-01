@@ -165,46 +165,68 @@ exports.getAdminDashboard = catchAsync(function _callee(req, res, next) {
           _context2.t9 = _context2.sent;
           _context2.next = 38;
           return regeneratorRuntime.awrap(User.countDocuments({
-            "subscription.tier": "free"
+            role: "employer"
           }));
 
         case 38:
           _context2.t10 = _context2.sent;
           _context2.next = 41;
-          return regeneratorRuntime.awrap(calculateChange(User, {
-            "subscription.tier": "free"
+          return regeneratorRuntime.awrap(User.countDocuments({
+            role: "candidate"
           }));
 
         case 41:
           _context2.t11 = _context2.sent;
           _context2.next = 44;
           return regeneratorRuntime.awrap(User.countDocuments({
-            "subscription.tier": "starter"
+            role: "employer",
+            isClaimed: false
           }));
 
         case 44:
           _context2.t12 = _context2.sent;
           _context2.next = 47;
-          return regeneratorRuntime.awrap(calculateChange(User, {
-            "subscription.tier": "starter"
+          return regeneratorRuntime.awrap(User.countDocuments({
+            "subscription.tier": "free"
           }));
 
         case 47:
           _context2.t13 = _context2.sent;
           _context2.next = 50;
-          return regeneratorRuntime.awrap(User.countDocuments({
-            "subscription.tier": "professional"
+          return regeneratorRuntime.awrap(calculateChange(User, {
+            "subscription.tier": "free"
           }));
 
         case 50:
           _context2.t14 = _context2.sent;
           _context2.next = 53;
-          return regeneratorRuntime.awrap(calculateChange(User, {
-            "subscription.tier": "professional"
+          return regeneratorRuntime.awrap(User.countDocuments({
+            "subscription.tier": "starter"
           }));
 
         case 53:
           _context2.t15 = _context2.sent;
+          _context2.next = 56;
+          return regeneratorRuntime.awrap(calculateChange(User, {
+            "subscription.tier": "starter"
+          }));
+
+        case 56:
+          _context2.t16 = _context2.sent;
+          _context2.next = 59;
+          return regeneratorRuntime.awrap(User.countDocuments({
+            "subscription.tier": "professional"
+          }));
+
+        case 59:
+          _context2.t17 = _context2.sent;
+          _context2.next = 62;
+          return regeneratorRuntime.awrap(calculateChange(User, {
+            "subscription.tier": "professional"
+          }));
+
+        case 62:
+          _context2.t18 = _context2.sent;
           stats = {
             totalJobs: _context2.t0,
             totalJobsChange: _context2.t1,
@@ -216,14 +238,17 @@ exports.getAdminDashboard = catchAsync(function _callee(req, res, next) {
             totalUsersChange: _context2.t7,
             verifiedEmployers: _context2.t8,
             verifiedEmployersChange: _context2.t9,
-            freeUsers: _context2.t10,
-            freeUsersChange: _context2.t11,
-            starterUsers: _context2.t12,
-            starterUsersChange: _context2.t13,
-            professionalUsers: _context2.t14,
-            professionalUsersChange: _context2.t15
+            totalEmployers: _context2.t10,
+            totalCandidates: _context2.t11,
+            unclaimedShadowAccounts: _context2.t12,
+            freeUsers: _context2.t13,
+            freeUsersChange: _context2.t14,
+            starterUsers: _context2.t15,
+            starterUsersChange: _context2.t16,
+            professionalUsers: _context2.t17,
+            professionalUsersChange: _context2.t18
           };
-          _context2.next = 57;
+          _context2.next = 66;
           return regeneratorRuntime.awrap(Job.aggregate([{
             $match: {
               status: {
@@ -251,9 +276,9 @@ exports.getAdminDashboard = catchAsync(function _callee(req, res, next) {
             }
           }]));
 
-        case 57:
+        case 66:
           jobsByVisaType = _context2.sent;
-          _context2.next = 60;
+          _context2.next = 69;
           return regeneratorRuntime.awrap(Job.aggregate([{
             $match: {
               status: {
@@ -281,9 +306,9 @@ exports.getAdminDashboard = catchAsync(function _callee(req, res, next) {
             }
           }]));
 
-        case 60:
+        case 69:
           jobsByLocation = _context2.sent;
-          _context2.next = 63;
+          _context2.next = 72;
           return regeneratorRuntime.awrap(Job.aggregate([{
             $match: {
               status: {
@@ -320,9 +345,9 @@ exports.getAdminDashboard = catchAsync(function _callee(req, res, next) {
             }
           }]));
 
-        case 63:
+        case 72:
           topEmployers = _context2.sent;
-          _context2.next = 66;
+          _context2.next = 75;
           return regeneratorRuntime.awrap(Job.aggregate([{
             $match: {
               status: "active"
@@ -342,84 +367,84 @@ exports.getAdminDashboard = catchAsync(function _callee(req, res, next) {
             }
           }]));
 
-        case 66:
+        case 75:
           platformAnalytics = _context2.sent;
-          _context2.next = 69;
+          _context2.next = 78;
           return regeneratorRuntime.awrap(BugReport.find().sort({
             createdAt: -1
           }).populate("reportedBy", "name email"));
 
-        case 69:
+        case 78:
           bugReports = _context2.sent;
-          _context2.next = 72;
+          _context2.next = 81;
           return regeneratorRuntime.awrap(Discount.find().sort("-createdAt"));
 
-        case 72:
+        case 81:
           discounts = _context2.sent;
           // Check for expired discounts and update them
           _iteratorNormalCompletion = true;
           _didIteratorError = false;
           _iteratorError = undefined;
-          _context2.prev = 76;
+          _context2.prev = 85;
           _iterator = discounts[Symbol.iterator]();
 
-        case 78:
+        case 87:
           if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-            _context2.next = 87;
+            _context2.next = 96;
             break;
           }
 
           discount = _step.value;
 
           if (!(discount.isActive && discount.expiresAt && new Date() > discount.expiresAt)) {
-            _context2.next = 84;
+            _context2.next = 93;
             break;
           }
 
           discount.isActive = false;
-          _context2.next = 84;
+          _context2.next = 93;
           return regeneratorRuntime.awrap(discount.save());
 
-        case 84:
-          _iteratorNormalCompletion = true;
-          _context2.next = 78;
-          break;
-
-        case 87:
-          _context2.next = 93;
-          break;
-
-        case 89:
-          _context2.prev = 89;
-          _context2.t16 = _context2["catch"](76);
-          _didIteratorError = true;
-          _iteratorError = _context2.t16;
-
         case 93:
-          _context2.prev = 93;
-          _context2.prev = 94;
+          _iteratorNormalCompletion = true;
+          _context2.next = 87;
+          break;
+
+        case 96:
+          _context2.next = 102;
+          break;
+
+        case 98:
+          _context2.prev = 98;
+          _context2.t19 = _context2["catch"](85);
+          _didIteratorError = true;
+          _iteratorError = _context2.t19;
+
+        case 102:
+          _context2.prev = 102;
+          _context2.prev = 103;
 
           if (!_iteratorNormalCompletion && _iterator["return"] != null) {
             _iterator["return"]();
           }
 
-        case 96:
-          _context2.prev = 96;
+        case 105:
+          _context2.prev = 105;
 
           if (!_didIteratorError) {
-            _context2.next = 99;
+            _context2.next = 108;
             break;
           }
 
           throw _iteratorError;
 
-        case 99:
-          return _context2.finish(96);
+        case 108:
+          return _context2.finish(105);
 
-        case 100:
-          return _context2.finish(93);
+        case 109:
+          return _context2.finish(102);
 
-        case 101:
+        case 110:
           res.status(200).render("adminDashboard", {
             title: "Admin Dashboard",
             reportedJobs: reportedJobs,
@@ -439,12 +464,12 @@ exports.getAdminDashboard = catchAsync(function _callee(req, res, next) {
             }
           });
 
-        case 102:
+        case 111:
         case "end":
           return _context2.stop();
       }
     }
-  }, null, null, [[76, 89, 93, 101], [94,, 96, 100]]);
+  }, null, null, [[85, 98, 102, 110], [103,, 105, 109]]);
 });
 exports.getEmployerDashboard = catchAsync(function _callee2(req, res, next) {
   var jobs, activeDiscount, featuredJobs, regularJobs, calculateAnalytics, analytics;

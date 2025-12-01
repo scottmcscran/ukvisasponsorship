@@ -47,6 +47,9 @@ block content
         button.tab-btn(data-tab='subscription') Subscription
 
       .tab-content.tab-content--active(id='jobs' style=user.companyProfile.accStatus === 'banned' ? 'display: none !important' : '')
+        .info-message(style="background-color: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px; padding: 1.5rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem;")
+          span(style="font-size: 1.6rem;") ℹ️
+          p(style="font-size: 1.4rem; color: #0369a1; margin: 0;") We plan to improve analytics based on user requests (see request feature).
         .stats-grid
           .stat-card
             h3.stat-value= jobs.summary.totalJobs
@@ -65,9 +68,15 @@ block content
         .dashboard-content
           .content-header
             h3.heading-tertiary Your Jobs
-            if user.companyProfile.accStatus !== 'rejected'
+            if user.companyProfile.accStatus === 'verified'
               button.btn.btn--small.btn--standard#postJobBtn Post a Job
           
+          if user.companyProfile.accStatus === 'unverified'
+            .banned-message-container(style="text-align: center; padding: 3rem; background-color: #fff7ed; border-radius: 8px; border: 1px solid #fdba74; margin-bottom: 2rem;")
+              h2.heading-secondary.ma-bt-md(style="color: #c2410c;") Account Pending Verification
+              p.error-text(style="font-size: 1.8rem; color: #c2410c; font-weight: bold; max-width: none;") Your account is currently being reviewed by an admin.
+              p.ma-top-md(style="font-size: 1.6rem; color: #9a3412; max-width: none;") You will be able to post jobs once your account is verified.
+
           if jobs.allJobs.length > 0
             .job-list
               each job in jobs.allJobs

@@ -266,6 +266,15 @@ block content
                 if stats.verifiedEmployersChange != 0
                   span(style=`font-size: 1.4rem; margin-left: 0.5rem; color: ${stats.verifiedEmployersChange > 0 ? '#2ecc71' : '#e74c3c'}`) #{stats.verifiedEmployersChange > 0 ? '+' : ''}#{stats.verifiedEmployersChange}%
             .stat-card
+              h4.stat-card__title Total Employers
+              p.stat-card__value #{stats.totalEmployers}
+            .stat-card
+              h4.stat-card__title Total Candidates
+              p.stat-card__value #{stats.totalCandidates}
+            .stat-card
+              h4.stat-card__title Unclaimed Shadow
+              p.stat-card__value #{stats.unclaimedShadowAccounts}
+            .stat-card
               h4.stat-card__title Free Users
               p.stat-card__value
                 | #{stats.freeUsers}
@@ -323,6 +332,70 @@ block content
                     li
                       span= emp.companyName
                       strong= emp.jobCount
+
+            .charts-container(style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 3rem;")
+              .chart-wrapper(style="background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);")
+                canvas#userDistributionChart
+              .chart-wrapper(style="background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);")
+                canvas#visaTypeChart
+
+          script(src="https://cdn.jsdelivr.net/npm/chart.js")
+          script.
+            document.addEventListener('DOMContentLoaded', function() {
+              // User Distribution Chart
+              const ctxUser = document.getElementById('userDistributionChart').getContext('2d');
+              new Chart(ctxUser, {
+                type: 'doughnut',
+                data: {
+                  labels: ['Candidates', 'Real Employers', 'Shadow Accounts', 'Unverified'],
+                  datasets: [{
+                    data: [
+                      #{stats.totalCandidates}, 
+                      #{stats.verifiedEmployers - stats.unclaimedShadowAccounts}, 
+                      #{stats.unclaimedShadowAccounts}, 
+                      #{stats.totalEmployers - stats.verifiedEmployers}
+                    ],
+                    backgroundColor: ['#3498db', '#2ecc71', '#95a5a6', '#f1c40f']
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  plugins: {
+                    title: {
+                      display: true,
+                      text: 'User Distribution'
+                    }
+                  }
+                }
+              });
+
+              // Visa Type Chart
+              const ctxVisa = document.getElementById('visaTypeChart').getContext('2d');
+              const visaData = !{JSON.stringify(analytics.jobsByVisaType)};
+              new Chart(ctxVisa, {
+                type: 'bar',
+                data: {
+                  labels: visaData.map(v => v.visaType),
+                  datasets: [{
+                    label: 'Jobs Count',
+                    data: visaData.map(v => v.count),
+                    backgroundColor: '#9b59b6'
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  plugins: {
+                    title: {
+                      display: true,
+                      text: 'Jobs by Visa Type'
+                    },
+                    legend: {
+                      display: false
+                    }
+                  }
+                }
+              });
+            });
 
         //- BLOG POST TAB
         .tab-content(id='blog')

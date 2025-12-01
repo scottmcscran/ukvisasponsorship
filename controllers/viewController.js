@@ -62,6 +62,13 @@ exports.getAdminDashboard = catchAsync(async (req, res, next) => {
       "companyProfile.accStatus": "verified",
     }),
 
+    totalEmployers: await User.countDocuments({ role: "employer" }),
+    totalCandidates: await User.countDocuments({ role: "candidate" }),
+    unclaimedShadowAccounts: await User.countDocuments({
+      role: "employer",
+      isClaimed: false,
+    }),
+
     freeUsers: await User.countDocuments({ "subscription.tier": "free" }),
     freeUsersChange: await calculateChange(User, {
       "subscription.tier": "free",
