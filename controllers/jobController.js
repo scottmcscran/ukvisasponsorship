@@ -556,46 +556,51 @@ exports.createJob = catchAsync(async (req, res, next) => {
   const tier = user.subscription.tier;
   const status = user.subscription.status;
 
-  // 1. Check Active Job Limits
-  const activeJobsCount = await Job.countDocuments({
-    postedBy: user.id,
-    status: "active",
-  });
-
-  if (tier === "free" && activeJobsCount >= 3) {
-    return next(
-      new AppError(
-        "Free plan limit reached (3 active jobs). Please upgrade to post more.",
-        403
-      )
-    );
-  }
-
-  // 2. Check Featured Job Limits
-  if (req.body.featured) {
-    if (tier === "free" || status !== "active") {
-      return next(
-        new AppError("Featured jobs are only available on paid plans.", 403)
-      );
-    }
-
-    const featuredJobsCount = await Job.countDocuments({
+  // Skip limit checks if admin is posting
+  if (!req.body.isAdminPosted) {
+    // 1. Check Active Job Limits
+    const activeJobsCount = await Job.countDocuments({
       postedBy: user.id,
       status: "active",
-      featured: true,
+      isAdminPosted: { $ne: true },
     });
 
-    let limit = 0;
-    if (tier === "starter") limit = 3;
-    if (tier === "professional") limit = 10;
-
-    if (featuredJobsCount >= limit) {
+    if (tier === "free" && activeJobsCount >= 3) {
       return next(
         new AppError(
-          `Featured job limit reached (${limit} for ${tier} plan).`,
+          "Free plan limit reached (3 active jobs). Please upgrade to post more.",
           403
         )
       );
+    }
+
+    // 2. Check Featured Job Limits
+    if (req.body.featured) {
+      if (tier === "free" || status !== "active") {
+        return next(
+          new AppError("Featured jobs are only available on paid plans.", 403)
+        );
+      }
+
+      const featuredJobsCount = await Job.countDocuments({
+        postedBy: user.id,
+        status: "active",
+        featured: true,
+        isAdminPosted: { $ne: true },
+      });
+
+      let limit = 0;
+      if (tier === "starter") limit = 3;
+      if (tier === "professional") limit = 10;
+
+      if (featuredJobsCount >= limit) {
+        return next(
+          new AppError(
+            `Featured job limit reached (${limit} for ${tier} plan).`,
+            403
+          )
+        );
+      }
     }
   }
 
@@ -631,6 +636,7 @@ exports.updateJob = catchAsync(async (req, res, next) => {
       status: "active",
       featured: true,
       _id: { $ne: req.params.id }, // Exclude current job if it was already featured
+      isAdminPosted: { $ne: true },
     });
 
     let limit = 0;

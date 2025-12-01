@@ -929,71 +929,82 @@ exports.createJob = catchAsync(function _callee11(req, res, next) {
 
         case 11:
           tier = user.subscription.tier;
-          status = user.subscription.status; // 1. Check Active Job Limits
+          status = user.subscription.status; // Skip limit checks if admin is posting
 
-          _context11.next = 15;
+          if (req.body.isAdminPosted) {
+            _context11.next = 30;
+            break;
+          }
+
+          _context11.next = 16;
           return regeneratorRuntime.awrap(Job.countDocuments({
             postedBy: user.id,
-            status: "active"
+            status: "active",
+            isAdminPosted: {
+              $ne: true
+            }
           }));
 
-        case 15:
+        case 16:
           activeJobsCount = _context11.sent;
 
           if (!(tier === "free" && activeJobsCount >= 3)) {
-            _context11.next = 18;
+            _context11.next = 19;
             break;
           }
 
           return _context11.abrupt("return", next(new AppError("Free plan limit reached (3 active jobs). Please upgrade to post more.", 403)));
 
-        case 18:
+        case 19:
           if (!req.body.featured) {
-            _context11.next = 29;
+            _context11.next = 30;
             break;
           }
 
           if (!(tier === "free" || status !== "active")) {
-            _context11.next = 21;
+            _context11.next = 22;
             break;
           }
 
           return _context11.abrupt("return", next(new AppError("Featured jobs are only available on paid plans.", 403)));
 
-        case 21:
-          _context11.next = 23;
+        case 22:
+          _context11.next = 24;
           return regeneratorRuntime.awrap(Job.countDocuments({
             postedBy: user.id,
             status: "active",
-            featured: true
+            featured: true,
+            isAdminPosted: {
+              $ne: true
+            }
           }));
 
-        case 23:
+        case 24:
           featuredJobsCount = _context11.sent;
           limit = 0;
           if (tier === "starter") limit = 3;
           if (tier === "professional") limit = 10;
 
           if (!(featuredJobsCount >= limit)) {
-            _context11.next = 29;
+            _context11.next = 30;
             break;
           }
 
           return _context11.abrupt("return", next(new AppError("Featured job limit reached (".concat(limit, " for ").concat(tier, " plan)."), 403)));
 
-        case 29:
+        case 30:
           location = req.body.location;
-          _context11.next = 32;
+          _context11.next = 33;
           return regeneratorRuntime.awrap(geoPostcode(location.postcode, next));
 
-        case 32:
+        case 33:
           location.coordinates = _context11.sent;
           // Ensure postedBy is set to current user
           req.body.postedBy = user.id;
-          _context11.next = 36;
+          _context11.next = 37;
           return regeneratorRuntime.awrap(Job.create(req.body));
 
-        case 36:
+        case 37:
           job = _context11.sent;
           res.status(201).json({
             status: "success",
@@ -1002,7 +1013,7 @@ exports.createJob = catchAsync(function _callee11(req, res, next) {
             }
           });
 
-        case 38:
+        case 39:
         case "end":
           return _context11.stop();
       }
@@ -1039,8 +1050,11 @@ exports.updateJob = catchAsync(function _callee12(req, res, next) {
             featured: true,
             _id: {
               $ne: req.params.id
-            } // Exclude current job if it was already featured
-
+            },
+            // Exclude current job if it was already featured
+            isAdminPosted: {
+              $ne: true
+            }
           }));
 
         case 8:

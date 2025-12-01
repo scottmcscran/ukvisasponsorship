@@ -679,7 +679,6 @@ exports.checkAccountStatus = catchAsync(function _callee11(req, res, next) {
   });
 });
 exports.checkJobPostLimits = catchAsync(function _callee12(req, res, next) {
-  var user, tier, TIER_LIMITS, isFeatured, maxAllowed, currentCount;
   return regeneratorRuntime.async(function _callee12$(_context12) {
     while (1) {
       switch (_context12.prev = _context12.next) {
@@ -692,37 +691,14 @@ exports.checkJobPostLimits = catchAsync(function _callee12(req, res, next) {
           return _context12.abrupt("return", next());
 
         case 2:
-          user = req.user;
-          tier = user.subscription.tier;
-          TIER_LIMITS = {
-            free: {
-              basic: 3,
-              featured: 0
-            },
-            starter: {
-              basic: Infinity,
-              featured: 3
-            },
-            professional: {
-              basic: Infinity,
-              featured: 10
-            }
-          };
-          isFeatured = req.body && req.body.featured || false;
-          maxAllowed = isFeatured ? TIER_LIMITS[tier].featured : TIER_LIMITS[tier].basic;
-          currentCount = isFeatured ? user.featuredJobsCount : user.basicJobsCount;
-
-          if (!(currentCount >= maxAllowed)) {
-            _context12.next = 10;
-            break;
-          }
-
-          return _context12.abrupt("return", next(new AppError("Limit reached: ".concat(maxAllowed, " ").concat(isFeatured ? "featured" : "basic", " jobs allowed on ").concat(tier, " tier."), 403)));
-
-        case 10:
+          // This middleware is deprecated in favor of the checks inside jobController.createJob
+          // We are keeping it here just in case, but it should just pass through now
+          // or we can remove it from the route.
+          // For now, let's just call next() to let the controller handle the logic
+          // which now includes the "isAdminPosted" exclusion.
           next();
 
-        case 11:
+        case 3:
         case "end":
           return _context12.stop();
       }

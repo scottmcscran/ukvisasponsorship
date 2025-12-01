@@ -383,33 +383,12 @@ exports.checkJobPostLimits = catchAsync(async (req, res, next) => {
   // Skip check for admins
   if (req.user.role === "admin") return next();
 
-  const user = req.user;
-  const tier = user.subscription.tier;
+  // This middleware is deprecated in favor of the checks inside jobController.createJob
+  // We are keeping it here just in case, but it should just pass through now
+  // or we can remove it from the route.
+  // For now, let's just call next() to let the controller handle the logic
+  // which now includes the "isAdminPosted" exclusion.
 
-  const TIER_LIMITS = {
-    free: { basic: 3, featured: 0 },
-    starter: { basic: Infinity, featured: 3 },
-    professional: { basic: Infinity, featured: 10 },
-  };
-
-  const isFeatured = (req.body && req.body.featured) || false;
-
-  const maxAllowed = isFeatured
-    ? TIER_LIMITS[tier].featured
-    : TIER_LIMITS[tier].basic;
-
-  const currentCount = isFeatured
-    ? user.featuredJobsCount
-    : user.basicJobsCount;
-
-  if (currentCount >= maxAllowed) {
-    return next(
-      new AppError(
-        `Limit reached: ${maxAllowed} ${isFeatured ? `featured` : `basic`} jobs allowed on ${tier} tier.`,
-        403
-      )
-    );
-  }
   next();
 });
 
