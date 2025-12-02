@@ -4,26 +4,26 @@ const Email = require("../utils/email");
 
 exports.processShadowEmailQueue = async () => {
   console.log("Starting Shadow Email Queue processing...");
-  const queueItems = await ShadowEmailQueue.find().populate("user");
-
-  if (queueItems.length === 0) {
-    console.log("No emails in queue.");
-    return;
-  }
-
-  console.log(`Found ${queueItems.length} emails to send.`);
 
   const baseUrl =
     process.env.NODE_ENV === "production"
       ? "https://ukvisasponsorship.com"
       : "http://localhost:3000";
 
-  for (const item of queueItems) {
+  let processedCount = 0;
+
+  // Process queue items one by one atomically to prevent duplicate sends in clustered environments
+  while (true) {
+    const item = await ShadowEmailQueue.findOneAndDelete().populate("user");
+
+    if (!item) {
+      break; // Queue is empty
+    }
+
     const user = item.user;
 
-    // If user was deleted, remove from queue
+    // If user was deleted, just continue (item is already removed from queue)
     if (!user) {
-      await ShadowEmailQueue.findByIdAndDelete(item._id);
       continue;
     }
 
@@ -36,14 +36,14 @@ exports.processShadowEmailQueue = async () => {
 
       await new Email(user, claimUrl).sendClaimAccount();
       console.log(`Sent claim email to ${user.email}`);
-
-      // Delete from queue after sending
-      await ShadowEmailQueue.findByIdAndDelete(item._id);
+      processedCount++;
     } catch (err) {
       console.error(`Failed to send email to ${user.email}:`, err);
-      // Delete from queue even if failed, to avoid infinite retry loops on bad data
-      await ShadowEmailQueue.findByIdAndDelete(item._id);
+      // Item is already removed from queue, so it won't block others or loop infinitely
     }
   }
-  console.log("Shadow Email Queue processing complete.");
+
+  console.log(
+    `Shadow Email Queue processing complete. Sent ${processedCount} emails.`
+  );
 };
