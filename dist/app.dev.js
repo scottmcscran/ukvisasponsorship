@@ -53,7 +53,7 @@ app.use(function (req, res, next) {
   if (req.headers["x-forwarded-ssl"] === "on") return next();
   if (req.headers["front-end-https"] === "on") return next(); // 5. Allow localhost/dev/private IPs
 
-  if (req.hostname === "localhost" || req.hostname === "127.0.0.1" || req.hostname.startsWith("192.168.") || req.hostname.startsWith("10.") || req.hostname.endsWith(".local")) {
+  if (req.hostname === "localhost" || req.hostname === "127.0.0.1" || req.hostname && req.hostname.startsWith("192.168.") || req.hostname && req.hostname.startsWith("10.") || req.hostname && req.hostname.endsWith(".local")) {
     return next();
   } // If none of the above, redirect to HTTPS
 

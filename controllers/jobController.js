@@ -12,11 +12,12 @@ const r2 = require("../utils/r2");
 const multerStorage = multer.memoryStorage();
 const multerFilter = (req, file, cb) => {
   if (
-    file.mimetype.startsWith("application/pdf") ||
-    file.mimetype.startsWith("application/msword") ||
-    file.mimetype.startsWith(
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    )
+    file.mimetype &&
+    (file.mimetype.startsWith("application/pdf") ||
+      file.mimetype.startsWith("application/msword") ||
+      file.mimetype.startsWith(
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      ))
   ) {
     cb(null, true);
   } else {

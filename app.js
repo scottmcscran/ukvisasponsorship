@@ -47,9 +47,9 @@ app.use((req, res, next) => {
   if (
     req.hostname === "localhost" ||
     req.hostname === "127.0.0.1" ||
-    req.hostname.startsWith("192.168.") ||
-    req.hostname.startsWith("10.") ||
-    req.hostname.endsWith(".local")
+    (req.hostname && req.hostname.startsWith("192.168.")) ||
+    (req.hostname && req.hostname.startsWith("10.")) ||
+    (req.hostname && req.hostname.endsWith(".local"))
   ) {
     return next();
   }

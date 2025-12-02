@@ -163,7 +163,7 @@ exports.deleteUser = factory.deleteOne(User);
 var multerStorage = multer.memoryStorage();
 
 var multerFilter = function multerFilter(req, file, cb) {
-  if (file.mimetype.startsWith("application/pdf") || file.mimetype.startsWith("application/msword") || file.mimetype.startsWith("application/vnd.openxmlformats-officedocument.wordprocessingml.document")) {
+  if (file.mimetype && (file.mimetype.startsWith("application/pdf") || file.mimetype.startsWith("application/msword") || file.mimetype.startsWith("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))) {
     cb(null, true);
   } else {
     cb(new AppError("Not a valid file! Please upload only PDF or Word documents.", 400), false);
