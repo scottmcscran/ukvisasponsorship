@@ -42,9 +42,9 @@ const server = app.listen(port, () => {
     }
   });
 
-  // Run at 10:15 every Tuesday
-  cron.schedule("15 10 * * 2", async () => {
-    console.log(`Running weekly shadow email queue processing...`);
+  // Run at 10:15 every Tuesday - Thursday
+  cron.schedule("15 10 * * 2-4", async () => {
+    console.log(`Running shadow email queue processing...`);
     try {
       await processShadowEmailQueue();
     } catch (error) {
