@@ -108,20 +108,30 @@ exports.dailySubscriptionCheck = async () => {
 exports.checkShadowAccountExpirations = async () => {
   const threeWeeksAgo = new Date(Date.now() - 21 * 24 * 60 * 60 * 1000);
 
-  // Expire ALL jobs that were posted by admin and are older than 3 weeks
-  // regardless of whether the account is claimed or not.
-  const result = await Job.updateMany(
-    {
-      isAdminPosted: true,
-      status: "active",
-      postedDate: { $lt: threeWeeksAgo },
-    },
-    {
-      status: "admin_expired",
-    }
-  );
+  // Find users who had the claim email sent more than 3 weeks ago
+  const expiredUsers = await User.find({
+    claimEmailSentAt: { $lt: threeWeeksAgo },
+  }).select("_id");
 
-  console.log(
-    `Admin Posted Job Cleanup: Expired ${result.modifiedCount} jobs.`
-  );
+  const expiredUserIds = expiredUsers.map((u) => u._id);
+
+  if (expiredUserIds.length > 0) {
+    // Expire jobs posted by these users that are admin posted and active
+    const result = await Job.updateMany(
+      {
+        isAdminPosted: true,
+        status: "active",
+        postedBy: { $in: expiredUserIds },
+      },
+      {
+        status: "admin_expired",
+      }
+    );
+
+    console.log(
+      `Admin Posted Job Cleanup: Expired ${result.modifiedCount} jobs.`
+    );
+  } else {
+    console.log(`Admin Posted Job Cleanup: No jobs to expire.`);
+  }
 };

@@ -143,6 +143,7 @@ const userSchema = new mongoose.Schema(
     },
     claimToken: String,
     claimTokenExpires: Date,
+    claimEmailSentAt: Date,
 
     active: {
       type: Boolean,

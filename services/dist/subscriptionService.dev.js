@@ -226,30 +226,52 @@ exports.dailySubscriptionCheck = function _callee2() {
 };
 
 exports.checkShadowAccountExpirations = function _callee3() {
-  var threeWeeksAgo, result;
+  var threeWeeksAgo, expiredUsers, expiredUserIds, result;
   return regeneratorRuntime.async(function _callee3$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
-          threeWeeksAgo = new Date(Date.now() - 21 * 24 * 60 * 60 * 1000); // Expire ALL jobs that were posted by admin and are older than 3 weeks
-          // regardless of whether the account is claimed or not.
+          threeWeeksAgo = new Date(Date.now() - 21 * 24 * 60 * 60 * 1000); // Find users who had the claim email sent more than 3 weeks ago
 
           _context3.next = 3;
+          return regeneratorRuntime.awrap(User.find({
+            claimEmailSentAt: {
+              $lt: threeWeeksAgo
+            }
+          }).select("_id"));
+
+        case 3:
+          expiredUsers = _context3.sent;
+          expiredUserIds = expiredUsers.map(function (u) {
+            return u._id;
+          });
+
+          if (!(expiredUserIds.length > 0)) {
+            _context3.next = 12;
+            break;
+          }
+
+          _context3.next = 8;
           return regeneratorRuntime.awrap(Job.updateMany({
             isAdminPosted: true,
             status: "active",
-            postedDate: {
-              $lt: threeWeeksAgo
+            postedBy: {
+              $in: expiredUserIds
             }
           }, {
             status: "admin_expired"
           }));
 
-        case 3:
+        case 8:
           result = _context3.sent;
           console.log("Admin Posted Job Cleanup: Expired ".concat(result.modifiedCount, " jobs."));
+          _context3.next = 13;
+          break;
 
-        case 5:
+        case 12:
+          console.log("Admin Posted Job Cleanup: No jobs to expire.");
+
+        case 13:
         case "end":
           return _context3.stop();
       }

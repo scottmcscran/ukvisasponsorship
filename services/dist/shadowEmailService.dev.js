@@ -18,7 +18,7 @@ exports.processShadowEmailQueue = function _callee() {
 
         case 3:
           if (!true) {
-            _context.next = 28;
+            _context.next = 29;
             break;
           }
 
@@ -33,7 +33,7 @@ exports.processShadowEmailQueue = function _callee() {
             break;
           }
 
-          return _context.abrupt("break", 28);
+          return _context.abrupt("break", 29);
 
         case 9:
           user = item.user; // If user was deleted, just continue (item is already removed from queue)
@@ -49,38 +49,39 @@ exports.processShadowEmailQueue = function _callee() {
           _context.prev = 12;
           // Generate claim token
           claimToken = user.createClaimToken();
-          _context.next = 16;
+          user.claimEmailSentAt = Date.now();
+          _context.next = 17;
           return regeneratorRuntime.awrap(user.save({
             validateBeforeSave: false
           }));
 
-        case 16:
+        case 17:
           claimUrl = "".concat(baseUrl, "/claim-account/").concat(claimToken);
-          _context.next = 19;
+          _context.next = 20;
           return regeneratorRuntime.awrap(new Email(user, claimUrl).sendClaimAccount());
 
-        case 19:
+        case 20:
           console.log("Sent claim email to ".concat(user.email));
           processedCount++;
-          _context.next = 26;
+          _context.next = 27;
           break;
 
-        case 23:
-          _context.prev = 23;
+        case 24:
+          _context.prev = 24;
           _context.t0 = _context["catch"](12);
           console.error("Failed to send email to ".concat(user.email, ":"), _context.t0); // Item is already removed from queue, so it won't block others or loop infinitely
 
-        case 26:
+        case 27:
           _context.next = 3;
           break;
 
-        case 28:
+        case 29:
           console.log("Shadow Email Queue processing complete. Sent ".concat(processedCount, " emails."));
 
-        case 29:
+        case 30:
         case "end":
           return _context.stop();
       }
     }
-  }, null, null, [[12, 23]]);
+  }, null, null, [[12, 24]]);
 };

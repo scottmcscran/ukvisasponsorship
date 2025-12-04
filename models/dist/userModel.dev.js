@@ -117,6 +117,7 @@ var userSchema = new mongoose.Schema((_ref = {
   },
   claimToken: String,
   claimTokenExpires: Date,
+  claimEmailSentAt: Date,
   active: {
     type: Boolean,
     "default": true,

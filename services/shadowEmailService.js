@@ -30,6 +30,7 @@ exports.processShadowEmailQueue = async () => {
     try {
       // Generate claim token
       const claimToken = user.createClaimToken();
+      user.claimEmailSentAt = Date.now();
       await user.save({ validateBeforeSave: false });
 
       const claimUrl = `${baseUrl}/claim-account/${claimToken}`;
