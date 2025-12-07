@@ -661,6 +661,7 @@ export const initAdmin = () => {
 
   if (createShadowNoJobsBtn) {
     createShadowNoJobsBtn.addEventListener("click", async (e) => {
+      console.log("Create Shadow No Jobs Button Clicked");
       e.preventDefault();
       const companyName = document.getElementById("shadowCompanyName").value;
       const email = document.getElementById("shadowEmail").value;

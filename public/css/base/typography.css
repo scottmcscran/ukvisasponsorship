@@ -147,6 +147,10 @@ p {
   margin-top: 3.5rem !important;
 }
 
+.ma-top-sm {
+  margin-top: 1rem !important;
+}
+
 .ma-left-sm {
   margin-left: 1rem !important;
 }
