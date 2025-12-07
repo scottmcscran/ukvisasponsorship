@@ -313,7 +313,10 @@ exports.sendClaimEmail = catchAsync(async (req, res, next) => {
     return next(new AppError("Email already queued for this user", 400));
   }
 
-  await ShadowEmailQueue.create({ user: user._id });
+  await ShadowEmailQueue.create({
+    user: user._id,
+    emailType: req.body.emailType || "standard",
+  });
 
   res.status(200).json({
     status: "success",

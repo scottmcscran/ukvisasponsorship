@@ -653,4 +653,69 @@ export const initAdmin = () => {
       }
     });
   });
+
+  // --- SHADOW ACCOUNT NO JOBS LOGIC ---
+  const createShadowNoJobsBtn = document.getElementById(
+    "createShadowNoJobsBtn"
+  );
+
+  if (createShadowNoJobsBtn) {
+    createShadowNoJobsBtn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      const companyName = document.getElementById("shadowCompanyName").value;
+      const email = document.getElementById("shadowEmail").value;
+      const industry = document.getElementById("shadowIndustry").value;
+
+      if (!companyName || !email) {
+        return showAlert("error", "Please provide company name and email");
+      }
+
+      createShadowNoJobsBtn.textContent = "Creating...";
+
+      try {
+        // 1. Create the shadow employer
+        const res = await axios.post("/api/v1/admin/shadow-employer", {
+          companyName,
+          email,
+          industry,
+        });
+
+        if (res.data.status === "success") {
+          const user = res.data.data.user;
+
+          // 2. Queue the "No Jobs" email immediately
+          const emailRes = await axios.post(
+            `/api/v1/admin/users/${user._id}/send-claim-email`,
+            {
+              emailType: "no-jobs",
+            }
+          );
+
+          if (emailRes.data.status === "success") {
+            showAlert("success", "Account created and email queued!");
+            createShadowNoJobsBtn.textContent = "Done";
+            createShadowNoJobsBtn.disabled = true;
+            document.getElementById("createShadowBtn").disabled = true;
+
+            // Refresh queue list
+            await loadShadowQueue();
+
+            // Reset form after delay
+            setTimeout(() => {
+              document.querySelector(".form--shadow-employer").reset();
+              createShadowNoJobsBtn.textContent = "Create & Email (No Jobs)";
+              createShadowNoJobsBtn.disabled = false;
+              document.getElementById("createShadowBtn").disabled = false;
+            }, 2000);
+          }
+        }
+      } catch (err) {
+        showAlert(
+          "error",
+          err.response?.data?.message || "Error creating account"
+        );
+        createShadowNoJobsBtn.textContent = "Create & Email (No Jobs)";
+      }
+    });
+  }
 };

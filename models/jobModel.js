@@ -66,7 +66,7 @@ const jobSchema = new mongoose.Schema(
       },
       period: {
         type: String,
-        enum: [`year`, `month`, `day`, `hour`],
+        enum: [`year`, `month`, `week`, `day`, `hour`],
         default: `year`,
       },
     },

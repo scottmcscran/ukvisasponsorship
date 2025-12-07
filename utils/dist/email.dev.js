@@ -197,6 +197,23 @@ function () {
         }
       }, null, this);
     }
+  }, {
+    key: "sendClaimAccountNoJobs",
+    value: function sendClaimAccountNoJobs() {
+      return regeneratorRuntime.async(function sendClaimAccountNoJobs$(_context8) {
+        while (1) {
+          switch (_context8.prev = _context8.next) {
+            case 0:
+              _context8.next = 2;
+              return regeneratorRuntime.awrap(this.send("claimAccountNoJobs", "Claim your employer account"));
+
+            case 2:
+            case "end":
+              return _context8.stop();
+          }
+        }
+      }, null, this);
+    }
   }]);
 
   return Email;

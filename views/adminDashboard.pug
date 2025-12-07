@@ -45,6 +45,7 @@ block content
                       option(value='Other') Other
                   .form__group
                     button.btn.btn--small.btn--green#createShadowBtn(type='button') Create Account
+                    button.btn.btn--small.btn--green.ma-left-sm#createShadowNoJobsBtn(type='button') Create & Email (No Jobs)
 
               .shadow-account-queue
                 h3.heading-tertiary.ma-bt-sm Queued Emails (Next Tuesday 10:15)
@@ -92,6 +93,7 @@ block content
                   select#shadowJobSalaryPeriod.form__input
                     option(value='year') Per Year
                     option(value='month') Per Month
+                    option(value='week') Per Week
                     option(value='day') Per Day
                     option(value='hour') Per Hour
                 .form__group

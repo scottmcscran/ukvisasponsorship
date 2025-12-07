@@ -35,7 +35,12 @@ exports.processShadowEmailQueue = async () => {
 
       const claimUrl = `${baseUrl}/claim-account/${claimToken}`;
 
-      await new Email(user, claimUrl).sendClaimAccount();
+      if (item.emailType === "no-jobs") {
+        await new Email(user, claimUrl).sendClaimAccountNoJobs();
+      } else {
+        await new Email(user, claimUrl).sendClaimAccount();
+      }
+
       console.log(`Sent claim email to ${user.email}`);
       processedCount++;
     } catch (err) {

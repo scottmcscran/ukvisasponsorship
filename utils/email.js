@@ -98,4 +98,8 @@ module.exports = class Email {
   async sendClaimAccount() {
     await this.send(`claimAccount`, `Claim your employer account`);
   }
+
+  async sendClaimAccountNoJobs() {
+    await this.send(`claimAccountNoJobs`, `Claim your employer account`);
+  }
 };

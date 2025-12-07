@@ -1,0 +1,16 @@
+extends baseEmail
+
+block content
+  p Hi #{firstName},
+  p We noticed that your company holds a sponsorship license, but we couldn't find any specific visa-sponsored job listings for you at the moment.
+  p We have created an employer account for #{firstName} on UK Visa Sponsorship to help you reach qualified candidates who require visa sponsorship.
+  p If you have roles available, please claim your account below to upload them and connect with global talent.
+  table.btn.btn-primary(role='presentation', border='0', cellpadding='0', cellspacing='0')
+    tbody
+      tr
+        td(align='left')
+          table(role='presentation', border='0', cellpadding='0', cellspacing='0')
+            tbody
+              tr
+                td
+                  a(href=`${url}`, target='_blank') Claim My Account

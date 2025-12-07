@@ -12,6 +12,11 @@ var shadowEmailQueueSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     "default": Date.now
+  },
+  emailType: {
+    type: String,
+    "enum": ["standard", "no-jobs"],
+    "default": "standard"
   }
 });
 var ShadowEmailQueue = mongoose.model("ShadowEmailQueue", shadowEmailQueueSchema);

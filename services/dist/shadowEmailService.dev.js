@@ -18,7 +18,7 @@ exports.processShadowEmailQueue = function _callee() {
 
         case 3:
           if (!true) {
-            _context.next = 29;
+            _context.next = 34;
             break;
           }
 
@@ -33,7 +33,7 @@ exports.processShadowEmailQueue = function _callee() {
             break;
           }
 
-          return _context.abrupt("break", 29);
+          return _context.abrupt("break", 34);
 
         case 9:
           user = item.user; // If user was deleted, just continue (item is already removed from queue)
@@ -57,31 +57,45 @@ exports.processShadowEmailQueue = function _callee() {
 
         case 17:
           claimUrl = "".concat(baseUrl, "/claim-account/").concat(claimToken);
-          _context.next = 20;
-          return regeneratorRuntime.awrap(new Email(user, claimUrl).sendClaimAccount());
 
-        case 20:
-          console.log("Sent claim email to ".concat(user.email));
-          processedCount++;
-          _context.next = 27;
+          if (!(item.emailType === "no-jobs")) {
+            _context.next = 23;
+            break;
+          }
+
+          _context.next = 21;
+          return regeneratorRuntime.awrap(new Email(user, claimUrl).sendClaimAccountNoJobs());
+
+        case 21:
+          _context.next = 25;
           break;
 
-        case 24:
-          _context.prev = 24;
-          _context.t0 = _context["catch"](12);
-          console.error("Failed to send email to ".concat(user.email, ":"), _context.t0); // Item is already removed from queue, so it won't block others or loop infinitely
+        case 23:
+          _context.next = 25;
+          return regeneratorRuntime.awrap(new Email(user, claimUrl).sendClaimAccount());
 
-        case 27:
-          _context.next = 3;
+        case 25:
+          console.log("Sent claim email to ".concat(user.email));
+          processedCount++;
+          _context.next = 32;
           break;
 
         case 29:
+          _context.prev = 29;
+          _context.t0 = _context["catch"](12);
+          console.error("Failed to send email to ".concat(user.email, ":"), _context.t0); // Item is already removed from queue, so it won't block others or loop infinitely
+
+        case 32:
+          _context.next = 3;
+          break;
+
+        case 34:
           console.log("Shadow Email Queue processing complete. Sent ".concat(processedCount, " emails."));
 
-        case 30:
+        case 35:
         case "end":
           return _context.stop();
       }
     }
-  }, null, null, [[12, 24]]);
+  }, null, null, [[12, 29]]);
 };

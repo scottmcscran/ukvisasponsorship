@@ -3,14 +3,14 @@ extends baseEmail
 block content
   p(style='font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px; color: #000000;') Hi #{firstName},
   p(style='font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px; color: #000000;') Welcome to UK Visa Sponsorship! Please verify your email address to activate your account.
-  table.btn.btn-primary(role='presentation', border='0', cellpadding='0', cellspacing='0')
+  table.btn.btn-primary(role='presentation', border='0', cellpadding='0', cellspacing='0', style='width: 100%;')
     tbody
       tr
-        td(align='left')
-          table(role='presentation', border='0', cellpadding='0', cellspacing='0')
+        td(align='center')
+          table(role='presentation', border='0', cellpadding='0', cellspacing='0', style='width: 100%;')
             tbody
               tr
-                td
-                  a(href=`${url}`, target='_blank', style='background-color: #3498db; border: solid 1px #3498db; border-radius: 5px; box-sizing: border-box; color: #ffffff; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none; text-transform: capitalize;') Verify Email Address
+                td(align='center')
+                  a(href=`${url}`, target='_blank', style='background-color: #3498db; border: solid 1px #3498db; border-radius: 5px; box-sizing: border-box; color: #ffffff; cursor: pointer; display: block; width: 100%; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none; text-transform: capitalize; text-align: center;') Verify Email Address
   p(style='font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px; color: #000000;') If you didn't create an account, please ignore this email.
   p(style='font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px; color: #000000;') - The UK Visa Sponsorship Team
