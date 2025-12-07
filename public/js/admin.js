@@ -703,7 +703,8 @@ export const initAdmin = () => {
             // Reset form after delay
             setTimeout(() => {
               document.querySelector(".form--shadow-employer").reset();
-              createShadowNoJobsBtn.textContent = "Create & Email (No Jobs)";
+              createShadowNoJobsBtn.textContent =
+                "Create & Email (No Visa Jobs)";
               createShadowNoJobsBtn.disabled = false;
               document.getElementById("createShadowBtn").disabled = false;
             }, 2000);
@@ -714,7 +715,7 @@ export const initAdmin = () => {
           "error",
           err.response?.data?.message || "Error creating account"
         );
-        createShadowNoJobsBtn.textContent = "Create & Email (No Jobs)";
+        createShadowNoJobsBtn.textContent = "Create & Email (No Visa Jobs)";
       }
     });
   }
