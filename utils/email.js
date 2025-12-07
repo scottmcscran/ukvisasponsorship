@@ -6,6 +6,7 @@ module.exports = class Email {
   constructor(user, url) {
     this.to = user.email;
     this.firstName = user.name.split(` `)[0];
+    this.name = user.name;
     this.url = url;
     this.from = `Uk Visa Sponsorship <${process.env.EMAIL_FROM || "mail@ukvisasponsorship.com"}>`;
   }
@@ -34,6 +35,7 @@ module.exports = class Email {
   async send(template, subject) {
     const html = pug.renderFile(`${__dirname}/../views/email/${template}.pug`, {
       firstName: this.firstName,
+      name: this.name,
       url: this.url,
       subject,
     });
