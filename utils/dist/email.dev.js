@@ -21,7 +21,6 @@ function () {
 
     this.to = user.email;
     this.firstName = user.name.split(" ")[0];
-    this.name = user.name;
     this.url = url;
     this.from = "Uk Visa Sponsorship <".concat(process.env.EMAIL_FROM || "mail@ukvisasponsorship.com", ">");
   }
@@ -56,7 +55,6 @@ function () {
             case 0:
               html = pug.renderFile("".concat(__dirname, "/../views/email/").concat(template, ".pug"), {
                 firstName: this.firstName,
-                name: this.name,
                 url: this.url,
                 subject: subject
               });
