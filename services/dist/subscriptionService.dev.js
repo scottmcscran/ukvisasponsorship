@@ -226,32 +226,72 @@ exports.dailySubscriptionCheck = function _callee2() {
 };
 
 exports.checkShadowAccountExpirations = function _callee3() {
-  var threeWeeksAgo, expiredUsers, expiredUserIds, result;
+  var threeWeeksAgo, unclaimedExpiredUsers, unclaimedUserIds, deleteResult, expiredUsers, expiredUserIds, result;
   return regeneratorRuntime.async(function _callee3$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
-          threeWeeksAgo = new Date(Date.now() - 21 * 24 * 60 * 60 * 1000); // Find users who had the claim email sent more than 3 weeks ago
+          threeWeeksAgo = new Date(Date.now() - 21 * 24 * 60 * 60 * 1000); // 1. Delete Unclaimed Accounts older than 3 weeks
 
           _context3.next = 3;
           return regeneratorRuntime.awrap(User.find({
+            isClaimed: false,
             claimEmailSentAt: {
               $lt: threeWeeksAgo
             }
           }).select("_id"));
 
         case 3:
+          unclaimedExpiredUsers = _context3.sent;
+
+          if (!(unclaimedExpiredUsers.length > 0)) {
+            _context3.next = 12;
+            break;
+          }
+
+          unclaimedUserIds = unclaimedExpiredUsers.map(function (u) {
+            return u._id;
+          }); // Delete jobs associated with these users
+
+          _context3.next = 8;
+          return regeneratorRuntime.awrap(Job.deleteMany({
+            postedBy: {
+              $in: unclaimedUserIds
+            }
+          }));
+
+        case 8:
+          _context3.next = 10;
+          return regeneratorRuntime.awrap(User.deleteMany({
+            _id: {
+              $in: unclaimedUserIds
+            }
+          }));
+
+        case 10:
+          deleteResult = _context3.sent;
+          console.log("Shadow Account Cleanup: Deleted ".concat(deleteResult.deletedCount, " unclaimed accounts."));
+
+        case 12:
+          _context3.next = 14;
+          return regeneratorRuntime.awrap(User.find({
+            claimEmailSentAt: {
+              $lt: threeWeeksAgo
+            }
+          }).select("_id"));
+
+        case 14:
           expiredUsers = _context3.sent;
           expiredUserIds = expiredUsers.map(function (u) {
             return u._id;
           });
 
           if (!(expiredUserIds.length > 0)) {
-            _context3.next = 12;
+            _context3.next = 23;
             break;
           }
 
-          _context3.next = 8;
+          _context3.next = 19;
           return regeneratorRuntime.awrap(Job.updateMany({
             isAdminPosted: true,
             status: "active",
@@ -262,16 +302,16 @@ exports.checkShadowAccountExpirations = function _callee3() {
             status: "admin_expired"
           }));
 
-        case 8:
+        case 19:
           result = _context3.sent;
           console.log("Admin Posted Job Cleanup: Expired ".concat(result.modifiedCount, " jobs."));
-          _context3.next = 13;
+          _context3.next = 24;
           break;
 
-        case 12:
+        case 23:
           console.log("Admin Posted Job Cleanup: No jobs to expire.");
 
-        case 13:
+        case 24:
         case "end":
           return _context3.stop();
       }

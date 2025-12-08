@@ -108,6 +108,29 @@ exports.dailySubscriptionCheck = async () => {
 exports.checkShadowAccountExpirations = async () => {
   const threeWeeksAgo = new Date(Date.now() - 21 * 24 * 60 * 60 * 1000);
 
+  // 1. Delete Unclaimed Accounts older than 3 weeks
+  const unclaimedExpiredUsers = await User.find({
+    isClaimed: false,
+    claimEmailSentAt: { $lt: threeWeeksAgo },
+  }).select("_id");
+
+  if (unclaimedExpiredUsers.length > 0) {
+    const unclaimedUserIds = unclaimedExpiredUsers.map((u) => u._id);
+
+    // Delete jobs associated with these users
+    await Job.deleteMany({ postedBy: { $in: unclaimedUserIds } });
+
+    // Delete the users
+    const deleteResult = await User.deleteMany({
+      _id: { $in: unclaimedUserIds },
+    });
+
+    console.log(
+      `Shadow Account Cleanup: Deleted ${deleteResult.deletedCount} unclaimed accounts.`
+    );
+  }
+
+  // 2. Expire Admin-Posted Jobs for users who have had the email for > 3 weeks (Claimed or Unclaimed - though unclaimed are deleted above)
   // Find users who had the claim email sent more than 3 weeks ago
   const expiredUsers = await User.find({
     claimEmailSentAt: { $lt: threeWeeksAgo },
